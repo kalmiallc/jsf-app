@@ -1,0 +1,14 @@
+<div class="jsf-builder-layout-toolbar-button cursor-pointer"
+     [jsfHoverClass]="'hover'"
+     [class.active]="active"
+     matRipple>
+  <div class="jsf-builder-layout-toolbar-button-icon" *ngIf="icon">
+    <jsf-icon [icon]="icon" [size]="'20px'"></jsf-icon>
+  </div>
+
+  <div class="jsf-builder-layout-toolbar-button-label font-size-sm" *ngIf="label">
+    <span>{{ label }}</span>
+  </div>
+
+  <div class="jsf-builder-layout-toolbar-button-overlay __background-color--primary-contrast"></div>
+</div>

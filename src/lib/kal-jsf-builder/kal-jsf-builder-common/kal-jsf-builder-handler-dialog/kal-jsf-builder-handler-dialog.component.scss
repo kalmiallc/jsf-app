@@ -1,0 +1,38 @@
+$header-item-height: 34px;
+
+.category-buttons {
+  height:      100%;
+  display:     flex;
+  align-items: center;
+}
+
+.category-button {
+  display:         flex;
+  height:          $header-item-height;
+  justify-content: center;
+  align-items:     center;
+  padding:         0 15px;
+
+  margin-right:    20px;
+
+  cursor:          pointer;
+  user-select:     none;
+
+  &:focus {
+    outline: 0;
+  }
+}
+
+.mat-dialog-content {
+  width: 60vw !important;
+}
+
+:host ::ng-deep {
+  jsf-kal-jsf-builder-card-button-container {
+
+    & > * {
+      width: 20% !important;
+    }
+  }
+}
+

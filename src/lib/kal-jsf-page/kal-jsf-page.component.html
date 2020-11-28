@@ -1,0 +1,42 @@
+<div class="jsf-page">
+  <jsf-kal-jsf-doc
+    *ngIf="!proxy && pageBuilder.rootComponent.jsfDefinition"
+    [ngClass]="pageBuilder.pageDefinition.component.htmlClass"
+    [jsfComponentBuilder]="pageBuilder.rootComponent"
+    [onError]="onComponentJsfErrorCallback('')"
+    [onFormBuilderCreated]="onComponentJsfBuilderCreateCallback('')"
+    [innerScroll]="pageBuilder.pageDefinition.component.innerScroll"
+    [doc]="pageBuilder.rootComponent.jsfDefinition"
+    [enableThemeRender]="enableThemeRender"
+    [builderOptions]="builderOptions"
+    [modes]="modes"
+    [jsfDefinitionProvider]="jsfDefinitionProvider"
+    [disableWrapperStyles]="disableWrapperStyles"
+    [showLoadingIndicator]="showLoadingIndicator"
+    [developerTools]="developerTools"
+    [onFormEvent]="onFormEventInterceptor"
+    [onCustomEvent]="onCustomEvent"
+    [onVirtualEvent]="onVirtualEvent"
+    [onNotification]="onNotification">
+  </jsf-kal-jsf-doc>
+  <jsf-kal-jsf-proxy-doc
+    *ngIf="proxy && pageBuilder.rootComponent.jsfDefinition"
+    [ngClass]="pageBuilder.pageDefinition.component.htmlClass"
+    [jsfComponentBuilder]="pageBuilder.rootComponent"
+    [onError]="onComponentJsfErrorCallback('')"
+    [onFormBuilderCreated]="onComponentJsfBuilderCreateCallback('')"
+    [innerScroll]="pageBuilder.pageDefinition.component.innerScroll"
+    [doc]="pageBuilder.rootComponent.jsfDefinition"
+    [enableThemeRender]="enableThemeRender"
+    [builderOptions]="builderOptions"
+    [modes]="modes"
+    [jsfDefinitionProvider]="jsfDefinitionProvider"
+    [disableWrapperStyles]="disableWrapperStyles"
+    [showLoadingIndicator]="showLoadingIndicator"
+    [developerTools]="developerTools"
+    [onFormEvent]="onFormEventInterceptor"
+    [onCustomEvent]="onCustomEvent"
+    [onVirtualEvent]="onVirtualEvent"
+    [onNotification]="onNotification">
+  </jsf-kal-jsf-proxy-doc>
+</div>

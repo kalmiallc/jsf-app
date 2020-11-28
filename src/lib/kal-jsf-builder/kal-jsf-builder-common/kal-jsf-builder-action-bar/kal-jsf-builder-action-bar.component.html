@@ -1,0 +1,10 @@
+<div class="jsf-builder-action-bar rounded-sm no-text-selection __background-color--primary __color--primary-contrast __fill--primary-contrast __stroke--primary-contrast __shadow-float-sm--black">
+  <div class="jsf-builder-action-bar-title">
+    <span>{{ getLayoutInfo(layoutEditor.type)?.title || layoutEditor.type }}</span>
+  </div>
+
+  <ng-template [cdkPortalOutlet]="additionalTemplatePortal"></ng-template>
+
+  <jsf-kal-jsf-builder-action-bar-button icon="delete" (click)="actionBarDeleteLayout()"></jsf-kal-jsf-builder-action-bar-button>
+  <jsf-kal-jsf-builder-action-bar-button icon="close" (click)="actionBarClose()"></jsf-kal-jsf-builder-action-bar-button>
+</div>

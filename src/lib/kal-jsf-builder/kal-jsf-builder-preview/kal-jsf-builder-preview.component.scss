@@ -1,0 +1,14 @@
+jsf-kal-jsf-builder-content {
+  display: block;
+  height: 100%;
+
+  ::ng-deep {
+    .kal-jsf-builder-content {
+      height: 100%;
+    }
+
+    .jsf-page {
+      height: 100%;
+    }
+  }
+}

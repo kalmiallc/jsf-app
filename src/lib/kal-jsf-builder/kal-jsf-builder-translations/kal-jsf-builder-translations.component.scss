@@ -1,0 +1,136 @@
+$language-card-background-color: #f2f5fa;
+
+$translation-message-row-background-odd: #f2f5fa;
+$translation-message-row-background-even: lighten(#f2f5fa, 2%);
+
+$translation-message-border: darken(#f2f5fa, 10%);
+
+.jsf-builder-language-card {
+  background-color: $language-card-background-color;
+
+  padding-left: 10px;
+  padding-right: 10px;
+  height: 50px;
+
+  .language-code {
+    padding-right: 5px;
+  }
+
+  .language-name {
+    font-weight: 500;
+  }
+
+  .jsf-builder-language-card-progress {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .mat-icon {
+      display: block;
+      margin-right: 7px;
+    }
+
+    .jsf-builder-language-card-progress-text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      font-size: .8rem;
+      font-weight: 500;
+
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+  }
+}
+
+
+.jsf-builder-translation-message-container {
+  .jsf-builder-translation-message {
+    padding: 8px 12px;
+    display: flex;
+
+    border: 1px solid $translation-message-border;
+
+    &.translated {
+      mark {
+
+      }
+    }
+
+    .message-source-container {
+      width: 40%;
+      height: 100%;
+
+      display: flex;
+      flex-direction: column;
+
+      justify-content: space-between;
+
+      .message-source-text {
+        font-size: 1rem;
+        opacity: .9;
+
+        mat-icon {
+          font-size: 20px;
+          vertical-align: middle;
+        }
+      }
+
+      .message-source-id {
+        font-size: .8rem;
+      }
+    }
+
+    .message-input {
+      width: 100%;
+      font-family: inherit;
+      margin-bottom: 0;
+      margin-top: 0;
+      vertical-align: bottom;
+      font-size: 1rem;
+
+      min-height: 46px;
+
+      border: 1px solid $translation-message-border;
+    }
+
+    .message-target-container {
+      width: calc(60% - 50px);
+      height: 100%;
+    }
+
+    .message-status-container {
+      width: 50px;
+      height: 100%;
+
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+
+      .mat-icon-button {
+        color: #242424;
+        opacity: .5;
+        margin-top: 3px;
+      }
+    }
+
+    &:not(:last-child) {
+      border-bottom: none;
+    }
+
+    &:nth-child(odd) {
+      background-color: $translation-message-row-background-odd;
+    }
+
+    &:nth-child(even) {
+      background-color: $translation-message-row-background-even;
+    }
+
+
+  }
+}

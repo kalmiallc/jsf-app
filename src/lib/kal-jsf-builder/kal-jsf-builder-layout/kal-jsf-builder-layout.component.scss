@@ -1,0 +1,62 @@
+// Core styles for router elements.
+::ng-deep {
+  jsf-layout-builder-items-router {
+    display: block;
+
+    jsf-layout-builder-router-droppable {
+      display: block;
+    }
+  }
+}
+
+
+:host {
+
+  .jsf-builder-layout-root {
+
+    &.jsf-builder-dragging, &.jsf-builder-router-padding {
+      ::ng-deep {
+        jsf-layout-builder-items-router {
+          jsf-layout-builder-router-droppable {
+            padding: 10px;
+          }
+        }
+
+        // Add margin to inner element of a draggable (for example a div)
+        jsf-layout-builder-router:not(:last-child) {
+          jsf-layout-builder-router-draggable > * > * {
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+
+    &.jsf-builder-dragging, &.jsf-builder-router-borders {
+      ::ng-deep {
+        jsf-layout-builder-items-router {
+          outline-width: 1px;
+          outline-style: dashed;
+          outline-offset: -1px;
+        }
+      }
+    }
+
+  }
+}
+
+
+
+
+.layout-toolbox-tabgroup {
+  height: 100%;
+
+  ::ng-deep {
+    & > .mat-tab-body-wrapper {
+      flex: 1 0 auto;
+    }
+  }
+
+  .os-host {
+    height: 100%;
+  }
+}

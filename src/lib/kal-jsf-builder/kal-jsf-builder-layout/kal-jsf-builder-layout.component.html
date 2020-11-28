@@ -1,0 +1,94 @@
+<!-- Viewport -->
+<jsf-kal-jsf-builder-viewport>
+  <!-- Content -->
+  <jsf-kal-jsf-builder-content [deviceSize]="deviceSize">
+    <!-- Set up drag and drop -->
+    <div class="jsf-builder-layout-root"
+         [class.jsf-builder-router-padding]="layoutPaddingEnabled"
+         [class.jsf-builder-router-borders]="layoutBordersEnabled">
+      <jsf-layout-builder-router *ngIf="jsfEditor.layoutEditor"
+                                 [layoutEditor]="jsfEditor.layoutEditor"></jsf-layout-builder-router>
+    </div>
+  </jsf-kal-jsf-builder-content>
+
+  <!-- Toolbox -->
+  <jsf-kal-jsf-builder-toolbox>
+    <mat-tab-group class="layout-toolbox-tabgroup" [selectedIndex]="selectedSidebarIndex">
+      <!-- Toolbox -->
+      <mat-tab label="Toolbox">
+        <overlay-scrollbars [options]="scrollOptions">
+          <mat-form-field class="mt-2" appearance="outline">
+            <mat-label>Search</mat-label>
+            <input matInput placeholder="Search" [(ngModel)]="layoutToolboxSearch">
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+
+          <mat-accordion [multi]="true">
+            <ng-container *ngFor="let category of layoutCategories">
+              <ng-container *ngIf="getLayoutTypesByCategory(category); let items">
+                <mat-expansion-panel *ngIf="items.length" [expanded]="true">
+
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      <span class="font-size-sm font-weight-bold">{{ category }}</span>
+                    </mat-panel-title>
+                  </mat-expansion-panel-header>
+
+                  <div class="toolbox-card-items-container">
+                    <jsf-kal-jsf-builder-card-button-container ngxDroppable [copy]="true"
+                                                               (drag)="toolboxDropStart($event)"
+                                                               (cancel)="toolboxDropCancel($event)">
+                      <ng-container
+                        *ngFor="let item of items">
+                        <jsf-kal-jsf-builder-card-button [label]="item.info?.title || item.name"
+                                                         iconPath="{{ assetsBasePath }}{{ item?.info?.icon || 'unknown.svg' }}"
+                                                         class="jsf-builder-new-layout-drag-placeholder"
+                                                         [ngxDraggable]="[ 'editor' + jsfEditor.id ]"
+                                                         [model]="item.type">
+                        </jsf-kal-jsf-builder-card-button>
+                      </ng-container>
+                    </jsf-kal-jsf-builder-card-button-container>
+                  </div>
+                </mat-expansion-panel>
+              </ng-container>
+            </ng-container>
+          </mat-accordion>
+        </overlay-scrollbars>
+      </mat-tab>
+
+      <!-- Properties -->
+      <mat-tab label="Properties">
+        <overlay-scrollbars [options]="scrollOptions">
+          <div class="m-2">
+            <p class="__color--warn" *ngIf="selectedLayout?.error">{{ selectedLayout?.error | json }}</p>
+            <div class="__background-color--grey-light-50 rounded-sm px-2 py-2 text-center mt-2" *ngIf="!selectedLayout && !selectedProp">
+              No layout selected.
+            </div>
+
+            <!-- Prop options -->
+            <div class="prop-properties" *ngIf="selectedProp">
+              <jsf-kal-jsf-form-control [doc]="selectedProp.propertiesJsfDocument"
+                                        [(ngModel)]="selectedPropValue">
+              </jsf-kal-jsf-form-control>
+            </div>
+
+            <div class="handler-properties" *ngIf="selectedProp?.handlerLayoutJsfDocument">
+              <jsf-kal-jsf-form-control [doc]="selectedProp.handlerLayoutJsfDocument"
+                                        [(ngModel)]="selectedPropHandlerLayoutValue">
+              </jsf-kal-jsf-form-control>
+            </div>
+
+            <!-- Layout options -->
+            <div class="layout-properties" *ngIf="selectedLayout">
+              <jsf-kal-jsf-form-control [doc]="selectedLayout.propertiesJsfDocument"
+                                        [(ngModel)]="selectedLayoutValue">
+              </jsf-kal-jsf-form-control>
+            </div>
+          </div>
+        </overlay-scrollbars>
+      </mat-tab>
+    </mat-tab-group>
+  </jsf-kal-jsf-builder-toolbox>
+</jsf-kal-jsf-builder-viewport>
+
+<ng-keyboard-shortcuts [shortcuts]="keyboardShortcuts"></ng-keyboard-shortcuts>

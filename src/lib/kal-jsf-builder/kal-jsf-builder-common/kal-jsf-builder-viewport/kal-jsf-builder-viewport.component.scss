@@ -1,0 +1,30 @@
+.kal-jsf-builder-viewport {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+
+  background-color: #f2f5fa;
+
+  .kal-jsf-builder-viewport-content {
+    flex: 1 0 auto;
+    position: relative;
+
+    ::ng-deep {
+      & > .os-host {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+
+        & > .os-scrollbar-vertical {
+          right: 1rem;
+        }
+      }
+    }
+  }
+}

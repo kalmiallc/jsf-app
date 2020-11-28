@@ -1,0 +1,43 @@
+<!-- Viewport -->
+<jsf-kal-jsf-builder-viewport>
+
+  <!-- Content -->
+  <jsf-kal-jsf-builder-content [deviceSize]="deviceSize">
+    <!--
+    <jsf-kal-jsf-proxy-doc
+      *ngIf="jsfEditorDocument && proxyRendering"
+      [doc]="jsfEditorDocument"
+      [enableThemeRender]="themeRendering"
+      [innerScroll]="false"
+      [onError]="jsfError"
+      [onFormBuilderCreated]="jsfBuilder">
+    </jsf-kal-jsf-proxy-doc>
+    <jsf-kal-jsf-doc
+      *ngIf="jsfEditorDocument && !proxyRendering"
+      [doc]="jsfEditorDocument"
+      [enableThemeRender]="themeRendering"
+      [innerScroll]="false"
+      [onError]="jsfError()"
+      [onFormBuilderCreated]="jsfBuilder()"
+    ></jsf-kal-jsf-doc> -->
+
+    <jsf-page
+      *ngFor="let pb of jsfPageBuilders"
+      [dataSourceProvider]="dataSourceProvider"
+      [jsfDefinitionProvider]="jsfDefinitionProvider"
+      [proxy]="proxyRendering"
+      [dataSourceConfig]="dataSourceConfig"
+      [pageBuilder]="pb"
+      [modes]="modes"
+      [onError]="jsfError"
+      [onFormBuilderCreated]="jsfBuilder"
+      [enableThemeRender]="themeRendering">
+    </jsf-page>
+  </jsf-kal-jsf-builder-content>
+
+  <!-- Toolbox -->
+  <jsf-kal-jsf-builder-toolbox>
+    <jsf-kal-jsf-form-control [(ngModel)]="toolboxFormValue" [doc]="toolboxFormDoc"></jsf-kal-jsf-form-control>
+  </jsf-kal-jsf-builder-toolbox>
+
+</jsf-kal-jsf-builder-viewport>

@@ -1,0 +1,40 @@
+{
+  "name": "@kalmia/jsf-app",
+  "version": "9.2.50",
+  "authors": "Tilen Tomakić <tilen@tomakic.com>",
+  "contributors": [
+    "Matej Gorjanc", "Sašo Bizjak", "Nejc Selan"
+  ],
+  "license": "GPL-3.0-only",
+  "scripts": {
+    "test": "ng test jsf",
+    "build": "ng build jsf --prod",
+    "build:watch": "ng build jsf --prod --watch",
+    "lint": "ng lint"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "peerDependencies": {
+    "@angular/common": "^9.1.9",
+    "@angular/core": "^9.1.9",
+    "@angular/material-moment-adapter": "^9.2.4",
+    "@juggle/resize-observer": "^3.1.1",
+    "@kalmia/cdk": "^9.2.4-custom.4",
+    "@kalmia/dragula": "3.8.0-custom.1",
+    "@kalmia/jsf-common-es2015": "^3.0.0",
+    "@kalmia/material": "^9.2.4-custom.5",
+    "@swimlane/ngx-dnd": "^8.1.2",
+    "angular-gridster2": "9.1.0",
+    "big.js": "^5.2.2",
+    "bowser": "^1.9.4",
+    "color": "^3.1.2",
+    "intersection-observer": "^0.11.0",
+    "ng-keyboard-shortcuts": "9.0.0",
+    "ngx-monaco-editor": "^9.0.0",
+    "overlayscrollbars": "^1.12.0",
+    "overlayscrollbars-ngx": "^0.2.2",
+    "rxjs": "~6.5.5"
+  },
+  "dependencies": {}
+}

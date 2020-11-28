@@ -1,0 +1,208 @@
+<div class="jsf-builder" id="jsf-builder-{{ jsfEditor.id }}">
+
+  <div class="jsf-builder-wrapper __color--text">
+    <div class="jsf-builder-header __shadow-float-md--black">
+      <div class="jsf-builder-header-body">
+        <div class="jsf-builder-header-content">
+
+          <!-- Left side -->
+          <div class="header-items-left">
+            <!-- Logo -->
+            <img *ngIf="editorLogoSrc" [src]="editorLogoSrc"
+                 class="header-logo cursor-pointer">
+
+            <!-- Project name -->
+            <div class="header-project-name">
+              <span class="font-weight-medium font-size-h5">{{ editorTitle || title || 'Untitled' }}</span>
+              <span class="small text-muted pl-1" *ngIf="key">{{ key }}</span>
+            </div>
+          </div>
+
+          <!-- Center -->
+          <div class="header-items-center">
+            <div class="header-item __color-text font-weight-medium rounded-sm"
+                 [ngClass]="{'selected __background-color--primary-10': selectedTab === BuilderTabEnum.Config}"
+                 (click)="selectTab(BuilderTabEnum.Config)"
+                 matRipple>
+              Config
+            </div>
+
+            <div class="header-item __color-text font-weight-medium rounded-sm"
+                 [ngClass]="{'selected __background-color--primary-10': selectedTab === BuilderTabEnum.Schema}"
+                 (click)="selectTab(BuilderTabEnum.Schema)"
+                 matRipple>
+              Schema
+            </div>
+
+            <div class="header-item __color-text font-weight-medium rounded-sm"
+                 [ngClass]="{'selected __background-color--primary-10': selectedTab === BuilderTabEnum.Layout}"
+                 (click)="selectTab(BuilderTabEnum.Layout)"
+                 matRipple>
+              Layout
+            </div>
+
+            <div class="header-item __color-text font-weight-medium rounded-sm"
+                 *ngIf="translationLanguages && translationLanguages?.length"
+                 [ngClass]="{'selected __background-color--primary-10': selectedTab === BuilderTabEnum.Translations}"
+                 (click)="selectTab(BuilderTabEnum.Translations)"
+                 matRipple>
+              Translations
+            </div>
+
+            <div class="header-item __color-text font-weight-medium rounded-sm"
+                 [ngClass]="{'selected __background-color--primary-10': selectedTab === BuilderTabEnum.Preview}"
+                 (click)="selectTab(BuilderTabEnum.Preview)"
+                 matRipple>
+              Preview
+            </div>
+
+            <div class="header-item __color-text font-weight-medium rounded-sm"
+                 [ngClass]="{'selected __background-color--primary-10': selectedTab === BuilderTabEnum.Export}"
+                 (click)="selectTab(BuilderTabEnum.Export)"
+                 matRipple>
+              Import/Export
+            </div>
+          </div>
+
+          <!-- Right side -->
+          <div class="header-items-right">
+            <ng-container *ngIf="availableLayoutModes?.length">
+              <button mat-icon-button
+                      [class.__color--primary]="selectedLayoutModes?.length"
+                      matTooltip="Modes"
+                      [matMenuTriggerFor]="modesMenu">
+                <mat-icon>visibility</mat-icon>
+              </button>
+
+              <mat-menu #modesMenu="matMenu">
+                <ng-container *ngFor="let availableMode of availableLayoutModes">
+                  <button mat-menu-item [disableRipple]="true" (click)="$event.stopPropagation()">
+                    <mat-checkbox [ngModel]="hasSelectedMode(availableMode)"
+                                  (ngModelChange)="setSelectedMode(availableMode, $event)"
+                                  (click)="$event.stopPropagation()">
+                      {{ availableMode }}
+                    </mat-checkbox>
+                  </button>
+                </ng-container>
+              </mat-menu>
+
+              <div class="header-items-spacer"></div>
+            </ng-container>
+
+            <button mat-icon-button
+                    [class.__color--primary]="deviceSize === 'desktop'"
+                    (click)="setDeviceSize('desktop')"
+                    matTooltip="Desktop">
+              <mat-icon>desktop_windows</mat-icon>
+            </button>
+
+            <button mat-icon-button
+                    [class.__color--primary]="deviceSize === 'tablet'"
+                    (click)="setDeviceSize('tablet')"
+                    matTooltip="Tablet">
+              <mat-icon>tablet</mat-icon>
+            </button>
+
+            <button mat-icon-button
+                    [class.__color--primary]="deviceSize === 'mobile'"
+                    (click)="setDeviceSize('mobile')"
+                    matTooltip="Mobile">
+              <mat-icon>phone_android</mat-icon>
+            </button>
+
+            <div class="header-items-spacer"></div>
+
+            <button mat-icon-button
+                    [class.__color--primary]="layoutPaddingEnabled"
+                    (click)="toggleLayoutPadding()"
+                    matTooltip="Toggle spacing">
+              <mat-icon>select_all</mat-icon>
+            </button>
+
+            <button mat-icon-button
+                    [class.__color--primary]="layoutBordersEnabled"
+                    (click)="toggleLayoutBorders()"
+                    matTooltip="Toggle drop regions">
+              <mat-icon>border_clear</mat-icon>
+            </button>
+
+            <div class="header-vertical-separator border-right __border-color--grey mx-5"></div>
+
+            <div class="header-item __color--primary font-weight-medium rounded-sm"
+                 (click)="closeClick()"
+                 matRipple>
+              Close
+            </div>
+
+            <div class="header-item __color--primary-contrast __background-color--primary font-weight-medium rounded-sm"
+                 (click)="saveClick()"
+                 matRipple>
+              Save
+            </div>
+
+            <div class="ml-1" *ngIf="key">
+              <button mat-icon-button [matMenuTriggerFor]="moreMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+
+            <mat-menu #moreMenu="matMenu">
+              <button mat-menu-item (click)="saveAsClick()">Save as</button>
+              <button mat-menu-item (click)="deleteClick()">Delete</button>
+            </mat-menu>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="jsf-builder-body">
+      <!-- CONFIG -->
+      <jsf-kal-jsf-builder-config
+        *ngIf="selectedTab === BuilderTabEnum.Config"
+        [jsfEditor]="jsfEditor">
+      </jsf-kal-jsf-builder-config>
+
+      <!-- LAYOUT -->
+      <jsf-kal-jsf-builder-layout
+        *ngIf="selectedTab === BuilderTabEnum.Layout"
+        [jsfEditor]="jsfEditor"
+        [availableLayoutModes]="availableLayoutModes">
+      </jsf-kal-jsf-builder-layout>
+
+      <!-- SCHEMA -->
+      <jsf-kal-jsf-builder-schema
+        *ngIf="selectedTab === BuilderTabEnum.Schema"
+        [dataSourceListProvider]="dataSourceListProvider"
+        [jsfDefinitionListProvider]="jsfDefinitionListProvider"
+        [jsfEditor]="jsfEditor">
+      </jsf-kal-jsf-builder-schema>
+
+      <!-- TRANSLATIONS -->
+      <jsf-kal-jsf-builder-translations
+        *ngIf="selectedTab === BuilderTabEnum.Translations && translationLanguages"
+        [translationLanguages]="translationLanguages"
+        [jsfEditor]="jsfEditor">
+      </jsf-kal-jsf-builder-translations>
+
+      <!-- PREVIEW -->
+      <jsf-kal-jsf-builder-preview
+        *ngIf="selectedTab === BuilderTabEnum.Preview"
+        [dataSourceListProvider]="dataSourceListProvider"
+        [jsfDefinitionListProvider]="jsfDefinitionListProvider"
+        [jsfDefinitionProvider]="jsfDefinitionProvider"
+        [dataSourceProvider]="dataSourceProvider"
+        [dataSourceConfig]="dataSourceConfig"
+        [jsfEditor]="jsfEditor"
+        [modes]="modes">
+      </jsf-kal-jsf-builder-preview>
+
+      <!-- EXPORT -->
+      <jsf-kal-jsf-builder-export
+        *ngIf="selectedTab === BuilderTabEnum.Export"
+        [jsfEditor]="jsfEditor">
+      </jsf-kal-jsf-builder-export>
+    </div>
+  </div>
+</div>
+
+<ng-keyboard-shortcuts [shortcuts]="keyboardShortcuts"></ng-keyboard-shortcuts>

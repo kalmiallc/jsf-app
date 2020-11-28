@@ -1,0 +1,46 @@
+.jsf-builder-layout-toolbar-button {
+  display:         flex;
+  justify-content: center;
+  align-items:     center;
+
+  position:        relative;
+  padding:         12px 8px;
+
+
+  .jsf-builder-layout-toolbar-button-icon {
+    display:     inline;
+    line-height: 1em;
+  }
+
+  .jsf-builder-layout-toolbar-button-label {
+    display:      inline;
+    line-height:  1em;
+
+    padding-left: 6px;
+  }
+
+  .jsf-builder-layout-toolbar-button-overlay {
+    position:       absolute;
+    top:            0;
+    right:          0;
+    bottom:         0;
+    left:           0;
+
+    display:        none;
+    opacity:        .15;
+
+    pointer-events: none;
+  }
+
+  &.hover {
+    .jsf-builder-layout-toolbar-button-overlay {
+      display: block;
+    }
+  }
+
+  &.active {
+    .jsf-builder-layout-toolbar-button-overlay {
+      display: block;
+    }
+  }
+}

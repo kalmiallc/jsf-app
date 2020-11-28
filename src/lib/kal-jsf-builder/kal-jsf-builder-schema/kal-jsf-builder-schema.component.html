@@ -1,0 +1,216 @@
+<!-- Viewport -->
+<jsf-kal-jsf-builder-viewport *ngIf="modulesLoaded">
+  <!-- Content -->
+  <jsf-kal-jsf-builder-content>
+    <div class="jsf-builder-schema-root">
+      <ngx-dnd-container
+        *ngIf="dragAndDropModel"
+        class="jsf-builder-schema-dnd-root-container jsf-builder-schema-container"
+        [model]="dragAndDropModel"
+        [moves]="false"
+        dropZone="jsf-builder-target-root"
+        [attr.jsf-builder-schema-drop-zone-node-id]="dragAndDropModel[0].propEditor.id"
+        [removeOnSpill]="false"
+        droppableItemClass="jsf-builder-schema-item"
+        (drop)="nodeDropped($event)"
+        direction="vertical">
+
+        <ng-template let-model="model" let-template="template">
+          <!-- Node row -->
+          <div class="node-row px-3 py-2"
+               [class.supports-children]="model.propEditor.canHaveChildren()"
+               [class.selected]="this.selectedProp?.id === model.propEditor.id"
+               (click)="openProperties(model.propEditor.id); toolboxTabGroup.selectedIndex = 0;">
+
+            <!-- Expand/collapse button -->
+            <div class="expander-button" *ngIf="model.propEditor.canHaveChildren()">
+              <button mat-icon-button (click)="toggleNodeExpanded(model); $event.stopPropagation()">
+                <mat-icon>
+                  {{ model.expanded ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+              </button>
+            </div>
+
+            <!-- Node content -->
+            <div class="d-flex justify-content-between align-items-center flex-10">
+              <div class="node-row-left d-flex align-items-center">
+                <div class="jsf-prop jsf-prop-string jsf-prop-variant-small" *ngIf="model.parentNode" (click)="$event.stopPropagation()">
+                  <mat-form-field color="primary"
+                                  appearance="outline"
+                                  class="jsf-mat-form-field-variant-small __background-color--white rounded">
+                    <input class="form-control" matInput [(ngModel)]="model.propEditor.propertyName" [disabled]="model.propEditor.parent?.isArray || model.propEditor.parent?.isFixedArray">
+                  </mat-form-field>
+                </div>
+
+                <mat-chip-list class="ml-4" [selectable]="false">
+                  <!-- Prop type badge -->
+                  <mat-chip matTooltip="{{ model.propEditor.path }}"
+                            color="none"
+                            [style.background-color]="transparentize(model.propEditor.info.color)"
+                            [style.color]="model.propEditor.info.color"
+                            class="cursor-pointer"
+                            [style.white-space]="'nowrap'"
+                            (click)="openProperties(model.propEditor.id); toolboxTabGroup.selectedIndex = 0;">
+                    {{ model.propEditor.info.title }}
+                  </mat-chip>
+
+                  <!-- Handler badge -->
+                  <mat-chip
+                    *ngIf="model.propEditor.hasHandler && model.propEditor.hasHandlerInfo"
+                    matTooltip="Handler: {{ model.propEditor.handlerType }}"
+                    color="primary"
+                    class="cursor-pointer"
+                    (click)="openProperties(model.propEditor.id); toolboxTabGroup.selectedIndex = 1;">
+                    <mat-icon>extension</mat-icon>{{ model.propEditor.handlerTitle }}
+                  </mat-chip>
+                  <mat-chip
+                    matTooltip="Handler information not found. Please notify the developer."
+                    color="warn"
+                    class="cursor-pointer"
+                    (click)="openProperties(model.propEditor.id); toolboxTabGroup.selectedIndex = 1;"
+                    *ngIf="model.propEditor.hasHandler && !model.propEditor.hasHandlerInfo">
+                    <mat-icon>extension</mat-icon>{{ model.propEditor.handlerType }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+
+              <div class="node-row-right">
+                <div class="vertical-center-items action-buttons">
+                  <!-- Add button -->
+                  <button mat-icon-button *ngIf="model.propEditor.canHaveChildren()" [matMenuTriggerFor]="menuPropAdd" (click)="$event.stopPropagation()">
+                    <mat-icon>add</mat-icon>
+                  </button>
+
+                  <mat-menu #menuPropAdd="matMenu">
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.string)" mat-menu-item>String</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.integer)" mat-menu-item>Integer</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.number)" mat-menu-item>Number</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.date)" mat-menu-item>Date</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.boolean)" mat-menu-item>Boolean</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.object)" mat-menu-item>Object</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.array)" mat-menu-item>Array</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.fixedArray)" mat-menu-item>Fixed Array</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.binary)" mat-menu-item>Binary</button>
+                    <button (click)="addPropChild(model.propEditor.id, newPropDefinitions.id)" mat-menu-item>ID</button>
+                  </mat-menu>
+
+                  <!-- Delete button -->
+                  <button mat-icon-button [disabled]="!model.parentNode">
+                    <mat-icon aria-hidden="false" (click)="removeProp(model.propEditor.id); $event.stopPropagation()">delete</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Children nodes -->
+          <ng-container *ngIf="model.propEditor.canHaveChildren()">
+            <ngx-dnd-container
+              dropZone="jsf-builder-target"
+              class="jsf-builder-schema-container jsf-builder-schema-container-offset"
+              [class.d-none]="!model.expanded"
+              [attr.jsf-builder-schema-drop-zone-node-id]="model.propEditor.id"
+              [model]="model.childNodes"
+              [removeOnSpill]="false"
+              [template]="template"
+              droppableItemClass="jsf-builder-schema-item"
+              (drop)="nodeDropped($event)"
+              direction="vertical">
+            </ngx-dnd-container>
+          </ng-container>
+        </ng-template>
+      </ngx-dnd-container>
+    </div>
+  </jsf-kal-jsf-builder-content>
+
+  <!-- Toolbox -->
+  <jsf-kal-jsf-builder-toolbox>
+    <mat-tab-group class="layout-toolbox-tabgroup" [selectedIndex]="0" #toolboxTabGroup>
+      <mat-tab label="Properties">
+        <overlay-scrollbars [options]="scrollOptions">
+          <div class="m-2">
+            <p class="__color--warn" *ngIf="selectedProp?.error">{{ selectedProp?.error | json }}</p>
+            <div class="__background-color--grey-light-50 rounded-sm px-2 py-2 text-center mt-2" *ngIf="!selectedProp">
+              No property selected.
+            </div>
+
+            <ng-container *ngIf="selectedProp">
+              <div class="d-flex justify-content-between align-items-center py-1">
+                <span class="text-truncate">Form control: {{ selectedProp.prop.path }}</span>
+                <mat-chip-list [selectable]="false">
+                  <mat-chip color="none"
+                            [style.background-color]="transparentize(selectedProp.prop.info.color)"
+                            [style.color]="selectedProp.prop.info.color"
+                            [style.white-space]="'nowrap'">
+                    {{ selectedProp.prop.info.title }}
+                  </mat-chip>
+                </mat-chip-list>
+              </div>
+
+              <jsf-kal-jsf-form-control [doc]="selectedProp.propertiesJsfDocument"
+                                        [(ngModel)]="selectedPropValue">
+              </jsf-kal-jsf-form-control>
+            </ng-container>
+          </div>
+        </overlay-scrollbars>
+      </mat-tab>
+
+      <mat-tab label="Handler">
+        <overlay-scrollbars [options]="scrollOptions">
+          <div class="m-2">
+            <div class="__background-color--grey-light-50 rounded-sm px-2 py-2 text-center mt-2" *ngIf="!selectedProp; else handlerProps">
+              No property selected.
+            </div>
+
+            <ng-template #handlerProps>
+              <ng-container *ngIf="!selectedProp.prop.hasHandler; else handlerForm">
+                <div class="d-flex justify-content-between align-items-center py-1">
+                  <span class="text-truncate">No handler.</span>
+
+                  <button mat-icon-button
+                          color="primary"
+                          matTooltip="Add handler"
+                          (click)="selectHandler()">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              </ng-container>
+
+              <ng-template #handlerForm>
+                <div class="d-flex justify-content-between align-items-center py-1">
+                  <span class="text-truncate">Handler: {{ selectedProp.handlerTitle }}</span>
+
+                  <div>
+                    <button mat-icon-button
+                            color="primary"
+                            matTooltip="Change handler"
+                            (click)="selectHandler()">
+                      <mat-icon>create</mat-icon>
+                    </button>
+
+                    <button mat-icon-button
+                            color="primary"
+                            matTooltip="Remove handler"
+                            (click)="removeHandler()">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="__background-color--grey-light-50 rounded-sm px-2 py-2 text-center mt-3" *ngIf="!selectedProp.handlerCompatibility">
+                  Handler information not found. Please notify the developer.
+                </div>
+
+                <jsf-kal-jsf-form-control
+                  *ngIf="selectedProp.handlerJsfDocument"
+                  [doc]="selectedProp.handlerJsfDocument"
+                  [(ngModel)]="selectedHandlerValue">
+                </jsf-kal-jsf-form-control>
+              </ng-template>
+            </ng-template>
+          </div>
+        </overlay-scrollbars>
+      </mat-tab>
+    </mat-tab-group>
+  </jsf-kal-jsf-builder-toolbox>
+</jsf-kal-jsf-builder-viewport>

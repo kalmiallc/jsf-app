@@ -1,0 +1,28 @@
+.jsf-lb-stepper-header {
+  display: flex;
+  justify-content: flex-end;
+
+  .jsf-lb-stepper-header-item {
+    display: flex;
+    align-items: center;
+
+    cursor: pointer;
+    padding: 5px 10px;
+
+    .step-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+
+      margin-right: 10px;
+    }
+  }
+}
+
+.jsf-lb-stepper-step {
+  padding: 5px;
+}

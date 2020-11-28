@@ -1,0 +1,26 @@
+$swift-ease-out-duration: 400ms;
+$swift-ease-out-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+.jsf-builder-action-bar {
+  display: flex;
+  animation: fadein $swift-ease-out-duration $swift-ease-out-timing-function;
+
+  .jsf-builder-action-bar-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 10px;
+  }
+}
+
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

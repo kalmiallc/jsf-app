@@ -1,0 +1,90 @@
+<!-- Viewport -->
+<jsf-kal-jsf-builder-viewport *ngIf="modulesLoaded">
+
+  <!-- Content -->
+  <jsf-kal-jsf-builder-content>
+    <ng-container *ngIf="selectedLanguage; else noLanguageSelected">
+      <!-- Messages -->
+      <div class="jsf-builder-translation-message-container">
+        <ng-container *ngFor="let translatedMessage of getTranslationsForLanguage(selectedLanguage)">
+          <div class="jsf-builder-translation-message" [class.translated]="!!translatedMessage.targetText">
+            <div class="message-source-container">
+              <ng-container *ngIf="!translatedMessage.custom; else customMessageSource">
+               <span class="message-source-text">
+                <mat-icon class="__color--warn" matTooltip="Message not found in form" i18n-matTooltip *ngIf="!findExtractedMessage(translatedMessage.sourceText, translatedMessage.sourceId)">warning</mat-icon>
+                <mark class="text-pre-wrap text-break" [class.__background-color--warn-10]="!translatedMessage.targetText"
+                      [class.__background-color--success-10]="!!translatedMessage.targetText">{{ translatedMessage.sourceText }}</mark></span>
+
+                <span class="text-muted message-source-id" *ngIf="translatedMessage.sourceId">{{ translatedMessage.sourceId }}</span>
+              </ng-container>
+
+              <ng-template #customMessageSource>
+                <textarea class="message-input rounded-sm mr-3" rows="2" [(ngModel)]="translatedMessage.sourceText" (ngModelChange)="writeTranslations()"></textarea>
+              </ng-template>
+            </div>
+
+            <div class="message-target-container">
+              <textarea class="message-input rounded-sm" rows="2" [(ngModel)]="translatedMessage.targetText" (ngModelChange)="writeTranslations()"></textarea>
+            </div>
+
+            <div class="message-status-container">
+              <button mat-icon-button (click)="removeTranslation(translatedMessage)" tabindex="-1">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="jsf-builder-translation-toolbar mt-2">
+        <div class="d-flex justify-content-end">
+          <button mat-flat-button color="primary" (click)="addCustomTranslation()">
+            <mat-icon>add</mat-icon>
+            Add translation
+          </button>
+        </div>
+      </div>
+
+    </ng-container>
+
+    <ng-template #noLanguageSelected>
+      <div class="text-center text-muted p-3" i18n>No language selected.</div>
+    </ng-template>
+  </jsf-kal-jsf-builder-content>
+
+  <!-- Toolbox -->
+  <jsf-kal-jsf-builder-toolbox>
+    <ng-container *ngFor="let language of translationLanguages">
+      <div class="jsf-builder-language-card rounded-sm mb-2 cursor-pointer"
+           (click)="selectLanguage(language)"
+           [class.selected]="selectedLanguage === language">
+        <div class="d-flex align-items-center justify-content-between h-full">
+          <div class="jsf-builder-language-card-name">
+            <span class="language-code text-muted">{{ language.code.toUpperCase() }}</span>
+            <span class="language-name">{{ language.name }}</span>
+          </div>
+
+          <div class="jsf-builder-language-card-progress">
+            <ng-container *ngIf="getTranslationProgressForLanguage(language) === 100; let progress; else progressIndicator">
+              <mat-icon class="__color--success">check</mat-icon>
+            </ng-container>
+
+            <ng-template #progressIndicator>
+              <mat-progress-spinner [strokeWidth]="2"
+                                    [diameter]="40"
+                                    [value]="getTranslationProgressForLanguage(language)"
+                                    [color]="'primary'">
+              </mat-progress-spinner>
+
+              <div class="jsf-builder-language-card-progress-text">{{ getTranslationProgressForLanguage(language) }}%</div>
+            </ng-template>
+
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </jsf-kal-jsf-builder-toolbox>
+
+</jsf-kal-jsf-builder-viewport>
+

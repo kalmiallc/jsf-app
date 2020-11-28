@@ -1,0 +1,21 @@
+$gutter: 24px;
+$vertical-margin: 18px;
+
+:host {
+  display: flex;
+  flex-wrap: wrap;
+
+  margin-left: -$gutter / 2;
+  margin-right: -$gutter / 2;
+
+  ::ng-deep {
+    & > * {
+      padding-left: $gutter / 2;
+      padding-right: $gutter / 2;
+
+      width: 50%;
+
+      margin-bottom: $vertical-margin;
+    }
+  }
+}

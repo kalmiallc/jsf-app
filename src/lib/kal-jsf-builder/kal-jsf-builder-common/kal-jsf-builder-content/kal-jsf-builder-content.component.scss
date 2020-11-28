@@ -1,0 +1,25 @@
+$swift-ease-out-duration:        400ms;
+$swift-ease-out-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+:host {
+  display: flex;
+  justify-content: center;
+}
+
+.kal-jsf-builder-content {
+  flex: 1 1 auto;
+
+  transition: max-width $swift-ease-out-duration $swift-ease-out-timing-function;
+
+  &.kal-jsf-builder-device-size-desktop {
+    max-width: 1920px;
+  }
+
+  &.kal-jsf-builder-device-size-tablet {
+    max-width: 800px;
+  }
+
+  &.kal-jsf-builder-device-size-mobile {
+    max-width: 480px;
+  }
+}

@@ -1,0 +1,13 @@
+.kal-jsf-builder-toolbox  {
+  width: 25vw;
+  height: 100%;
+
+  max-width: 380px;
+  min-width: 200px;
+
+  & > .os-host {
+    & > .os-scrollbar-vertical {
+      left: 5px;
+    }
+  }
+}

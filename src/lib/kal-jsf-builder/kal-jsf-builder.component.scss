@@ -1,0 +1,115 @@
+$header-height:      5em;
+$header-item-height: 34px;
+
+::ng-deep {
+  html body .gu-mirror {
+    display: none !important;
+  }
+}
+
+.jsf-builder {
+  position: absolute;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+.jsf-builder-wrapper {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  height: 100%;
+
+  .jsf-builder-body {
+    flex: 1 0 auto;
+    position: relative;
+  }
+}
+
+.jsf-builder-header {
+  position: relative;
+  z-index: 10;
+}
+
+.jsf-builder-header-body {
+  height:           $header-height;
+}
+
+.jsf-builder-header-content {
+  width:           100%;
+  height:          100%;
+
+  display:         flex;
+  align-items:     center;
+
+  padding-right:   3em;
+  padding-left:   3em;
+
+  justify-content: space-between;
+
+  .header-items-left, .header-items-right, .header-items-center {
+    height:      100%;
+    display:     flex;
+    align-items: center;
+  }
+
+  .header-item {
+    display:         flex;
+    height:          $header-item-height;
+    justify-content: center;
+    align-items:     center;
+    padding:         0 15px;
+
+    margin: 0 2px;
+
+    cursor: pointer;
+    user-select: none;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  .header-items-spacer {
+    margin-left: 18px;
+  }
+
+  .header-vertical-separator {
+    height: ($header-height * .6);
+    border-right: 2px;
+  }
+
+  .header-project-name {
+    padding-left: 15px;
+  }
+
+  .header-logo {
+    height:              ($header-height * .7);
+
+    background-position: center center;
+    background-repeat:   no-repeat;
+    background-size:     contain;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  .header-link {
+    padding:      0 15px;
+    margin-right: 5px;
+    cursor:       pointer;
+
+    user-select:  none;
+
+    &:focus {
+      outline: 0;
+    }
+  }
+}

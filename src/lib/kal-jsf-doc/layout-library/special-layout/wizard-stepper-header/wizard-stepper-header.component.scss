@@ -1,0 +1,22 @@
+.jsf-layout-wizard-stepper-header-container {
+  display: flex;
+  align-items: center;
+}
+
+.jsf-layout-wizard-stepper-header-step {
+  padding: 6px 12px;
+  cursor: pointer;
+
+  &.selected {
+    font-weight: bold;
+  }
+}
+
+.wizard-step-index {
+  padding-right: 6px;
+}
+
+.wizard-step-name{
+  flex: 1 0 auto;
+}
+

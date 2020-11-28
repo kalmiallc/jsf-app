@@ -1,0 +1,21 @@
+<div class="jsf-code-editor rounded-sm"
+     [class.code-editor-error]="!!errorMessage">
+
+  <div class="jsf-code-editor-preview-area cursor-pointer rounded-sm"
+       [class.__background-color--warn]="!!errorMessage"
+       [class.__color--warn-contrast]="!!errorMessage"
+       (click)="openCodeEditor()">
+    <jsf-icon icon="fullscreen"></jsf-icon>
+    <div class="jsf-code-editor-content text-monospace text-pre-wrap no-text-selection">{{ content }}</div>
+    <div class="jsf-code-editor-overlay"></div>
+  </div>
+
+  <jsf-error-messages [messages]="[errorMessage]"></jsf-error-messages>
+</div>
+
+<ng-template #codeEditorTemplate>
+  <div class="jsf-code-editor-overlay-content" style="position: relative; width: 100%; height: 100%;">
+    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="content" style="width: 100%; height: 100%;"></ngx-monaco-editor>
+    <jsf-icon icon="close" class="cursor-pointer" (click)="closeCodeEditor()" style="position: absolute; top: 0; right: -30px;"></jsf-icon>
+  </div>
+</ng-template>
