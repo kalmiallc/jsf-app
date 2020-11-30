@@ -10,6 +10,15 @@ $content-gutter: 12px;
    */
   width: 100vw;
   height: 100vh;
+
+  &.native-frame {
+    width: auto;
+    height: auto;
+
+    .jsf-layout-wizard-wrapper {
+      height: auto;
+    }
+  }
 }
 
 .jsf-layout-wizard-wrapper {

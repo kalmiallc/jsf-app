@@ -18,6 +18,7 @@ import {
   JsfLayoutWizard,
   JsfLayoutWizardSection,
   JsfWizardStep,
+  LayoutMode,
   PropStatus,
   PropStatusChangeInterface
 }                                                   from '@kalmia/jsf-common-es2015';
@@ -47,6 +48,7 @@ const ResizeObserver = (window as any).ResizeObserver || ResizeObserverPolyfill;
   template       : `
       <div class="jsf-layout-wizard jsf-animatable"
            [id]="id"
+           [class.native-frame]="isInsideNativeFrame()"
            [ngClass]="getLayoutInnerClass()"
            [ngStyle]="getLayoutInnerStyle()"
            (click)="handleLayoutClick($event)"
@@ -82,7 +84,13 @@ const ResizeObserver = (window as any).ResizeObserver || ResizeObserverPolyfill;
                                [class.jsf-layout-wizard-sidebar]="section.layout.sectionType === 'sidebar'"
                                [class.jsf-layout-wizard-no-styles]="section.layout.sectionOptions?.noStyles">
                               <div class="jsf-layout-wizard-center-item-scroll-container">
-                                  <overlay-scrollbars [options]="scrollOptions">
+                                  <ng-container *ngIf="!isInsideNativeFrame(); else desktopLayoutContent">
+                                      <overlay-scrollbars [options]="scrollOptions">
+                                          <ng-container *ngTemplateOutlet="desktopLayoutContent"></ng-container>
+                                      </overlay-scrollbars>
+                                  </ng-container>
+
+                                  <ng-template #desktopLayoutContent>
                                       <ng-container *ngFor="let item of section.items">
                                           <jsf-layout-router *ngIf="item.visible"
                                                              [layoutBuilder]="item"
@@ -91,7 +99,8 @@ const ResizeObserver = (window as any).ResizeObserver || ResizeObserverPolyfill;
                                                              [ngStyle]="getLayoutItemStyle(item)">
                                           </jsf-layout-router>
                                       </ng-container>
-                                  </overlay-scrollbars>
+                                  </ng-template>
+
                               </div>
                           </div>
                       </ng-container>
@@ -99,7 +108,13 @@ const ResizeObserver = (window as any).ResizeObserver || ResizeObserverPolyfill;
 
                   <!-- Mobile layout with one single scroll -->
                   <ng-template #mobileLayout>
-                      <overlay-scrollbars [options]="scrollOptions">
+                      <ng-container *ngIf="!isInsideNativeFrame(); else mobileLayoutContent">
+                          <overlay-scrollbars [options]="scrollOptions">
+                              <ng-container *ngTemplateOutlet="mobileLayoutContent"></ng-container>
+                          </overlay-scrollbars>
+                      </ng-container>
+
+                      <ng-template #mobileLayoutContent>
                           <ng-container *ngFor="let section of centerSections">
                               <div class="jsf-layout-wizard-center-item"
                                    *ngIf="isSectionVisible(section)"
@@ -119,7 +134,7 @@ const ResizeObserver = (window as any).ResizeObserver || ResizeObserverPolyfill;
                                   </div>
                               </div>
                           </ng-container>
-                      </overlay-scrollbars>
+                      </ng-template>
                   </ng-template>
               </div>
 
@@ -551,7 +566,7 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
   }
 
   private updateWizardHeight() {
-    if (this.wizardElement) {
+    if (this.wizardElement && !this.isInsideNativeFrame()) {
       const sizeObserverElement = this.getWizardSizeObserverElement();
       if (sizeObserverElement) {
         const cs = getComputedStyle(sizeObserverElement);
@@ -573,6 +588,10 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
         (this.wizardElement.nativeElement as HTMLElement).style.height = `${ vh }px`;
       }
     }
+  }
+
+  public isInsideNativeFrame() {
+    return this.layoutBuilder.rootBuilder.hasMode(LayoutMode.Embedded);
   }
 
   private isEvalObject(x: any): x is { $eval: string, dependencies?: string[] } {
