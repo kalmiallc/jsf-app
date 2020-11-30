@@ -1,9 +1,11 @@
 {
   "name": "@kalmia/jsf-app",
-  "version": "9.2.50",
+  "version": "9.2.51",
   "authors": "Tilen Tomakić <tilen@tomakic.com>",
   "contributors": [
-    "Matej Gorjanc", "Sašo Bizjak", "Nejc Selan"
+    "Matej Gorjanc",
+    "Sašo Bizjak",
+    "Nejc Selan"
   ],
   "license": "GPL-3.0-only",
   "scripts": {
