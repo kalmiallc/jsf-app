@@ -517,6 +517,10 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
   }
 
   private updateStepValidState(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
+
     this._stepValidState[step.id] = this.isStepValid(step);
     this._update.next();
   }
