@@ -405,10 +405,16 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
   }
 
   public getStepName(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
     return this.i18n(step.title);
   }
 
   public getStepIndex(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
     return this.steps.indexOf(this.getStepById(step.id));
   }
 
@@ -417,6 +423,9 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
   }
 
   public isStepSelected(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
     return this.selectedStep && step && this.selectedStep.id === step.id;
   }
 
@@ -425,6 +434,9 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
    * If you need to use the state in templates you should use getStepValidState since it uses a cached value.
    */
   public isStepValid(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
     const stepPropKeys = this._stepPropKeys[step.id] || [];
     for (const key of stepPropKeys) {
       const prop = this.layoutBuilder.rootBuilder.getProp(key);
@@ -436,6 +448,9 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
   }
 
   public isStepErrorStateVisible(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
     return this.parentValidationContextState || this.stepIdsWithVisibleErrorStates.indexOf(step.id) > -1;
   }
 
@@ -444,6 +459,9 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
    *
    */
   public selectStep(step: JsfWizardStep, options?: { skipUpdateErrorState?: boolean }) {
+    if (!step) {
+      return;
+    }
     for (const s of this.steps) {
       this._selectedStep = s;
 
@@ -495,6 +513,9 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
   }
 
   public markStepErrorStateAsVisible(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
     if (!this.isStepErrorStateVisible(step)) {
       this.stepIdsWithVisibleErrorStates.push(step.id);
     }
@@ -504,6 +525,9 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
    * Returns cached validity state.
    */
   public isStepInValidState(step: JsfWizardStep) {
+    if (!step) {
+      return;
+    }
     if (this._stepValidState[step.id] === void 0) {
       this.updateStepValidState(step);
     }
@@ -520,7 +544,6 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
     if (!step) {
       return;
     }
-
     this._stepValidState[step.id] = this.isStepValid(step);
     this._update.next();
   }
