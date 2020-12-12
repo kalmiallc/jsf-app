@@ -262,6 +262,7 @@ export class KalJsfPageComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {}
 
   ngOnDestroy() {
+    this.pageBuilder.destroy();
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
     (window as any).__jsfPage[this.pageBuilder.id] = void 0;
