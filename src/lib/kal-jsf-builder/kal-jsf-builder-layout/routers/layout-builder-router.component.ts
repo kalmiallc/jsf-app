@@ -66,6 +66,7 @@ import { LbRender3DComponent }                    from '../layout-builder-librar
 import { LbPropComponent }                        from '../layout-builder-library/prop-layout/prop/lb-prop.component';
 import { LbWizardComponent }                      from '../layout-builder-library/items-layout/wizard/lb-wizard.component';
 import { LbWizardStepperContentComponent }        from '../layout-builder-library/items-layout/wizard-stepper-content/lb-wizard-stepper-content.component';
+import { LbFloatingDivComponent }                 from '../layout-builder-library/items-layout/floating-div/lb-floating-div.component';
 import { BuilderActionBarService }                from '../builder-action-bar.service';
 import { Subject }                                from 'rxjs';
 import { takeUntil }                              from 'rxjs/operators';
@@ -78,6 +79,7 @@ const componentList = {
 
   // Items layouts
   'div'                           : LbDivComponent,
+  'floating-div'                  : LbFloatingDivComponent,
   'row'                           : LbRowComponent,
   'col'                           : LbColComponent,
   'tabset'                        : LbTabsetComponent,

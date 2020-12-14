@@ -1,0 +1,51 @@
+.jsf-layout-floating-div {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  &.p-horiz-left {
+    right: initial;
+  }
+
+  &.p-horiz-center {
+    left: 50%;
+    transform: translateX(-50%);
+    right: initial;
+  }
+
+  &.p-horiz-right {
+    left: initial;
+  }
+
+  &.p-vert-top {
+    bottom: initial;
+  }
+
+  &.p-vert-middle {
+    top: 50%;
+    transform: translateY(-50%);
+    bottom: initial;
+  }
+
+  &.p-vert-bottom {
+    top: initial;
+  }
+
+  &.p-vert-middle.p-horiz-center {
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+  &.rotation-enabled {
+    &.p-vert-middle.p-horiz-left {
+      transform-origin: left center;
+      transform: translateY(-50%) rotate(90deg) translateX(-50%) translateY(-50%);
+    }
+
+    &.p-vert-middle.p-horiz-right {
+      transform-origin: right center;
+      transform: translateY(-50%) rotate(-90deg) translateX(50%) translateY(-50%);
+    }
+  }
+}

@@ -61,6 +61,7 @@ export * from './lib/kal-jsf-doc/layout-library/custom-components/loading-indica
 export * from './lib/kal-jsf-doc/layout-library/custom-components/icon/jsf-icon.component';
 
 export * from './lib/kal-jsf-doc/layout-library/items-layout/div/div.component';
+export * from './lib/kal-jsf-doc/layout-library/items-layout/floating-div/floating-div.component';
 export * from './lib/kal-jsf-doc/layout-library/items-layout/row/row.component';
 export * from './lib/kal-jsf-doc/layout-library/items-layout/col/col.component';
 export * from './lib/kal-jsf-doc/layout-library/items-layout/tabset/tabset.component';

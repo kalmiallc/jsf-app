@@ -72,6 +72,7 @@ import { LayoutRender3DComponent }                    from './kal-jsf-doc/layout
 import { LayoutWizardComponent }                      from './kal-jsf-doc/layout-library/items-layout/wizard/wizard.component';
 import { LayoutWizardStepperHeaderComponent }         from './kal-jsf-doc/layout-library/special-layout/wizard-stepper-header/wizard-stepper-header.component';
 import { OverlayscrollbarsModule }                    from 'overlayscrollbars-ngx';
+import { LayoutFloatingDivComponent }                 from './kal-jsf-doc/layout-library/items-layout/floating-div/floating-div.component';
 
 @NgModule({
   imports     : [
@@ -104,6 +105,7 @@ import { OverlayscrollbarsModule }                    from 'overlayscrollbars-ng
 
     // Layout components
     LayoutDivComponent,
+    LayoutFloatingDivComponent,
     LayoutRowComponent,
     LayoutColComponent,
     LayoutTabSetComponent,
@@ -188,6 +190,7 @@ import { OverlayscrollbarsModule }                    from 'overlayscrollbars-ng
 
     // Layout components
     LayoutDivComponent,
+    LayoutFloatingDivComponent,
     LayoutRowComponent,
     LayoutColComponent,
     LayoutTabSetComponent,

@@ -98,6 +98,7 @@ import { MatProgressSpinnerModule }                  from '@angular/material/pro
 import { MatDatepickerModule }                       from '@angular/material/datepicker';
 import { LbWizardComponent }                         from './kal-jsf-builder-layout/layout-builder-library/items-layout/wizard/lb-wizard.component';
 import { LbWizardStepperContentComponent }           from './kal-jsf-builder-layout/layout-builder-library/items-layout/wizard-stepper-content/lb-wizard-stepper-content.component';
+import { LbFloatingDivComponent }                    from './kal-jsf-builder-layout/layout-builder-library/items-layout/floating-div/lb-floating-div.component';
 import { MatSelectModule }                           from '@angular/material/select';
 import { KeyboardShortcutsModule }                   from 'ng-keyboard-shortcuts';
 import { MatSnackBarModule }                         from '@angular/material/snack-bar';
@@ -154,6 +155,7 @@ import { MatSnackBarModule }                         from '@angular/material/sna
     LbDefaultComponent,
     LbRowComponent,
     LbDivComponent,
+    LbFloatingDivComponent,
     LbStepperComponent,
     LbStepComponent,
     LayoutBuilderRouterComponent,
@@ -217,6 +219,7 @@ import { MatSnackBarModule }                         from '@angular/material/sna
     LbDefaultComponent,
     LbRowComponent,
     LbDivComponent,
+    LbFloatingDivComponent,
     LbStepperComponent,
     LbStepComponent,
     LayoutBuilderRouterComponent,

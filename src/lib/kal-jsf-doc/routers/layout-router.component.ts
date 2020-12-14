@@ -75,6 +75,7 @@ import { LayoutRender3DComponent }                                              
 import { LayoutWizardComponent }                                                                          from '../layout-library/items-layout/wizard/wizard.component';
 import { LayoutWizardStepperHeaderComponent }                                                             from '../layout-library/special-layout/wizard-stepper-header/wizard-stepper-header.component';
 import { LayoutWizardStepperContentComponent }                                                            from '../layout-library/items-layout/wizard-stepper-content/wizard-stepper-content.component';
+import { LayoutFloatingDivComponent }                                                                     from '../layout-library/items-layout/floating-div/floating-div.component';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS, MAT_TOOLTIP_SCROLL_STRATEGY, MatTooltip, MatTooltipDefaultOptions } from '@angular/material/tooltip';
 import { Overlay, ScrollDispatcher }                                                                      from '@angular/cdk/overlay';
 import { Platform }                                                                                       from '@angular/cdk/platform';
@@ -90,6 +91,7 @@ const componentList = {
 
   // Items layouts
   'div'                           : LayoutDivComponent,
+  'floating-div'                  : LayoutFloatingDivComponent,
   'row'                           : LayoutRowComponent,
   'col'                           : LayoutColComponent,
   'tabset'                        : LayoutTabSetComponent,
