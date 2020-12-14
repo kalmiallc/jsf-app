@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit, Optional } from '@angular/core';
 import { JsfLayoutPoweredBy, JsfSpecialLayoutBuilder }                                            from '@kalmia/jsf-common-es2015';
+import { LayoutFloatingDivComponent }                                                             from '../../items-layout/floating-div/floating-div.component';
 import { AbstractSpecialLayoutComponent }                                                         from '../../../abstract/special-layout.component';
 import { BuilderDeveloperToolsInterface }                                                         from '../../../builder-developer-tools.interface';
 import { JSF_APP_CONFIG, JsfAppConfig }                                                           from '../../../../common';
-import { LayoutFloatingDivComponent }                                                             from '@kalmia/jsf-app/lib/kal-jsf-doc/layout-library/items-layout/floating-div/floating-div.component';
 
 @Component({
   selector       : 'jsf-layout-powered-by',
@@ -16,7 +16,7 @@ import { LayoutFloatingDivComponent }                                           
               <ng-container *ngIf="logoOnly; else fullPoweredByLayout">
                   <img class="powered-by-logo" src="./assets/branding/logo.png">
               </ng-container>
-              
+
               <ng-template #fullPoweredByLayout>
                   <span i18n class="powered-by-label">Powered by</span>
                   <img class="powered-by-logo" src="./assets/branding/powered-by.png">
