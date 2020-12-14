@@ -1,16 +1,26 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
-import { JsfLayoutPoweredBy, JsfSpecialLayoutBuilder }                                  from '@kalmia/jsf-common-es2015';
-import { AbstractSpecialLayoutComponent }                                               from '../../../abstract/special-layout.component';
-import { BuilderDeveloperToolsInterface }                                               from '../../../builder-developer-tools.interface';
-import { JSF_APP_CONFIG, JsfAppConfig }                                                 from '../../../../common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit, Optional } from '@angular/core';
+import { JsfLayoutPoweredBy, JsfSpecialLayoutBuilder }                                            from '@kalmia/jsf-common-es2015';
+import { AbstractSpecialLayoutComponent }                                                         from '../../../abstract/special-layout.component';
+import { BuilderDeveloperToolsInterface }                                                         from '../../../builder-developer-tools.interface';
+import { JSF_APP_CONFIG, JsfAppConfig }                                                           from '../../../../common';
+import { LayoutFloatingDivComponent }                                                             from '@kalmia/jsf-app/lib/kal-jsf-doc/layout-library/items-layout/floating-div/floating-div.component';
 
 @Component({
   selector       : 'jsf-layout-powered-by',
   template       : `
-      <div class="jsf-layout-powered-by jsf-animatable __color--black" [ngClass]="htmlClass" (click)="handleLayoutClick($event)">
+      <div class="jsf-layout-powered-by jsf-animatable __color--black"
+           [ngClass]="htmlClass"
+           [class.logo-only]="logoOnly"
+           (click)="handleLayoutClick($event)">
           <div class="powered-by-container" (click)="navigateToWebsite()">
-              <span i18n class="powered-by-label">Powered by</span>
-              <img class="powered-by-logo" src="./assets/branding/powered-by.png">
+              <ng-container *ngIf="logoOnly; else fullPoweredByLayout">
+                  <img class="powered-by-logo" src="./assets/branding/logo.png">
+              </ng-container>
+              
+              <ng-template #fullPoweredByLayout>
+                  <span i18n class="powered-by-label">Powered by</span>
+                  <img class="powered-by-logo" src="./assets/branding/powered-by.png">
+              </ng-template>
           </div>
       </div>
   `,
@@ -25,7 +35,13 @@ export class LayoutPoweredByComponent extends AbstractSpecialLayoutComponent<Jsf
   @Input()
   developerTools?: BuilderDeveloperToolsInterface;
 
+  get logoOnly() {
+    console.log(this.floatingDivComponent);
+    return !!this.floatingDivComponent;
+  }
+
   constructor(private cdRef: ChangeDetectorRef,
+              @Optional() @Inject(LayoutFloatingDivComponent) public floatingDivComponent: LayoutFloatingDivComponent,
               @Inject(JSF_APP_CONFIG) private jsfAppConfig: JsfAppConfig) {
     super();
   }

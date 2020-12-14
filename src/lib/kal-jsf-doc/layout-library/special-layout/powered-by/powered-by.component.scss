@@ -1,6 +1,9 @@
 .jsf-layout-powered-by {
-  margin-top: 30px;
-  margin-bottom: 30px;
+
+  &:not(.logo-only) {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
 
   text-align: center;
 
@@ -22,6 +25,19 @@
 
     .powered-by-label {
       letter-spacing: -0.3px;
+    }
+  }
+
+  &.logo-only {
+    .powered-by-container {
+      opacity: 1;
+      padding: 0;
+
+      .powered-by-logo {
+        margin: 0 ;
+        height: 26px;
+      }
+
     }
   }
 }
