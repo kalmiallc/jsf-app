@@ -36,7 +36,6 @@ export class LayoutPoweredByComponent extends AbstractSpecialLayoutComponent<Jsf
   developerTools?: BuilderDeveloperToolsInterface;
 
   get logoOnly() {
-    console.log(this.floatingDivComponent);
     return !!this.floatingDivComponent;
   }
 
