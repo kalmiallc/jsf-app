@@ -20,19 +20,20 @@ $content-gutter: 12px;
     flex-direction: row;
     flex: 1 0 auto;
 
-    .jsf-layout-wizard-sidebar {
-      width: 280px;
-      min-width: 280px;
+    .jsf-lb-wizard-sidebar {
+      width: 300px;
+      min-width: 300px;
+      max-width: 300px;
       flex-shrink: 1;
     }
 
     margin-left: -$content-gutter / 2;
     margin-right: -$content-gutter / 2;
 
-    padding: $content-gutter;
+    padding: 6px 0;
 
     .jsf-lb-wizard-content {
-      flex: 1 1 auto;
+      flex: 1 1;
       min-width: 0;
 
       padding-left: $content-gutter / 2;

@@ -86,7 +86,7 @@ export class LayoutWizardStepperContentComponent extends AbstractItemsLayoutComp
   }
 
   isStepLayoutSelected(stepLayout: StepLayoutInterface) {
-    for (const stepId of stepLayout.stepIds) {
+    for (const stepId of (stepLayout.stepIds || [])) {
       if (this.wizard.isStepSelected(this.wizard.getStepById(stepId))) {
         return true;
       }
@@ -95,7 +95,7 @@ export class LayoutWizardStepperContentComponent extends AbstractItemsLayoutComp
   }
 
   isStepLayoutValid(stepLayout: StepLayoutInterface) {
-    for (const stepId of stepLayout.stepIds) {
+    for (const stepId of (stepLayout.stepIds || [])) {
       if (!this.wizard.isStepInValidState(this.wizard.getStepById(stepId))) {
         return false;
       }
@@ -104,7 +104,7 @@ export class LayoutWizardStepperContentComponent extends AbstractItemsLayoutComp
   }
 
   isStepLayoutErrorStateVisible(stepLayout: StepLayoutInterface) {
-    for (const stepId of stepLayout.stepIds) {
+    for (const stepId of (stepLayout.stepIds || [])) {
       if (this.wizard.isStepErrorStateVisible(this.wizard.getStepById(stepId))) {
         return true;
       }
@@ -127,7 +127,7 @@ export class LayoutWizardStepperContentComponent extends AbstractItemsLayoutComp
   private registerSteps() {
     for (const step of this._stepLayouts) {
       const stepPropKeys = getLayoutChildAbstractPropKeys(step.layoutBuilder.layout);
-      for (const stepId of step.stepIds) {
+      for (const stepId of (step.stepIds || [])) {
         this.wizard.registerStepPropKeys(stepId, stepPropKeys);
       }
     }
