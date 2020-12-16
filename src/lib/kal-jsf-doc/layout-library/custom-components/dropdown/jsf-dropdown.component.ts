@@ -102,7 +102,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   @Input() htmlClass?: string;
   @Input() color?: 'primary' | 'accent' | 'none' = 'primary';
-  @Input() appearance?: 'legacy' | 'standard' | 'fill' | 'outline';
+  @Input() appearance?: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() variant?: 'small' | 'standard'        = 'standard';
 
   @Input() prefixIcon?: string;
