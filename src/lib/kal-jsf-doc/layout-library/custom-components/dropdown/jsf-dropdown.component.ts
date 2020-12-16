@@ -17,7 +17,7 @@ import { JsfPropBuilder, JsfPropLayoutBuilder }               from '@kalmia/jsf-
 import { ErrorStateMatcher }                                  from '@angular/material/core';
 import { MatSelectChange }                                    from '@angular/material/select';
 import * as OverlayScrollbars                                 from 'overlayscrollbars';
-import { jsfDefaultScrollOptions }                            from '@kalmia/jsf-app/lib/utilities';
+import { jsfDefaultScrollOptions }                            from '../../../../utilities';
 import { takeUntil }                                          from 'rxjs/operators';
 
 
@@ -126,12 +126,12 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   public readonly scrollOptions: OverlayScrollbars.Options = {
     ...jsfDefaultScrollOptions,
     autoUpdateInterval: 100,
-    overflowBehavior: {
+    overflowBehavior  : {
       x: 'hidden',
       y: 'scroll'
     },
-    resize          : 'none',
-    paddingAbsolute : true
+    resize            : 'none',
+    paddingAbsolute   : true
   };
 
   get hasNoItems() {
