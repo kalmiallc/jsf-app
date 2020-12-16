@@ -32,13 +32,15 @@ export class PropValidatorDirective implements Validator, OnInit, OnDestroy {
 
   ngOnInit() {
     // Trigger validation when prop status changes
-    this.layoutBuilder.propBuilder.statusChange
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe(status => {
-        if (status === PropStatus.Valid || status === PropStatus.Invalid) {
-          this._onPropValidated();
-        }
-      });
+    if (this.layoutBuilder) {
+      this.layoutBuilder.propBuilder.statusChange
+        .pipe(takeUntil(this.ngUnsubscribe))
+        .subscribe(status => {
+          if (status === PropStatus.Valid || status === PropStatus.Invalid) {
+            this._onPropValidated();
+          }
+        });
+    }
 
     // Trigger validation when show validation state changes
     if (this.showValidation) {
@@ -73,12 +75,14 @@ export class PropValidatorDirective implements Validator, OnInit, OnDestroy {
       }
     }
 
-    const errors = this.layoutBuilder.propBuilder.errors;
-    if (errors && errors.length > 0) {
-      return errors.reduce((acc, x) => {
-        acc[x.errorCode] = x.interpolatedMessage;
-        return acc;
-      }, {} as ValidationErrors);
+    if (this.layoutBuilder) {
+      const errors = this.layoutBuilder.propBuilder.errors;
+      if (errors && errors.length > 0) {
+        return errors.reduce((acc, x) => {
+          acc[x.errorCode] = x.interpolatedMessage;
+          return acc;
+        }, {} as ValidationErrors);
+      }
     }
 
     return null;

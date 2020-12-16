@@ -64,9 +64,9 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   @Input() format?: JsfFormat;
 
   @Input() htmlClass?: string;
-  @Input() color?: 'primary' | 'accent' | 'none' = 'primary';
-  @Input() appearance?: 'legacy' | 'standard' | 'fill' | 'outline';
-  @Input() variant?: 'small' | 'standard'        = 'standard';
+  @Input() color?: 'primary' | 'accent' | 'none'                   = 'primary';
+  @Input() appearance?: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
+  @Input() variant?: 'small' | 'standard'                          = 'standard';
 
   @Input() prefixIcon?: string;
   @Input() prefixLabel?: string;
