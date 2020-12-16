@@ -1,0 +1,69 @@
+<div class="jsf-dropdown jsf-animatable"
+     [ngClass]="htmlClass"
+     [class.jsf-dropdown-variant-standard]="isVariantStandard()"
+     [class.jsf-dropdown-variant-small]="isVariantSmall()">
+  <div class="dropdown"
+       [class.disabled]="disabled || hasNoItems">
+    <mat-form-field [color]="color"
+                    [appearance]="appearance"
+                    ngClass="jsf-form-field-select"
+                    [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
+                    [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
+                    jsfOutlineGapAutocorrect>
+      <mat-label *ngIf="title"
+                 [attr.for]="id"
+                 [style.display]="notitle ? 'none' : ''">
+        {{ title }}
+      </mat-label>
+
+      <mat-select
+        [placeholder]="placeholder"
+        [required]="required"
+        [disabled]="disabled || hasNoItems"
+        [multiple]="isArray"
+        [id]="id"
+        [name]="name"
+        [(ngModel)]="value"
+        #input="ngModel"
+        [jsfPropValidator]="layoutBuilder"
+        (selectionChange)="onClick.emit($event)"
+        [errorStateMatcher]="errorStateMatcher">
+        <mat-option *ngIf="searchable">
+          <ngx-mat-select-search ngModel
+                                 (ngModelChange)="search = $event"
+                                 [placeholderLabel]="searchPlaceholderLabel"
+                                 [noEntriesFoundLabel]="searchNoEntriesFoundLabel">
+          </ngx-mat-select-search>
+        </mat-option>
+
+        <overlay-scrollbars [options]="scrollOptions">
+          <mat-option *ngIf="!required && !isArray" [value]="null">{{ nullValueLabel }}</mat-option>
+          <mat-option *ngFor="let item of filteredItems; trackBy: trackByFn"
+                      [value]="item.value">
+            {{ item.label }}
+          </mat-option>
+        </overlay-scrollbars>
+      </mat-select>
+
+      <mat-icon matPrefix *ngIf="stepperButtons"
+                ngClass="stepper-button decrement no-text-selection __color--{{ color }}">
+        {{ iconPrevious }}
+      </mat-icon>
+
+      <mat-icon matSuffix *ngIf="stepperButtons"
+                ngClass="stepper-button increment no-text-selection __color--{{ color }}">
+        {{ iconNext }}
+      </mat-icon>
+
+      <mat-hint *ngIf="description">{{ description }}</mat-hint>
+
+      <mat-error *ngFor="let error of errors">
+        {{ error }}
+      </mat-error>
+    </mat-form-field>
+
+    <div class="stepper-overlay decrement no-text-selection" *ngIf="stepperButtons"
+         (click)="previousItem()"></div>
+    <div class="stepper-overlay increment no-text-selection" *ngIf="stepperButtons" (click)="nextItem()"></div>
+  </div>
+</div>

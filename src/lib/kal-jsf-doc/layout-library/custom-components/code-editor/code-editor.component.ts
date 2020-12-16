@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   forwardRef,
@@ -25,7 +26,8 @@ import { takeUntil }                               from 'rxjs/operators';
       useExisting: forwardRef(() => CodeEditorComponent),
       multi      : true
     }
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CodeEditorComponent implements OnInit, OnDestroy, ControlValueAccessor {
 

@@ -1,3 +1,5 @@
+import '@angular/localize/init';
+
 /*
  * Public API Surface of JSF
  */
@@ -59,6 +61,9 @@ export * from './lib/kal-jsf-doc/layout-library/custom-components/error-message/
 export * from './lib/kal-jsf-doc/layout-library/custom-components/overlay/jsf-overlay.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/loading-indicator/jsf-loading-indicator.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/icon/jsf-icon.component';
+export * from './lib/kal-jsf-doc/layout-library/custom-components/button/jsf-button.component';
+export * from './lib/kal-jsf-doc/layout-library/custom-components/dropdown/jsf-dropdown.component';
+export * from './lib/kal-jsf-doc/layout-library/custom-components/input/jsf-input.component';
 
 export * from './lib/kal-jsf-doc/layout-library/items-layout/div/div.component';
 export * from './lib/kal-jsf-doc/layout-library/items-layout/floating-div/floating-div.component';

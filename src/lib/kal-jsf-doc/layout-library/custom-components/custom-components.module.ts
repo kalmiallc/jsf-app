@@ -12,13 +12,20 @@ import { ObserversModule }              from '@angular/cdk/observers';
 import { PortalModule }                 from '@angular/cdk/portal';
 import { JsfIconComponent }             from './icon/jsf-icon.component';
 import { CodeEditorComponent }          from './code-editor/code-editor.component';
+import { JsfInputComponent }            from './input/jsf-input.component';
+import { JsfButtonComponent }           from './button/jsf-button.component';
+import { JsfDropdownComponent }         from './dropdown/jsf-dropdown.component';
 import { MonacoEditorModule }           from 'ngx-monaco-editor';
 import { OverlayModule }                from '@angular/cdk/overlay';
 import { FormsModule }                  from '@angular/forms';
+import { NgxMatSelectSearchModule }     from 'ngx-mat-select-search';
+import { SharedModule }                 from '../../shared/shared.module';
 
 @NgModule({
   imports     : [
     CommonModule,
+    SharedModule,
+    NgxMatSelectSearchModule,
     PortalModule,
     MatRippleModule,
     ObserversModule,
@@ -35,13 +42,19 @@ import { FormsModule }                  from '@angular/forms';
     JsfOverlayComponent,
     JsfLoadingIndicatorComponent,
     JsfIconComponent,
+    JsfInputComponent,
+    JsfDropdownComponent,
+    JsfButtonComponent,
     CodeEditorComponent
   ],
-  exports: [
+  exports     : [
     JsfErrorMessagesComponent,
     JsfOverlayComponent,
     JsfLoadingIndicatorComponent,
     JsfIconComponent,
+    JsfInputComponent,
+    JsfDropdownComponent,
+    JsfButtonComponent,
     CodeEditorComponent
   ]
 })

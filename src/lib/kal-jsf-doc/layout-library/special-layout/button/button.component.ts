@@ -14,121 +14,17 @@ import { takeUntil }                                                            
 @Component({
   selector       : 'jsf-layout-button',
   template       : `
-      <ng-container [ngSwitch]="themePreferences.variant">
-          <button *ngSwitchCase="'basic'"
-                  [type]="type"
-                  class="jsf-layout-button jsf-animatable"
-                  [class.jsf-layout-button-normal]="isSizeNormal()"
-                  [class.jsf-layout-button-small]="isSizeSmall()"
-                  [class.jsf-layout-button-large]="isSizeLarge()"
-                  [ngClass]="htmlClass"
+      <jsf-button [htmlClass]="htmlClass"
                   [id]="id"
                   [disabled]="disabled"
-                  mat-button
                   (click)="dispatchClickEvents($event)"
+                  [variant]="themePreferences.variant"
                   [color]="themePreferences.color"
-                  [disableRipple]="themePreferences.disableRipple">
-              <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-              <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-          </button>
-          <button *ngSwitchCase="'raised'"
-                  [type]="type"
-                  class="jsf-layout-button jsf-animatable"
-                  [class.jsf-layout-button-normal]="isSizeNormal()"
-                  [class.jsf-layout-button-small]="isSizeSmall()"
-                  [class.jsf-layout-button-large]="isSizeLarge()"
-                  [ngClass]="htmlClass"
-                  [id]="id"
-                  [disabled]="disabled"
-                  mat-raised-button
-                  (click)="dispatchClickEvents($event)"
-                  [color]="themePreferences.color !== 'none' && themePreferences.color"
-                  [disableRipple]="themePreferences.disableRipple">
-              <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-              <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-          </button>
-          <button *ngSwitchCase="'stroked'"
-                  [type]="type"
-                  class="jsf-layout-button jsf-animatable"
-                  [class.jsf-layout-button-normal]="isSizeNormal()"
-                  [class.jsf-layout-button-small]="isSizeSmall()"
-                  [class.jsf-layout-button-large]="isSizeLarge()"
-                  [ngClass]="htmlClass"
-                  [id]="id"
-                  [disabled]="disabled"
-                  mat-stroked-button
-                  (click)="dispatchClickEvents($event)"
-                  [color]="themePreferences.color !== 'none' && themePreferences.color"
-                  [disableRipple]="themePreferences.disableRipple">
-              <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-              <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-          </button>
-          <button *ngSwitchCase="'flat'"
-                  [type]="type"
-                  class="jsf-layout-button jsf-animatable"
-                  [class.jsf-layout-button-normal]="isSizeNormal()"
-                  [class.jsf-layout-button-small]="isSizeSmall()"
-                  [class.jsf-layout-button-large]="isSizeLarge()"
-                  [ngClass]="htmlClass"
-                  [id]="id"
-                  [disabled]="disabled"
-                  mat-flat-button
-                  (click)="dispatchClickEvents($event)"
-                  [color]="themePreferences.color !== 'none' && themePreferences.color"
-                  [disableRipple]="themePreferences.disableRipple">
-              <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-              <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-          </button>
-          <button *ngSwitchCase="'icon'"
-                  type="button"
-                  class="jsf-layout-button jsf-animatable"
-                  [class.jsf-layout-button-normal]="isSizeNormal()"
-                  [class.jsf-layout-button-small]="isSizeSmall()"
-                  [class.jsf-layout-button-large]="isSizeLarge()"
-                  [ngClass]="htmlClass"
-                  [id]="id"
-                  [disabled]="disabled"
-                  mat-icon-button
-                  (click)="dispatchClickEvents($event)"
-                  [color]="themePreferences.color !== 'none' && themePreferences.color"
-                  [disableRipple]="themePreferences.disableRipple">
-              <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-              <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-          </button>
-          <button *ngSwitchCase="'fab'"
-                  [type]="type"
-                  class="jsf-layout-button jsf-animatable"
-                  [class.jsf-layout-button-normal]="isSizeNormal()"
-                  [class.jsf-layout-button-small]="isSizeSmall()"
-                  [class.jsf-layout-button-large]="isSizeLarge()"
-                  [ngClass]="htmlClass"
-                  [id]="id"
-                  [disabled]="disabled"
-                  mat-fab
-                  (click)="dispatchClickEvents($event)"
-                  [color]="themePreferences.color !== 'none' && themePreferences.color"
-                  [disableRipple]="themePreferences.disableRipple">
-              <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-              <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-          </button>
-          <button *ngSwitchCase="'mini-fab'"
-                  [type]="type"
-                  class="jsf-layout-button jsf-animatable"
-                  [class.jsf-layout-button-normal]="isSizeNormal()"
-                  [class.jsf-layout-button-small]="isSizeSmall()"
-                  [class.jsf-layout-button-large]="isSizeLarge()"
-                  [ngClass]="htmlClass"
-                  [id]="id"
-                  [disabled]="disabled"
-                  mat-mini-fab
-                  (click)="dispatchClickEvents($event)"
-                  [color]="themePreferences.color !== 'none' && themePreferences.color"
-                  [disableRipple]="themePreferences.disableRipple">
-              <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
-              <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-          </button>
-          <pre *ngSwitchDefault>Unknown button variant {{ layoutBuilder.layout | json }}</pre>
-      </ng-container>
+                  [size]="themePreferences.size"
+                  [disableRipple]="themePreferences.disableRipple"
+                  [icon]="icon"
+                  [title]="title">
+      </jsf-button>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles         : []

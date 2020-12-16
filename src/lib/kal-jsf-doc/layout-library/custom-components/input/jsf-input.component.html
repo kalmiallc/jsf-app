@@ -1,0 +1,67 @@
+<div class="jsf-prop jsf-prop-string jsf-animatable"
+     [class.jsf-prop-variant-standard]="isVariantStandard()"
+     [class.jsf-prop-variant-small]="isVariantSmall()"
+     [class.jsf-mat-form-field-multiline]="isMultiline()"
+     [ngClass]="htmlClass"
+     (click)="onClick.emit($event)">
+  <mat-form-field [color]="color"
+                  [appearance]="appearance"
+                  [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
+                  [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
+                  jsfOutlineGapAutocorrect>
+    <mat-label *ngIf="title"
+               [attr.for]="id"
+               [style.display]="notitle ? 'none' : ''">
+      {{ title }}
+    </mat-label>
+
+    <input matInput
+           *ngIf="!multiline"
+           [placeholder]="placeholder || ''"
+           [required]="required"
+           [disabled]="disabled"
+           [id]="id"
+           [name]="name"
+           [readonly]="readonly"
+           [type]="inputType"
+           [(ngModel)]="value"
+           #input="ngModel"
+           [jsfPropValidator]="layoutBuilder"
+           [errorStateMatcher]="errorStateMatcher">
+
+    <textarea matInput
+              cdkTextareaAutosize
+              [cdkAutosizeMinRows]="rows"
+              cdkAutosizeMaxRows="10"
+              *ngIf="multiline"
+              [placeholder]="placeholder"
+              [required]="required"
+              [disabled]="disabled"
+              [id]="id"
+              [name]="name"
+              [readonly]="readonly"
+              [type]="secret ? 'password' : 'text'"
+              [(ngModel)]="value"
+              #input="ngModel"
+              [jsfPropValidator]="layoutBuilder"
+              [errorStateMatcher]="errorStateMatcher">
+    </textarea>
+
+    <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+    <span matPrefix *ngIf="prefixLabel">{{ prefixLabel }}</span>
+
+    <button mat-button *ngIf="clearable && value" matSuffix mat-icon-button aria-label="Clear"
+            (click)="value = null">
+      <mat-icon>close</mat-icon>
+    </button>
+
+    <span matSuffix *ngIf="suffixLabel">{{ suffixLabel }}</span>
+    <mat-icon matSuffix *ngIf="suffixIcon">{{ suffixIcon }}</mat-icon>
+
+    <mat-hint *ngIf="description">{{ description }}</mat-hint>
+
+    <mat-error *ngFor="let error of errors">
+      {{ error }}
+    </mat-error>
+  </mat-form-field>
+</div>

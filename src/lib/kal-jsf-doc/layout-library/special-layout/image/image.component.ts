@@ -122,12 +122,14 @@ export class LayoutImageComponent extends AbstractSpecialLayoutComponent<JsfLayo
       this._image = this.src;
     }
 
-    if (!(this._image.startsWith('http://') || this._image.startsWith('https://'))) {
-      if (this._image.startsWith('/')) {
-        this._image = this._image.slice(1);
-      }
+    if (this._image) {
+      if (!(this._image.startsWith('http://') || this._image.startsWith('https://'))) {
+        if (this._image.startsWith('/')) {
+          this._image = this._image.slice(1);
+        }
 
-      this._image = `./${ this._image }`;
+        this._image = `./${ this._image }`;
+      }
     }
 
     this.cdRef.detectChanges();

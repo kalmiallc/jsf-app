@@ -15,71 +15,31 @@ import { BuilderDeveloperToolsInterface }                                       
 @Component({
   selector       : 'jsf-prop-string',
   template       : `
-      <div class="jsf-prop jsf-prop-string jsf-animatable"
-           [class.jsf-prop-variant-standard]="isVariantStandard()"
-           [class.jsf-prop-variant-small]="isVariantSmall()"
-           [class.jsf-mat-form-field-multiline]="isMultiline()"
-           [ngClass]="htmlClass"
-           (click)="handleLayoutClick($event)">
-          <mat-form-field [color]="themePreferences.color"
-                          [appearance]="themePreferences.appearance"
-                          [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
-                          [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
-                          jsfOutlineGapAutocorrect>
-              <mat-label *ngIf="prop?.title"
-                         [attr.for]="id"
-                         [style.display]="layout?.notitle ? 'none' : ''">
-                  {{ i18n(prop?.title) }}
-              </mat-label>
-              <input matInput
-                     *ngIf="!prop?.multiline"
-                     [placeholder]="i18n(layout?.placeholder || '')"
-                     [required]="prop?.required"
-                     [disabled]="disabled"
-                     [id]="id"
-                     [name]="propBuilder.id"
-                     [readonly]="isReadOnly"
-                     [type]="inputType"
-                     [(ngModel)]="value"
-                     #input="ngModel"
-                     [jsfPropValidator]="layoutBuilder"
-                     [errorStateMatcher]="errorStateMatcher">
-
-              <textarea matInput
-                        cdkTextareaAutosize
-                        [cdkAutosizeMinRows]="rows"
-                        cdkAutosizeMaxRows="10"
-                        *ngIf="prop?.multiline"
-                        [placeholder]="i18n(layout?.placeholder || '')"
-                        [required]="prop?.required"
-                        [disabled]="disabled"
-                        [id]="id"
-                        [name]="propBuilder.id"
-                        [readonly]="isReadOnly"
-                        [type]="prop.secret ? 'password' : 'text'"
-                        [(ngModel)]="value"
-                        #input="ngModel"
-                        [jsfPropValidator]="layoutBuilder"
-                        [errorStateMatcher]="errorStateMatcher"></textarea>
-
-              <mat-icon matPrefix *ngIf="themePreferences.prefixIcon">{{ themePreferences.prefixIcon }}</mat-icon>
-              <span matPrefix *ngIf="themePreferences.prefixLabel">{{ themePreferences.prefixLabel }}</span>
-
-              <button mat-button *ngIf="themePreferences.clearable && value" matSuffix mat-icon-button aria-label="Clear"
-                      (click)="value = null">
-                  <mat-icon>close</mat-icon>
-              </button>
-
-              <span matSuffix *ngIf="themePreferences.suffixLabel">{{ themePreferences.suffixLabel }}</span>
-              <mat-icon matSuffix *ngIf="themePreferences.suffixIcon">{{ themePreferences.suffixIcon }}</mat-icon>
-
-              <mat-hint *ngIf="prop?.description">{{ i18n(prop?.description) }}</mat-hint>
-
-              <mat-error *ngFor="let error of errors">
-                  {{ error.interpolatedMessage }}
-              </mat-error>
-          </mat-form-field>
-      </div>
+      <jsf-input [type]="'string'"
+                 [required]="prop?.required"
+                 [disabled]="disabled"
+                 [id]="id"
+                 [name]="propBuilder.id"
+                 [readonly]="isReadOnly"
+                 [title]="i18n(prop?.title || '')"
+                 [description]="i18n(prop?.description || '')"
+                 [variant]="themePreferences.variant"
+                 [notitle]="layout?.notitle"
+                 [placeholder]="i18n(layout?.placeholder || '')"
+                 [multiline]="isMultiline()"
+                 [htmlClass]="htmlClass"
+                 [color]="themePreferences.color"
+                 [appearance]="themePreferences.appearance"
+                 (click)="handleLayoutClick($event)"
+                 [(ngModel)]="value"
+                 [prefixIcon]="themePreferences.prefixIcon"
+                 [prefixLabel]="themePreferences.prefixLabel"
+                 [suffixIcon]="themePreferences.suffixIcon"
+                 [suffixLabel]="themePreferences.suffixLabel"
+                 [clearable]="themePreferences.clearable"
+                 [layoutBuilder]="layoutBuilder"
+                 [errorStateMatcher]="errorStateMatcher">
+      </jsf-input>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles         : []
@@ -110,31 +70,6 @@ export class PropStringComponent extends AbstractPropLayoutComponent<JsfPropBuil
     }
   }
 
-  get inputType(): string {
-    const prop: JsfPropString = this.prop;
-
-    if (prop.secret) {
-      return 'password';
-    }
-
-    switch (prop.format) {
-      case 'email':
-        return 'email';
-      case 'phone':
-        return 'tel';
-      case 'color':
-        return 'color';
-      case 'uri':
-        return 'url';
-      case 'time':
-        return 'time';
-      case 'date-time':
-        return 'datetime-local';
-      default:
-        return 'text';
-    }
-  }
-
   get disabled(): boolean {
     if (this.propBuilder.hasProvider && this.propBuilder.providerExecutor.status === JsfProviderExecutorStatus.Pending) {
       return true;
@@ -151,13 +86,6 @@ export class PropStringComponent extends AbstractPropLayoutComponent<JsfPropBuil
     } else {
       return false;
     }
-  }
-
-  get rows() {
-    if (isBoolean(this.prop.multiline)) {
-      return this.prop.multiline ? 2 : 1;
-    }
-    return +this.prop.multiline;
   }
 
   get themePreferences(): JsfLayoutPropStringPreferences {
