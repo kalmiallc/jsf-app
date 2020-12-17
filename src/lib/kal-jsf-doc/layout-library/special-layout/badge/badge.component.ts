@@ -8,38 +8,14 @@ import Color                                                                    
 @Component({
   selector       : 'jsf-layout-badge',
   template       : `
-      <div class="jsf-layout-badge jsf-animatable" [ngClass]="htmlClass" (click)="handleLayoutClick($event)">
-          <div class="jsf-layout-badge-background rounded"
-               [class.__background-color--primary-20]="!backgroundColor || backgroundColor === 'primary'"
-               [class.__background-color--accent-20]="backgroundColor === 'accent'"
-               [class.__background-color--warn-20]="backgroundColor === 'warn'"
-               [ngStyle]="{'background-color': backgroundColor }">
-              <div class="jsf-layout-badge-content"
-                   [class.__color--primary]="!color || color === 'primary'"
-                   [class.__color--accent]="color === 'accent'"
-                   [class.__color--warn]="color === 'warn'"
-                   [ngStyle]="{'color': color }">
-                  <span>{{ title }}</span>
-              </div>
-          </div>
-      </div>
+      <jsf-badge [title]="title"
+                 [htmlClass]="htmlClass"
+                 [color]="color"
+                 [backgroundColor]="backgroundColor">
+      </jsf-badge>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styles         : [`
-      .jsf-layout-badge {
-          display: inline-block;
-      }
-
-      .jsf-layout-badge-background {
-          display:    inline-block;
-          padding:    .2rem .8rem;
-          transition: background-color 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
-      }
-
-      .jsf-layout-badge-content {
-          transition: color 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
-      }
-  `]
+  styles         : []
 })
 export class LayoutBadgeComponent extends AbstractSpecialLayoutComponent<JsfLayoutBadge> implements OnInit {
 

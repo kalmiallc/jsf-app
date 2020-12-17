@@ -13,13 +13,14 @@ import { PortalModule }                 from '@angular/cdk/portal';
 import { JsfIconComponent }             from './icon/jsf-icon.component';
 import { CodeEditorComponent }          from './code-editor/code-editor.component';
 import { JsfInputComponent }            from './input/jsf-input.component';
-import { JsfButtonComponent }           from './button/jsf-button.component';
-import { JsfDropdownComponent }         from './dropdown/jsf-dropdown.component';
-import { MonacoEditorModule }           from 'ngx-monaco-editor';
-import { OverlayModule }                from '@angular/cdk/overlay';
-import { FormsModule }                  from '@angular/forms';
-import { NgxMatSelectSearchModule }     from 'ngx-mat-select-search';
-import { SharedModule }                 from '../../shared/shared.module';
+import { JsfButtonComponent }       from './button/jsf-button.component';
+import { JsfDropdownComponent }     from './dropdown/jsf-dropdown.component';
+import { MonacoEditorModule }       from 'ngx-monaco-editor';
+import { OverlayModule }            from '@angular/cdk/overlay';
+import { FormsModule }              from '@angular/forms';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { SharedModule }             from '../../shared/shared.module';
+import { JsfBadgeComponent }        from './badge/jsf-badge.component';
 
 @NgModule({
   imports     : [
@@ -45,7 +46,8 @@ import { SharedModule }                 from '../../shared/shared.module';
     JsfInputComponent,
     JsfDropdownComponent,
     JsfButtonComponent,
-    CodeEditorComponent
+    CodeEditorComponent,
+    JsfBadgeComponent
   ],
   exports     : [
     JsfErrorMessagesComponent,
@@ -55,7 +57,8 @@ import { SharedModule }                 from '../../shared/shared.module';
     JsfInputComponent,
     JsfDropdownComponent,
     JsfButtonComponent,
-    CodeEditorComponent
+    CodeEditorComponent,
+    JsfBadgeComponent
   ]
 })
 export class JsfCustomComponentsModule {}

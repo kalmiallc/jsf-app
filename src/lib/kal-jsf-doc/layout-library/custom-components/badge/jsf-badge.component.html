@@ -1,0 +1,15 @@
+<div class="jsf-layout-badge jsf-animatable" [ngClass]="htmlClass">
+  <div class="jsf-layout-badge-background rounded"
+       [class.__background-color--primary-20]="!backgroundColor || backgroundColor === 'primary'"
+       [class.__background-color--accent-20]="backgroundColor === 'accent'"
+       [class.__background-color--warn-20]="backgroundColor === 'warn'"
+       [ngStyle]="{'background-color': backgroundColor }">
+    <div class="jsf-layout-badge-content"
+         [class.__color--primary]="!textColor || textColor === 'primary'"
+         [class.__color--accent]="textColor === 'accent'"
+         [class.__color--warn]="textColor === 'warn'"
+         [ngStyle]="{'color': textColor }">
+      <span>{{ title }}</span>
+    </div>
+  </div>
+</div>
