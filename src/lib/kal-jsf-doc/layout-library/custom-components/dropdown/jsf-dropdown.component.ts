@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  Inject,
   Injector,
   Input,
   OnDestroy,
@@ -18,6 +19,7 @@ import { ErrorStateMatcher }                                  from '@angular/mat
 import { MatSelectChange }                                    from '@angular/material/select';
 import * as OverlayScrollbars                                 from 'overlayscrollbars';
 import { jsfDefaultScrollOptions }                            from '../../../../utilities';
+import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
 import { takeUntil }                                          from 'rxjs/operators';
 
 
@@ -101,9 +103,9 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() iconPrevious?: string = 'keyboard_arrow_left';
 
   @Input() htmlClass?: string;
-  @Input() color?: 'primary' | 'accent' | 'none' = 'primary';
+  @Input() color?: 'primary' | 'accent' | 'none'                   = 'primary';
   @Input() appearance?: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
-  @Input() variant?: 'small' | 'standard'        = 'standard';
+  @Input() variant?: 'small' | 'standard'                          = 'standard';
 
   @Input() prefixIcon?: string;
   @Input() prefixLabel?: string;
@@ -114,6 +116,8 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() nullValueLabel?: string            = $localize`--`;
   @Input() searchPlaceholderLabel?: string    = $localize`Search`;
   @Input() searchNoEntriesFoundLabel?: string = $localize`No results.`;
+
+  @Input() errorMap?: { [errorCode: string]: string };
 
   // Used internally by JSF
   @Input() layoutBuilder?: JsfPropLayoutBuilder<JsfPropBuilder>;
@@ -144,7 +148,20 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
       errors = this.layoutBuilder.propBuilder.errors.map(x => x.interpolatedMessage);
     } else if (this._control) {
       for (const k of Object.keys(this._control.errors || {})) {
-        errors.push(this._control.errors[k]);
+        if (!this._control.errors[k]) {
+          continue;
+        }
+
+        let m: any;
+        if (this.errorMap && this.errorMap[k]) {
+          m = this.errorMap[k];
+        } else if (this.defaultErrorMap[k]) {
+          m = this.defaultErrorMap[k];
+        } else {
+          m = $localize`Field is invalid`;
+        }
+
+        errors.push(m(this._control.errors[k]));
       }
     }
     return errors;
@@ -154,6 +171,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   constructor(private cdRef: ChangeDetectorRef,
               private injector: Injector,
+              @Inject(JSF_FORM_CONTROL_ERRORS) private defaultErrorMap,
               protected overlay: Overlay) { }
 
   ngOnInit(): void {

@@ -4,6 +4,7 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  Inject,
   Injector,
   Input,
   OnDestroy,
@@ -16,6 +17,7 @@ import { Subject }                                            from 'rxjs';
 import { JsfFormat, JsfPropBuilder, JsfPropLayoutBuilder }    from '@kalmia/jsf-common-es2015';
 import { ErrorStateMatcher }                                  from '@angular/material/core';
 import { isBoolean }                                          from 'lodash';
+import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
 
 
 @Component({
@@ -74,6 +76,8 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   @Input() suffixLabel?: string;
   @Input() clearable?: boolean;
 
+  @Input() errorMap?: { [errorCode: string]: any };
+
   // Used internally by JSF
   @Input() layoutBuilder?: JsfPropLayoutBuilder<JsfPropBuilder>;
   @Input() errorStateMatcher?: ErrorStateMatcher;
@@ -118,7 +122,20 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
       errors = this.layoutBuilder.propBuilder.errors.map(x => x.interpolatedMessage);
     } else if (this._control) {
       for (const k of Object.keys(this._control.errors || {})) {
-        errors.push(this._control.errors[k]);
+        if (!this._control.errors[k]) {
+          continue;
+        }
+
+        let m: any;
+        if (this.errorMap && this.errorMap[k]) {
+          m = this.errorMap[k];
+        } else if (this.defaultErrorMap[k]) {
+          m = this.defaultErrorMap[k];
+        } else {
+          m = $localize`Field is invalid`;
+        }
+
+        errors.push(m(this._control.errors[k]));
       }
     }
     return errors;
@@ -128,6 +145,7 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
 
   constructor(private cdRef: ChangeDetectorRef,
               private injector: Injector,
+              @Inject(JSF_FORM_CONTROL_ERRORS) private defaultErrorMap,
               protected overlay: Overlay) { }
 
   ngOnInit(): void {

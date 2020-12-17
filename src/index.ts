@@ -57,6 +57,7 @@ export * from './lib/kal-jsf-doc/handlers/kal-jsf-handlers.module';
 export * from './lib/kal-jsf-doc/handlers/component/component.component';
 
 export * from './lib/kal-jsf-doc/layout-library/custom-components/custom-components.module';
+export * from './lib/kal-jsf-doc/layout-library/custom-components/jsf-control-errors';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/error-message/jsf-error-messages.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/overlay/jsf-overlay.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/loading-indicator/jsf-loading-indicator.component';
