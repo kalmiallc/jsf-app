@@ -1,15 +1,16 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
-import { AbstractItemsLayoutComponent }                                                                   from '../../../abstract/items-layout.component';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AbstractItemsLayoutComponent }                                                    from '../../../abstract/items-layout.component';
 import {
   JsfItemsLayoutBuilder,
   JsfLayoutButtonPreferences,
-  JsfLayoutMenu, JsfUnknownLayoutBuilder,
+  JsfLayoutMenu,
+  JsfUnknownLayoutBuilder,
   PropStatus,
   PropStatusChangeInterface
-}                                                                                                         from '@kalmia/jsf-common-es2015';
-import { BuilderDeveloperToolsInterface }                                                                 from '../../../builder-developer-tools.interface';
-import { takeUntil }                      from 'rxjs/operators';
-import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
+}                                                                                          from '@kalmia/jsf-common-es2015';
+import { BuilderDeveloperToolsInterface }                                                  from '../../../builder-developer-tools.interface';
+import { takeUntil }                                                                       from 'rxjs/operators';
+import { MatMenuTrigger }                                                                  from '@angular/material/menu';
 
 
 @Component({
@@ -34,7 +35,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                       [disableRipple]="themePreferences.disableRipple">
                   <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
                   <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-                  <mat-icon class="mr-n2">keyboard_arrow_down</mat-icon>
+                  <mat-icon class="mr-n2" *ngIf="themePreferences.showMenuArrow">keyboard_arrow_down</mat-icon>
               </button>
               <button *ngSwitchCase="'raised'"
                       [type]="type"
@@ -51,7 +52,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                       [disableRipple]="themePreferences.disableRipple">
                   <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
                   <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-                  <mat-icon class="mr-n2">keyboard_arrow_down</mat-icon>
+                  <mat-icon class="mr-n2" *ngIf="themePreferences.showMenuArrow">keyboard_arrow_down</mat-icon>
               </button>
               <button *ngSwitchCase="'stroked'"
                       [type]="type"
@@ -68,7 +69,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                       [disableRipple]="themePreferences.disableRipple">
                   <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
                   <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-                  <mat-icon class="mr-n2">keyboard_arrow_down</mat-icon>
+                  <mat-icon class="mr-n2" *ngIf="themePreferences.showMenuArrow">keyboard_arrow_down</mat-icon>
               </button>
               <button *ngSwitchCase="'flat'"
                       [type]="type"
@@ -85,7 +86,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                       [disableRipple]="themePreferences.disableRipple">
                   <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
                   <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-                  <mat-icon class="mr-n2">keyboard_arrow_down</mat-icon>
+                  <mat-icon class="mr-n2" *ngIf="themePreferences.showMenuArrow">keyboard_arrow_down</mat-icon>
               </button>
               <button *ngSwitchCase="'icon'"
                       [type]="type"
@@ -103,7 +104,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                   <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
                   <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
                   <!-- No additional arrow for icon-type menu button -->
-                  <!-- <mat-icon class="mr-n2">keyboard_arrow_down</mat-icon> -->
+                  <!-- <mat-icon class="mr-n2" *ngIf=themePreferences.showMenuArrow>keyboard_arrow_down</mat-icon> -->
               </button>
               <button *ngSwitchCase="'fab'"
                       [type]="type"
@@ -120,7 +121,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                       [disableRipple]="themePreferences.disableRipple">
                   <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
                   <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-                  <mat-icon class="mr-n2">keyboard_arrow_down</mat-icon>
+                  <mat-icon class="mr-n2" *ngIf="themePreferences.showMenuArrow">keyboard_arrow_down</mat-icon>
               </button>
               <button *ngSwitchCase="'mini-fab'"
                       [type]="type"
@@ -137,7 +138,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                       [disableRipple]="themePreferences.disableRipple">
                   <mat-icon *ngIf="icon">{{ icon }}</mat-icon>
                   <span class="jsf-button-title" *ngIf="title">{{ title }}</span>
-                  <mat-icon class="mr-n2">keyboard_arrow_down</mat-icon>
+                  <mat-icon class="mr-n2" *ngIf="themePreferences.showMenuArrow">keyboard_arrow_down</mat-icon>
               </button>
               <pre *ngSwitchDefault>Unknown button variant {{ layoutBuilder.layout | json }}</pre>
           </ng-container>
@@ -152,7 +153,7 @@ import { MatMenu, MatMenuTrigger }        from '@angular/material/menu';
                                             [ngStyle]="getLayoutItemStyle(item)">
                       </jsf-layout-menu-item>
                   </ng-container>
-                  
+
                   <ng-template #layoutItem>
                       <jsf-layout-router [layoutBuilder]="item"
                                          [developerTools]="developerTools"
@@ -220,6 +221,7 @@ export class LayoutMenuComponent extends AbstractItemsLayoutComponent<JsfLayoutM
       variant      : 'basic',
       size         : 'normal',
       disableRipple: false,
+      showMenuArrow: true,
 
       /* Global overrides */
       ...(this.globalThemePreferences ? this.globalThemePreferences.button : {}),
