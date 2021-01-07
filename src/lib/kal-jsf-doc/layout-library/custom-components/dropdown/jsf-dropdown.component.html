@@ -37,7 +37,7 @@
         </mat-option>
 
         <overlay-scrollbars [options]="scrollOptions">
-          <mat-option *ngIf="!required && !isArray" [value]="null">{{ nullValueLabel }}</mat-option>
+          <mat-option *ngIf="!required && !isArray && !multiple" [value]="null">{{ nullValueLabel }}</mat-option>
           <mat-option *ngFor="let item of filteredItems; trackBy: trackByFn"
                       [value]="item.value">
             {{ item.label }}
