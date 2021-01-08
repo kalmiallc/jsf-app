@@ -130,6 +130,9 @@ export class LayoutIframeComponent extends AbstractSpecialLayoutComponent<JsfLay
         this.activeSections = elementsToObserve.map(x => x.getAttribute('jsf-iframe-section'));
         elementsToObserve.map(x => this.observer.observe(x));
       }
+    } else if (event.data?.jsfLayoutIframeSize) {
+      // Set height
+      this.iframeElement.nativeElement.style.height = event.data?.jsfLayoutIframeSize.height + 'px';
     }
   }
 
@@ -158,7 +161,15 @@ export class LayoutIframeComponent extends AbstractSpecialLayoutComponent<JsfLay
                 }
               }, '*');
           });
-          
+
+          window.addEventListener('resize', function(){
+              parent.postMessage({
+                jsfLayoutIframeSize: {
+                  height: document.body.offsetHeight
+                }
+              }, '*');
+          });
+
           function JSF_IFRAME_GET_SECTIONS() {
             return Array.from(document.querySelectorAll('[jsf-iframe-section]'))
           }
