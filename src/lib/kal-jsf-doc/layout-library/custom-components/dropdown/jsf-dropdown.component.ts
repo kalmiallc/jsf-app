@@ -9,14 +9,15 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output,
+  ViewChild
 }                                                             from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Overlay }                                            from '@angular/cdk/overlay';
 import { Subject }                                            from 'rxjs';
 import { JsfPropBuilder, JsfPropLayoutBuilder }               from '@kalmia/jsf-common-es2015';
 import { ErrorStateMatcher }                                  from '@angular/material/core';
-import { MatSelectChange }                                    from '@angular/material/select';
+import { MatSelect, MatSelectChange }                         from '@angular/material/select';
 import * as OverlayScrollbars                                 from 'overlayscrollbars';
 import { jsfDefaultScrollOptions }                            from '../../../../utilities';
 import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
@@ -84,6 +85,9 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     this._items = value;
     this.updateFilteredItems();
   }
+
+  @ViewChild('dropdown', { read: MatSelect, static: false })
+  matSelect: MatSelect;
 
   @Input() multiple?: boolean;
   @Input() searchable?: boolean;

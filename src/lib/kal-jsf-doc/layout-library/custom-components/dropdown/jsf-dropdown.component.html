@@ -25,6 +25,7 @@
         [name]="name"
         [(ngModel)]="value"
         #input="ngModel"
+        #dropdown
         [jsfPropValidator]="layoutBuilder"
         (selectionChange)="onClick.emit($event)"
         [errorStateMatcher]="errorStateMatcher">
