@@ -1,6 +1,30 @@
 :host ::ng-deep {
   .mat-form-field-infix {
     height: auto !important;
-    min-height: 38px;
+
+    .mat-chip-list {
+      width: 100%;
+    }
+  }
+
+  .mat-form-field.jsf-mat-form-field-variant-standard {
+    .mat-form-field-infix {
+      min-height: 54px;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+      padding-top: 5px;
+      padding-bottom: 5px;
+    }
+  }
+
+  .mat-form-field.jsf-mat-form-field-variant-small {
+    .mat-form-field-infix {
+      min-height: 38px;
+
+      .mat-chip {
+        padding-top: 2px;
+        padding-bottom: 2px;
+      }
+    }
   }
 }
