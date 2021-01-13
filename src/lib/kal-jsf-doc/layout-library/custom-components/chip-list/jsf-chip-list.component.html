@@ -17,6 +17,12 @@
                     [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
                     [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
                     jsfOutlineGapAutocorrect>
+      <mat-label *ngIf="title"
+                 [attr.for]="id"
+                 [style.display]="notitle ? 'none' : ''">
+        {{ title }}
+      </mat-label>
+
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let chip of value; trackBy: trackByFn"
                   [selectable]="selectable"
@@ -35,10 +41,9 @@
                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                [matChipInputAddOnBlur]="addOnBlur"
                (matChipInputTokenEnd)="add($event)"
-                #input
-                #autocompleteTrigger="matAutocompleteTrigger">
+               #input
+               #autocompleteTrigger="matAutocompleteTrigger">
       </mat-chip-list>
-
 
       <mat-hint *ngIf="description">{{ description }}</mat-hint>
 
