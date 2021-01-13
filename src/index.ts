@@ -64,6 +64,7 @@ export * from './lib/kal-jsf-doc/layout-library/custom-components/loading-indica
 export * from './lib/kal-jsf-doc/layout-library/custom-components/icon/jsf-icon.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/button/jsf-button.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/dropdown/jsf-dropdown.component';
+export * from './lib/kal-jsf-doc/layout-library/custom-components/chip-list/jsf-chip-list.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/input/jsf-input.component';
 export * from './lib/kal-jsf-doc/layout-library/custom-components/badge/jsf-badge.component';
 

@@ -1,0 +1,40 @@
+<div class="jsf-chip-list jsf-animatable"
+     [ngClass]="htmlClass"
+     [class.jsf-handler-chip-list-variant-standard]="isVariantStandard()"
+     [class.jsf-handler-chip-list-variant-small]="isVariantSmall()">
+  <div class="chip-list"
+       [class.disabled]="disabled">
+    <mat-form-field [color]="color"
+                    [appearance]="appearance"
+                    class="jsf-form-field-chip-list"
+                    [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
+                    [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
+                    jsfOutlineGapAutocorrect>
+      <mat-chip-list #chipList>
+        <mat-chip *ngFor="let chip of value; trackBy: trackByFn"
+                  [selectable]="selectable"
+                  color="primary"
+                  [removable]="removable"
+                  (removed)="remove(chip)">
+          {{ chip }}
+          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        </mat-chip>
+
+        <input [placeholder]="placeholder"
+               [required]="required"
+               [disabled]="disabled"
+               [matChipInputFor]="chipList"
+               [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+               [matChipInputAddOnBlur]="addOnBlur"
+               (matChipInputTokenEnd)="add($event)">
+      </mat-chip-list>
+
+
+      <mat-hint *ngIf="description">{{ description }}</mat-hint>
+
+      <mat-error *ngFor="let error of errors">
+        {{ error }}
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>

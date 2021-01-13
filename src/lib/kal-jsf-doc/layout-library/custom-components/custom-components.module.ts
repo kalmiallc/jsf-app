@@ -11,8 +11,8 @@ import { JsfLoadingIndicatorComponent } from './loading-indicator/jsf-loading-in
 import { ObserversModule }              from '@angular/cdk/observers';
 import { PortalModule }                 from '@angular/cdk/portal';
 import { JsfIconComponent }             from './icon/jsf-icon.component';
-import { CodeEditorComponent }          from './code-editor/code-editor.component';
-import { JsfInputComponent }            from './input/jsf-input.component';
+import { CodeEditorComponent }      from './code-editor/code-editor.component';
+import { JsfInputComponent }        from './input/jsf-input.component';
 import { JsfButtonComponent }       from './button/jsf-button.component';
 import { JsfDropdownComponent }     from './dropdown/jsf-dropdown.component';
 import { MonacoEditorModule }       from 'ngx-monaco-editor';
@@ -21,6 +21,8 @@ import { FormsModule }              from '@angular/forms';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { SharedModule }             from '../../shared/shared.module';
 import { JsfBadgeComponent }        from './badge/jsf-badge.component';
+import { JsfChipListComponent }     from './chip-list/jsf-chip-list.component';
+import { MatChipsModule }           from '@angular/material/chips';
 
 @NgModule({
   imports     : [
@@ -33,6 +35,7 @@ import { JsfBadgeComponent }        from './badge/jsf-badge.component';
     MatStepperModule,
     MatTabsModule,
     MatIconModule,
+    MatChipsModule,
     OverlayModule,
     FormsModule,
     MonacoEditorModule,
@@ -46,6 +49,7 @@ import { JsfBadgeComponent }        from './badge/jsf-badge.component';
     JsfInputComponent,
     JsfDropdownComponent,
     JsfButtonComponent,
+    JsfChipListComponent,
     CodeEditorComponent,
     JsfBadgeComponent
   ],
@@ -57,6 +61,7 @@ import { JsfBadgeComponent }        from './badge/jsf-badge.component';
     JsfInputComponent,
     JsfDropdownComponent,
     JsfButtonComponent,
+    JsfChipListComponent,
     CodeEditorComponent,
     JsfBadgeComponent
   ]
