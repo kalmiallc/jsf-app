@@ -23,6 +23,7 @@ import { SharedModule }             from '../../shared/shared.module';
 import { JsfBadgeComponent }        from './badge/jsf-badge.component';
 import { JsfChipListComponent }     from './chip-list/jsf-chip-list.component';
 import { MatChipsModule }           from '@angular/material/chips';
+import { MatAutocompleteModule }    from '@angular/material/autocomplete';
 
 @NgModule({
   imports     : [
@@ -36,6 +37,7 @@ import { MatChipsModule }           from '@angular/material/chips';
     MatTabsModule,
     MatIconModule,
     MatChipsModule,
+    MatAutocompleteModule,
     OverlayModule,
     FormsModule,
     MonacoEditorModule,

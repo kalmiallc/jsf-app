@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, ElementRef,
   EventEmitter,
   forwardRef,
   Inject,
@@ -9,22 +9,17 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
-  ViewChild
-}                                                                     from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl }         from '@angular/forms';
-import { Overlay }                                                    from '@angular/cdk/overlay';
-import { Subject }                                                    from 'rxjs';
-import { JsfPropBuilder, JsfPropBuilderString, JsfPropLayoutBuilder } from '@kalmia/jsf-common-es2015';
-import { ErrorStateMatcher }                                          from '@angular/material/core';
-import { MatSelect, MatSelectChange }                                 from '@angular/material/select';
-import * as OverlayScrollbars                                         from 'overlayscrollbars';
-import { jsfDefaultScrollOptions }                                    from '../../../../utilities';
-import { JSF_FORM_CONTROL_ERRORS }                                    from '../jsf-control-errors';
-import { takeUntil }                                                  from 'rxjs/operators';
-import { MatChipInputEvent }                                          from '@angular/material/chips';
-import { ChipValue }           from '../../../../../../../../src/jsf-handlers/common/handlers/chip-list/app/chip-list.component';
-import { COMMA, ENTER, SPACE } from '@angular/cdk/keycodes';
+  Output, ViewChild
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
+import { Overlay }                                            from '@angular/cdk/overlay';
+import { BehaviorSubject, Observable, Subject }               from 'rxjs';
+import { JsfPropBuilder, JsfPropLayoutBuilder }               from '@kalmia/jsf-common-es2015';
+import { MatSelectChange }                                    from '@angular/material/select';
+import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
+import { MatChipInputEvent }                                  from '@angular/material/chips';
+import { COMMA, ENTER, SPACE }                                  from '@angular/cdk/keycodes';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@kalmia/material/autocomplete';
 
 
 @Component({
@@ -59,6 +54,16 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
 
   private _control: NgControl;
 
+  @ViewChild('input', { static: true })
+  input: ElementRef<HTMLInputElement>;
+
+  @ViewChild('autocompleteTrigger', { static: true })
+  autocompleteTrigger: MatAutocompleteTrigger;
+
+  filteredAutocompleteItems: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(void 0);
+
+  @Input() autocompleteItems: any[] = [];
+
   @Input() title?: string;
   @Input() description?: string;
   @Input() id?: string;
@@ -74,9 +79,9 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() appearance?: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() variant?: 'small' | 'standard'                          = 'standard';
 
-  @Input() selectable?: boolean;
-  @Input() removable?: boolean;
-  @Input() addOnBlur?: boolean;
+  @Input() selectable?: boolean = false;
+  @Input() removable?: boolean = true;
+  @Input() addOnBlur?: boolean = true;
 
   @Input() errorMap?: { [errorCode: string]: string };
 
@@ -122,6 +127,10 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
   ngOnInit(): void {
     this._control = this.injector.get(NgControl);
 
+    this.input.nativeElement.addEventListener('input', (event: InputEvent) => {
+      this.filteredAutocompleteItems.next(this._filter(this.input.nativeElement.value));
+    });
+
     this.cdRef.markForCheck();
     this.cdRef.detectChanges();
   }
@@ -129,6 +138,18 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.unsubscribe();
+  }
+
+  private _filter(value: string): any[] {
+    const filterValue = value.toLowerCase();
+    return this.autocompleteItems.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
+  autocompleteSelected(event: MatAutocompleteSelectedEvent): void {
+    this.value = this.value.concat([event.option.viewValue]);
+    this.input.nativeElement.value = '';
+    this.filteredAutocompleteItems.next(this._filter(this.input.nativeElement.value));
+    // this.autocompleteTrigger.openPanel();
   }
 
   add(event: MatChipInputEvent): void {
