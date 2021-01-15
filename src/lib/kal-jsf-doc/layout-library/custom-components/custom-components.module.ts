@@ -11,19 +11,25 @@ import { JsfLoadingIndicatorComponent } from './loading-indicator/jsf-loading-in
 import { ObserversModule }              from '@angular/cdk/observers';
 import { PortalModule }                 from '@angular/cdk/portal';
 import { JsfIconComponent }             from './icon/jsf-icon.component';
-import { CodeEditorComponent }      from './code-editor/code-editor.component';
-import { JsfInputComponent }        from './input/jsf-input.component';
-import { JsfButtonComponent }       from './button/jsf-button.component';
-import { JsfDropdownComponent }     from './dropdown/jsf-dropdown.component';
-import { MonacoEditorModule }       from 'ngx-monaco-editor';
-import { OverlayModule }            from '@angular/cdk/overlay';
-import { FormsModule }              from '@angular/forms';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { SharedModule }             from '../../shared/shared.module';
-import { JsfBadgeComponent }        from './badge/jsf-badge.component';
-import { JsfChipListComponent }     from './chip-list/jsf-chip-list.component';
-import { MatChipsModule }           from '@angular/material/chips';
-import { MatAutocompleteModule }    from '@angular/material/autocomplete';
+import { CodeEditorComponent }          from './code-editor/code-editor.component';
+import { JsfInputComponent }            from './input/jsf-input.component';
+import { JsfButtonComponent }           from './button/jsf-button.component';
+import { JsfDropdownComponent }         from './dropdown/jsf-dropdown.component';
+import { MonacoEditorModule }           from 'ngx-monaco-editor';
+import { OverlayModule }                from '@angular/cdk/overlay';
+import { FormsModule }                  from '@angular/forms';
+import { NgxMatSelectSearchModule }     from 'ngx-mat-select-search';
+import { SharedModule }                 from '../../shared/shared.module';
+import { JsfBadgeComponent }            from './badge/jsf-badge.component';
+import { JsfChipListComponent }         from './chip-list/jsf-chip-list.component';
+import { MatChipsModule }               from '@angular/material/chips';
+import { MatAutocompleteModule }        from '@angular/material/autocomplete';
+import { JsfFileUploadComponent }       from './file-upload/jsf-file-upload.component';
+import { FileUploadModule }             from 'ng2-file-upload';
+import { MatProgressSpinnerModule }     from '@angular/material/progress-spinner';
+import { MatProgressBarModule }         from '@angular/material/progress-bar';
+import { MatSnackBarModule }            from '@angular/material/snack-bar';
+import { JsfPipesModule }               from '../../pipes/jsf-pipes.module';
 
 @NgModule({
   imports     : [
@@ -38,10 +44,15 @@ import { MatAutocompleteModule }    from '@angular/material/autocomplete';
     MatIconModule,
     MatChipsModule,
     MatAutocompleteModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    FileUploadModule,
     OverlayModule,
     FormsModule,
     MonacoEditorModule,
-    JsfDirectivesModule
+    JsfDirectivesModule,
+    JsfPipesModule
   ],
   declarations: [
     JsfErrorMessagesComponent,
@@ -52,6 +63,7 @@ import { MatAutocompleteModule }    from '@angular/material/autocomplete';
     JsfDropdownComponent,
     JsfButtonComponent,
     JsfChipListComponent,
+    JsfFileUploadComponent,
     CodeEditorComponent,
     JsfBadgeComponent
   ],
@@ -64,6 +76,7 @@ import { MatAutocompleteModule }    from '@angular/material/autocomplete';
     JsfDropdownComponent,
     JsfButtonComponent,
     JsfChipListComponent,
+    JsfFileUploadComponent,
     CodeEditorComponent,
     JsfBadgeComponent
   ]

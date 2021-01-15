@@ -1,0 +1,137 @@
+@import 'css-file-icons.css';
+
+
+$swift-ease-out-duration:        400ms !default;
+$swift-ease-out-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
+
+$card-item-height:               100px;
+$card-item-margin:               20px;
+
+
+.upload-area {
+  span {
+    pointer-events: none;
+  }
+}
+
+.upload-bar {
+  margin-bottom: -22px;
+  margin-top: 22px;
+}
+
+.file-card-container {
+  display: flex;
+  justify-content: flex-start;
+
+  .file-card-inner-container {
+
+  }
+}
+
+.file-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 10px;
+  cursor: pointer;
+
+  user-select: none;
+
+  .fi {
+    margin: 0;
+    min-width: 36px;
+  }
+}
+
+.file-card-filename {
+  padding-left: 10px;
+  font-weight: bold;
+}
+
+.file-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.preview-container {
+  height: 100%;
+  width: 40%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.jsf-file-upload-card {
+  width:           100%;
+  height:          $card-item-height;
+
+  position:        relative;
+
+  margin-bottom:   $card-item-margin;
+
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+
+  flex-direction:  column;
+
+  &:not(.selected) {
+    cursor: pointer;
+  }
+
+  &:hover {
+    .jsf-file-upload-card-hover-overlay {
+      opacity: 1;
+    }
+  }
+}
+
+.preview-image {
+  background-size:     contain;
+  background-repeat:   no-repeat;
+  background-position: center;
+
+  height:              100%;
+  width:               100%;
+}
+
+.jsf-file-upload-card-body {
+  min-height: $card-item-height;
+}
+
+.jsf-file-upload-card-text {
+  width:       100%;
+  line-height: 1.1;
+}
+
+.jsf-file-upload-card-image {
+  height:       auto;
+  width:        70%;
+  max-width:    150px;
+  margin-right: 10px;
+
+  .mat-icon {
+    font-size: 85px;
+    width:     auto;
+    height:    auto;
+  }
+}
+
+.jsf-file-upload-card-selection-label {
+  font-size:  1rem;
+  display:    block;
+  margin-top: -10px;
+}
+
+.jsf-file-upload-subnav {
+  margin-top: -20px;
+  padding:    2px 10px;
+}
+
+.jsf-file-upload-error-messages {
+  display:       block;
+  line-height:   1;
+  margin-bottom: 5px;
+}

@@ -1,0 +1,95 @@
+<div class="jsf-file-upload">
+  <div class="border border-style-solid rounded-lg"
+       [class.cursor-not-allowed]="disabled"
+       [class.__border-color--warn]="displayErrors"
+       [class.__color--warn]="displayErrors">
+    <div class="jsf-file-upload-card-body d-flex h-full w-full p-2">
+
+      <ng-container [ngSwitch]="state">
+        <!-- Initializing -->
+        <ng-container *ngSwitchCase="uploaderState.Initializing">
+          <div class="text-center w-full d-flex flex-column align-items-center justify-content-center rounded-sm">
+            <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+          </div>
+        </ng-container>
+
+        <!-- Awaiting Upload -->
+        <ng-container *ngSwitchCase="uploaderState.AwaitingUpload">
+          <div class="text-center w-full d-flex flex-column align-items-center justify-content-center rounded-sm upload-area"
+               ng2FileDrop
+               [uploader]="uploader"
+               [class.__background-color--primary-20]="dropZoneOver"
+               (fileOver)="fileOver($event)"
+               (onFileDrop)="fileDrop($event)">
+            <ng-container *ngIf="!dropZoneOver">
+
+              <jsf-button [title]="uploadLabel" (click)="fileInput.click()"></jsf-button>
+              <input hidden #fileInput type="file" ng2FileSelect [uploader]="uploader" [attr.accept]="allowedFileTypesInputString" [multiple]="false"/>
+
+              <span class="d-block text-muted small" *ngIf="allowedFileTypesText">
+                {{ allowedExtensionsLabel }}&nbsp;{{ allowedFileTypesText }}
+              </span>
+            </ng-container>
+
+            <ng-container *ngIf="dropZoneOver">
+              <span class="font-size-h4 __color--primary">{{ dropFileLabel }}</span>
+              <span class="d-block text-muted small" *ngIf="allowedFileTypesText">
+                  {{ allowedExtensionsLabel }}&nbsp;{{ allowedFileTypesText }}
+                </span>
+            </ng-container>
+          </div>
+        </ng-container>
+
+        <!-- Uploading -->
+        <ng-container *ngSwitchCase="uploaderState.Uploading">
+          <div class="text-center w-full d-flex flex-column align-items-center justify-content-center rounded-sm upload-area">
+            <span class="font-size-h4 __color--primary">{{ uploadingLabel }} {{ uploadProgress }}%</span>
+            <mat-progress-bar color="primary" [value]="uploadProgress" class="upload-bar"></mat-progress-bar>
+          </div>
+        </ng-container>
+
+        <!-- Post upload -->
+        <ng-container *ngSwitchCase="uploaderState.PostUpload">
+          <div class="w-full d-flex align-items-center justify-content-between">
+            <!-- File preview -->
+            <div class="preview-container">
+              <mat-progress-spinner mode="indeterminate" diameter="30" *ngIf="previewFileLoading"></mat-progress-spinner>
+              <ng-container *ngIf="!previewFileLoading">
+                <div class="preview-image" [style.background-image]="'url(&quot;' + previewFileUrl + '&quot;)' | safe:'style'" *ngIf="isImageLikeFile" (click)="downloadPreviewFile()"></div>
+
+                <div class="file-card-container" *ngIf="!isImageLikeFile">
+                  <div class="file-card-inner-container">
+                    <ng-container *ngTemplateOutlet="genericFileCard"></ng-container>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+
+            <!-- Actions -->
+            <div class="file-actions">
+              <jsf-button [title]="reUploadLabel" (click)="fileInput.click()"></jsf-button>
+              <input hidden #fileInput type="file" ng2FileSelect [uploader]="uploader" [attr.accept]="allowedFileTypesInputString" [multiple]="false"/>
+
+              <jsf-button [title]="removeLabel" (click)="removeFile()"></jsf-button>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+
+  <ng-template #genericFileCard>
+    <div class="file-card rounded" matRipple (click)="downloadPreviewFile()">
+      <div class="fi fi-round-md" [ngClass]="'fi-' + ext">
+        <div class="fi-content">{{ ext }}</div>
+      </div>
+
+      <div class="file-card-filename small">
+        {{ filenameWithExt }}
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Validation messages -->
+  <jsf-error-messages class="jsf-file-upload-error-messages" *ngIf="displayErrors" [messages]="errors"></jsf-error-messages>
+</div>

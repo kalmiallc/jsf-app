@@ -33,6 +33,7 @@
     "color": "^3.1.2",
     "intersection-observer": "^0.11.0",
     "ng-keyboard-shortcuts": "9.0.0",
+    "ng2-file-upload": "^1.4.0",
     "ngx-monaco-editor": "^9.0.0",
     "overlayscrollbars": "^1.12.0",
     "overlayscrollbars-ngx": "^0.2.2",
