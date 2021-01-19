@@ -137,6 +137,7 @@ export * from './lib/kal-jsf-doc/services/theme-renderer.service';
 export * from './lib/kal-jsf-doc/services/scroll.service';
 export * from './lib/kal-jsf-doc/services/module-cache.service';
 export * from './lib/kal-jsf-doc/services/overlay-scrollbars.service';
+export * from './lib/kal-jsf-doc/services/scroll-to-error.service';
 
 export * from './lib/jsf-builder.module';
 export * from './lib/kal-jsf-builder/kal-jsf-builder.module';

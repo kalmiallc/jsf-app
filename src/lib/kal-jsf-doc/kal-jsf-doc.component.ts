@@ -68,6 +68,7 @@ import { ModuleLoaderService }            from './services/module-loader.service
 import { OverlayScrollbarsService }       from './services/overlay-scrollbars.service';
 import { getUrlQuery }                    from '../utilities/query';
 import { ActivatedRoute, Router }         from '@angular/router';
+import { JsfScrollToErrorService }        from './services/scroll-to-error.service';
 
 
 // tslint:disable:no-output-on-prefix
@@ -502,6 +503,7 @@ export class KalJsfDocComponent implements OnInit, AfterViewInit, OnDestroy {
               private themeRendererService: ThemeRendererService,
               private scriptInjector: ScriptInjectorService,
               private osService: OverlayScrollbarsService,
+              private scrollToErrorService: JsfScrollToErrorService,
               @Optional() @SkipSelf() private globalThemeOutlet: ThemeOutletComponent,
               @Optional() private formScrollElement: OverlayScrollbarsComponent,
               @Inject(JSF_APP_CONFIG) private jsfAppConfig: JsfAppConfig,
@@ -697,12 +699,12 @@ export class KalJsfDocComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /*
-    this.builder.layoutLoadingCount
-      .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((count) => {
-        this.osService.setPauseCount(count);
-      });
-    */
+     this.builder.layoutLoadingCount
+     .pipe(takeUntil(this.ngUnsubscribe))
+     .subscribe((count) => {
+     this.osService.setPauseCount(count);
+     });
+     */
 
     this.builder.docComponent = this;
 

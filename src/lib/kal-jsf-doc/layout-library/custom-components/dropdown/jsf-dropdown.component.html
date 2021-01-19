@@ -58,7 +58,7 @@
 
       <mat-hint *ngIf="description">{{ description }}</mat-hint>
 
-      <mat-error *ngFor="let error of errors">
+      <mat-error *ngFor="let error of errors" class="jsf-error">
         {{ error }}
       </mat-error>
     </mat-form-field>

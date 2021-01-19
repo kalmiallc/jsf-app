@@ -71,7 +71,7 @@ import { BuilderDeveloperToolsInterface }                                       
 
               <mat-hint *ngIf="prop?.description">{{ i18n(prop?.description) }}</mat-hint>
 
-              <mat-error *ngFor="let error of errors">
+              <mat-error *ngFor="let error of errors" class="jsf-error">
                   {{ error.interpolatedMessage }}
               </mat-error>
           </mat-form-field>
