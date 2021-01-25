@@ -39,7 +39,7 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA, SPACE];
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
   private _value: any[] = [];
 
@@ -150,6 +150,15 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
     this.input.nativeElement.value = '';
     this.filteredAutocompleteItems.next(this._filter(this.input.nativeElement.value));
     // this.autocompleteTrigger.openPanel();
+  }
+
+  // Add-on-blur emulation to prevent chips being added when user clicks an autocomplete value.
+  addChipOnBlur(event: FocusEvent) {
+    const target: HTMLElement = event.relatedTarget as HTMLElement;
+    if (!target || target.tagName !== 'MAT-OPTION') {
+      const matChipEvent: MatChipInputEvent = { input: this.input.nativeElement, value : this.input.nativeElement.value };
+      this.add(matChipEvent);
+    }
   }
 
   add(event: MatChipInputEvent): void {
