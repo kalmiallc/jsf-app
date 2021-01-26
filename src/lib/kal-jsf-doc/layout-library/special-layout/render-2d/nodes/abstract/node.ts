@@ -269,6 +269,8 @@ export abstract class Node<T extends PIXI.Container> {
         this.subscribeToMouseDownEvent();
         this.subscribeToMouseUpEvent();
         this.subscribeToDragEvent();
+        this.subscribeToMouseOverEvent();
+        this.subscribeToMouseOutEvent();
     }
 
     // Initialize emitter & update emitter state
@@ -537,6 +539,28 @@ export abstract class Node<T extends PIXI.Container> {
             this.dispatchEvent(NodeEvent.Drag, { $positionX: event.data.getLocalPosition(this._displayObject.parent).x - this.clickOffset.x, $positionY: event.data.getLocalPosition(this._displayObject.parent).y - this.clickOffset.y });
           }
         });
+      }
+    }
+  }
+
+  private subscribeToMouseOverEvent() {
+    if (this.layoutData.events) {
+      if (this.layoutData.events[NodeEvent.MouseOver]) {
+        this._displayObject
+          .on('pointerover', (event: PIXI.InteractionEvent) => {
+            this.dispatchEvent(NodeEvent.MouseOver, {});
+          });
+      }
+    }
+  }
+
+  private subscribeToMouseOutEvent() {
+    if (this.layoutData.events) {
+      if (this.layoutData.events[NodeEvent.MouseOut]) {
+        this._displayObject
+          .on('pointerout', (event: PIXI.InteractionEvent) => {
+            this.dispatchEvent(NodeEvent.MouseOut, {});
+          });
       }
     }
   }

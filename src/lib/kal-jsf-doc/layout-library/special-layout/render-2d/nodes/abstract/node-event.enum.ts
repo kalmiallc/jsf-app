@@ -27,4 +27,12 @@ export enum NodeEvent {
    * Fires when node is dragged
    */
   Drag  = 'drag',
+  /**
+   * Fires when node is hovered
+   */
+  MouseOver  = 'mouseOver',
+  /**
+   * Fires when node is hovered
+   */
+  MouseOut  = 'mouseOut',
 }
