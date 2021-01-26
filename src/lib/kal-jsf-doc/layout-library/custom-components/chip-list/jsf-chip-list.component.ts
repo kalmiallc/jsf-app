@@ -146,7 +146,7 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   autocompleteSelected(event: MatAutocompleteSelectedEvent): void {
-    this.value = this.value.concat([event.option.viewValue]);
+    this.value = (this.value || []).concat([event.option.viewValue]);
     this.input.nativeElement.value = '';
     this.filteredAutocompleteItems.next(this._filter(this.input.nativeElement.value));
     // this.autocompleteTrigger.openPanel();
