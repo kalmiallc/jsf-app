@@ -37,13 +37,19 @@
           </ngx-mat-select-search>
         </mat-option>
 
-        <overlay-scrollbars [options]="scrollOptions">
+        <overlay-scrollbars [options]="scrollOptions" [class.has-dropdown-panel-footer]="!!panelFooterTemplate">
           <mat-option *ngIf="!required && !isArray && !multiple" [value]="null">{{ nullValueLabel }}</mat-option>
           <mat-option *ngFor="let item of filteredItems; trackBy: trackByFn"
                       [value]="item.value">
             {{ item.label }}
           </mat-option>
         </overlay-scrollbars>
+
+        <ng-container *ngIf="panelFooterTemplate">
+          <div class="jsf-dropdown-panel-footer">
+            <ng-container *ngTemplateOutlet="panelFooterTemplate"></ng-container>
+          </div>
+        </ng-container>
       </mat-select>
 
       <mat-icon matPrefix *ngIf="stepperButtons"

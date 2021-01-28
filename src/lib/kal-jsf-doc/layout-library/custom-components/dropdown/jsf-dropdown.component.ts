@@ -9,9 +9,9 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output,
+  Output, TemplateRef,
   ViewChild
-}                                                             from '@angular/core';
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Overlay }                                            from '@angular/cdk/overlay';
 import { Subject }                                            from 'rxjs';
@@ -110,6 +110,8 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() color?: 'primary' | 'accent' | 'none'                   = 'primary';
   @Input() appearance?: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline';
   @Input() variant?: 'small' | 'standard'                          = 'standard';
+
+  @Input() panelFooterTemplate: TemplateRef<any>;
 
   @Input() prefixIcon?: string;
   @Input() prefixLabel?: string;
