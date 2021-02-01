@@ -19,7 +19,7 @@ import { MatSelectChange }                                    from '@angular/mat
 import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
 import { MatChipInputEvent }                                  from '@angular/material/chips';
 import { COMMA, ENTER, SPACE }                                  from '@angular/cdk/keycodes';
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@kalmia/material/autocomplete';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 
 @Component({
