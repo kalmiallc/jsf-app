@@ -131,6 +131,9 @@ export * from './lib/kal-jsf-doc/directives/array-item-remove.directive';
 export * from './lib/kal-jsf-doc/directives/layout-progress-tracker-step-controller.directive';
 export * from './lib/kal-jsf-doc/directives/mat-input-number-decimal.directive';
 
+export * from './lib/kal-jsf-doc/pipes/jsf-pipes.module';
+export * from './lib/kal-jsf-doc/pipes/safe.pipe';
+
 export * from './lib/kal-jsf-doc/services/responsive.service';
 export * from './lib/kal-jsf-doc/services/script-injector.service';
 export * from './lib/kal-jsf-doc/services/theme-renderer.service';
