@@ -1,14 +1,17 @@
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, EventEmitter,
+  Component,
+  EventEmitter,
   forwardRef,
   Inject,
   Injector,
   Input,
   OnDestroy,
-  OnInit, Output
-} from '@angular/core';
+  OnInit,
+  Output
+}                                                             from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Overlay }                                            from '@angular/cdk/overlay';
 import { Subject }                                            from 'rxjs';
@@ -17,7 +20,7 @@ import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-contr
 import { FileItem, FileUploader, ParsedResponseHeaders }      from 'ng2-file-upload';
 import { takeUntil }                                          from 'rxjs/operators';
 import { MatSnackBar }                                        from '@angular/material/snack-bar';
-import * as qs from 'query-string';
+import * as qs                                                from 'query-string';
 
 export enum UploaderState {
   Initializing,
@@ -39,7 +42,7 @@ export enum UploaderState {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class JsfFileUploadComponent implements OnInit, AfterViewInit, OnDestroy, ControlValueAccessor {
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -66,8 +69,8 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
 
   state: UploaderState = UploaderState.Initializing;
 
-  dropZoneOver         = false;
-  uploadProgress       = 0;
+  dropZoneOver       = false;
+  uploadProgress     = 0;
   previewFileLoading = false;
   previewFileUrl;
 
@@ -91,7 +94,7 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() uploadFailedLabel?: string      = $localize`Upload failed:`;
   @Input() allowedExtensionsLabel?: string = $localize`Allowed file types:`;
   @Input() dropFileLabel?: string          = $localize`Drop file here`;
-  @Input() invalidFileTypeLabel?: string = $localize`Invalid file type.`;
+  @Input() invalidFileTypeLabel?: string   = $localize`Invalid file type.`;
 
 
   @Input() errorMap?: { [errorCode: string]: string };
@@ -152,11 +155,18 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
   get filenameWithExt() {
     let filenameWithExt;
     if (this.value) {
-      const qsTokenString = this.value.split('#')[1];
-      if (qsTokenString) {
-        const qsTokens = qs.parse(qsTokenString);
-        filenameWithExt = qsTokens.filenameWithExt;
+      if (this.value.indexOf('/tmp/') > -1) {
+        // Assume uploaded to temporary dir, parse info from hashtag.
+        const qsTokenString = this.value.split('#')[1];
+        if (qsTokenString) {
+          const qsTokens  = qs.parse(qsTokenString);
+          filenameWithExt = qsTokens.filenameWithExt;
+        }
+      } else {
+        // Assume uploaded to permanent directory, parse info from URL.
+        filenameWithExt = this.value.split('/').pop();
       }
+
     }
     return filenameWithExt ?? '';
   }
@@ -194,7 +204,9 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
 
   ngOnInit(): void {
     this._control = this.injector.get(NgControl);
+  }
 
+  ngAfterViewInit(): void {
     this.createUploader();
 
     this.cdRef.markForCheck();
@@ -202,15 +214,15 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
   }
 
   private createUploader() {
+    this.state = UploaderState.AwaitingUpload;
+
     this.apiService.get('common/storage/presigned-upload')
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(({ preSignedUpload, preSignedDownload, s3Path, token }) => {
         console.log(preSignedUpload, preSignedDownload, s3Path, token);
-        this.preSignedUpload = preSignedUpload;
+        this.preSignedUpload   = preSignedUpload;
         this.preSignedDownload = preSignedDownload;
-        this.preSignedS3Path = s3Path;
-
-        this.state = UploaderState.AwaitingUpload;
+        this.preSignedS3Path   = s3Path;
 
         this.uploader = new FileUploader({
           url             : this.preSignedUpload,
@@ -250,14 +262,14 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
           this.cdRef.markForCheck();
           this.cdRef.detectChanges();
         };
-        this.uploader.onSuccessItem = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
+        this.uploader.onSuccessItem      = (item: FileItem, response: string, status: number, headers: ParsedResponseHeaders) => {
           console.log('onSuccessItem', item);
           this.state = UploaderState.PostUpload;
 
           this.uploadedFilename = item._file.name;
           this.value            = `${ this.preSignedDownload }#${ qs.stringify({
             filenameWithExt: this.uploadedFilename,
-            uploadPath: this.uploadPath
+            uploadPath     : this.uploadPath
           }) }`;
 
           console.log('Value = ', this.value);
@@ -289,29 +301,29 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
     }
 
     this.previewFileLoading = false;
-    this.previewFileUrl = this.value;
+    this.previewFileUrl     = this.value;
 
     this.cdRef.markForCheck();
     this.cdRef.detectChanges();
 
     /*
-    if (this.isUploadedToTmp) {
-      this.previewFileLoading = false;
-      this.previewFileUrl = this.preSignedDownload;
+     if (this.isUploadedToTmp) {
+     this.previewFileLoading = false;
+     this.previewFileUrl = this.preSignedDownload;
 
-      this.cdRef.markForCheck();
-      this.cdRef.detectChanges();
-    } else {
-      this.apiService.get(`common/storage/presigned-download?path=${ this.s3path }&expiry=604800`, )
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe(({ preSignedUrl }) => {
-          this.previewFileLoading = false;
-          this.previewFileUrl = preSignedUrl;
+     this.cdRef.markForCheck();
+     this.cdRef.detectChanges();
+     } else {
+     this.apiService.get(`common/storage/presigned-download?path=${ this.s3path }&expiry=604800`, )
+     .pipe(takeUntil(this.ngUnsubscribe))
+     .subscribe(({ preSignedUrl }) => {
+     this.previewFileLoading = false;
+     this.previewFileUrl = preSignedUrl;
 
-          this.cdRef.markForCheck();
-          this.cdRef.detectChanges();
-        });
-    }
+     this.cdRef.markForCheck();
+     this.cdRef.detectChanges();
+     });
+     }
      */
   }
 
@@ -350,6 +362,14 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
 
   public writeValue(obj: any): void {
     this._value = obj;
+
+    if (this.value) {
+      this.previewFileUrl = this.value;
+      this.state          = UploaderState.PostUpload;
+    } else {
+      this.state = UploaderState.AwaitingUpload;
+    }
+
     this.cdRef.detectChanges();
   }
 }
