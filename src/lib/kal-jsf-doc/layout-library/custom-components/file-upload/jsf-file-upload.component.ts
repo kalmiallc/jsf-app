@@ -1,14 +1,14 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, EventEmitter,
   forwardRef,
   Inject,
   Injector,
   Input,
   OnDestroy,
-  OnInit
-}                                                             from '@angular/core';
+  OnInit, Output
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Overlay }                                            from '@angular/cdk/overlay';
 import { Subject }                                            from 'rxjs';
@@ -100,6 +100,9 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
   @Input() layoutBuilder?: JsfPropLayoutBuilder<JsfPropBuilder>;
   @Input() showJsfErrors?: boolean;
 
+  @Output() fileUploaded?: EventEmitter<void> = new EventEmitter<void>();
+
+
   // Text for display in the component
   get allowedFileTypesText() {
     return this.allowedExtensions && this.allowedExtensions.map(x => `*.${ x }`).join(', ');
@@ -139,7 +142,7 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
     if (this.layoutBuilder) {
       return this.showJsfErrors;
     } else if (this._control) {
-      return this._control.touched || this._control.dirty;
+      return (this._control.touched || this._control.dirty) && this._control.invalid;
     }
   }
 
@@ -149,7 +152,7 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
   get filenameWithExt() {
     let filenameWithExt;
     if (this.value) {
-      const qsTokenString = this.value.split('?')[1];
+      const qsTokenString = this.value.split('#')[1];
       if (qsTokenString) {
         const qsTokens = qs.parse(qsTokenString);
         filenameWithExt = qsTokens.filenameWithExt;
@@ -172,23 +175,6 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
     return this.filenameWithExt.split(this.ext)[0];
   }
 
-  /**
-   * Gets the S3 path where the file is uploaded.
-   */
-  get s3path() {
-    let path;
-    if (this.value) {
-      path = this.value.split('?')[0];
-    }
-    return path ?? '';
-  }
-
-  /**
-   * Returns true if current file is uploaded in the tmp folder.
-   */
-  get isUploadedToTmp() {
-    return this.s3path.startsWith('tmp/');
-  }
 
   /**
    * Returns true if uploaded file is of an image type and can be displayed directly in the preview area.
@@ -269,7 +255,7 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
           this.state = UploaderState.PostUpload;
 
           this.uploadedFilename = item._file.name;
-          this.value            = `${ this.preSignedS3Path }?${ qs.stringify({
+          this.value            = `${ this.preSignedDownload }#${ qs.stringify({
             filenameWithExt: this.uploadedFilename,
             uploadPath: this.uploadPath
           }) }`;
@@ -277,6 +263,7 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
           console.log('Value = ', this.value);
 
           this.updateUploadedFileUrl();
+          this.fileUploaded.emit();
 
           this.cdRef.markForCheck();
           this.cdRef.detectChanges();
@@ -301,12 +288,13 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
       return;
     }
 
-    this.previewFileLoading = true;
-    this.previewFileUrl = '';
+    this.previewFileLoading = false;
+    this.previewFileUrl = this.value;
 
     this.cdRef.markForCheck();
     this.cdRef.detectChanges();
 
+    /*
     if (this.isUploadedToTmp) {
       this.previewFileLoading = false;
       this.previewFileUrl = this.preSignedDownload;
@@ -324,6 +312,7 @@ export class JsfFileUploadComponent implements OnInit, OnDestroy, ControlValueAc
           this.cdRef.detectChanges();
         });
     }
+     */
   }
 
   ngOnDestroy(): void {
