@@ -1,68 +1,268 @@
-<div class="jsf-prop jsf-prop-string jsf-animatable"
-     [class.jsf-prop-variant-standard]="isVariantStandard()"
-     [class.jsf-prop-variant-small]="isVariantSmall()"
-     [class.jsf-mat-form-field-multiline]="isMultiline()"
-     [ngClass]="htmlClass"
-     (click)="onClick.emit($event)">
-  <mat-form-field [color]="color"
-                  [appearance]="appearance"
-                  [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
-                  [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
-                  jsfOutlineGapAutocorrect>
-    <mat-label *ngIf="title"
-               [attr.for]="id"
-               [style.display]="notitle ? 'none' : ''">
-      {{ title }}
-    </mat-label>
+<ng-container [ngSwitch]="type">
+  <!-- String -->
+  <ng-container *ngSwitchCase="'string'">
+    <div class="jsf-prop jsf-prop-string jsf-animatable"
+         [class.jsf-prop-variant-standard]="isVariantStandard()"
+         [class.jsf-prop-variant-small]="isVariantSmall()"
+         [class.jsf-mat-form-field-multiline]="isMultiline()"
+         [ngClass]="htmlClass"
+         (click)="onClick.emit($event)">
+      <mat-form-field [color]="color"
+                      [appearance]="appearance"
+                      [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
+                      [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
+                      jsfOutlineGapAutocorrect>
+        <mat-label *ngIf="title"
+                   [attr.for]="id"
+                   [style.display]="notitle ? 'none' : ''">
+          {{ title }}
+        </mat-label>
 
-    <input matInput
-           *ngIf="!multiline"
-           [placeholder]="placeholder || ''"
-           [required]="required"
-           [disabled]="disabled"
-           [id]="id"
-           [name]="name"
-           [readonly]="readonly"
-           [type]="inputType"
-           [(ngModel)]="value"
-           #input="ngModel"
-           [jsfPropValidator]="layoutBuilder"
-           [errorStateMatcher]="errorStateMatcher">
+        <input matInput
+               *ngIf="!multiline"
+               [placeholder]="placeholder || ''"
+               [required]="required"
+               [disabled]="disabled"
+               [id]="id"
+               [name]="name"
+               [readonly]="readonly"
+               [type]="inputType"
+               [(ngModel)]="value"
+               #input="ngModel"
+               [jsfPropValidator]="layoutBuilder"
+               [errorStateMatcher]="errorStateMatcher">
 
-    <textarea matInput
-              cdkTextareaAutosize
-              [cdkAutosizeMinRows]="rows"
-              [rows]="rows"
-              cdkAutosizeMaxRows="10"
-              *ngIf="multiline"
-              [placeholder]="placeholder"
-              [required]="required"
-              [disabled]="disabled"
-              [id]="id"
-              [name]="name"
-              [readonly]="readonly"
-              [type]="secret ? 'password' : 'text'"
-              [(ngModel)]="value"
-              #input="ngModel"
-              [jsfPropValidator]="layoutBuilder"
-              [errorStateMatcher]="errorStateMatcher">
+        <textarea matInput
+                  cdkTextareaAutosize
+                  [cdkAutosizeMinRows]="rows"
+                  [rows]="rows"
+                  cdkAutosizeMaxRows="10"
+                  *ngIf="multiline"
+                  [placeholder]="placeholder"
+                  [required]="required"
+                  [disabled]="disabled"
+                  [id]="id"
+                  [name]="name"
+                  [readonly]="readonly"
+                  [type]="secret ? 'password' : 'text'"
+                  [(ngModel)]="value"
+                  #input="ngModel"
+                  [jsfPropValidator]="layoutBuilder"
+                  [errorStateMatcher]="errorStateMatcher">
     </textarea>
 
-    <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
-    <span matPrefix *ngIf="prefixLabel">{{ prefixLabel }}</span>
+        <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+        <span matPrefix *ngIf="prefixLabel">{{ prefixLabel }}</span>
 
-    <button mat-button *ngIf="clearable && value" matSuffix mat-icon-button aria-label="Clear"
-            (click)="value = null">
-      <mat-icon>close</mat-icon>
-    </button>
+        <button mat-button *ngIf="clearable && value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="value = null">
+          <mat-icon>close</mat-icon>
+        </button>
 
-    <span matSuffix *ngIf="suffixLabel">{{ suffixLabel }}</span>
-    <mat-icon matSuffix *ngIf="suffixIcon">{{ suffixIcon }}</mat-icon>
+        <span matSuffix *ngIf="suffixLabel">{{ suffixLabel }}</span>
+        <mat-icon matSuffix *ngIf="suffixIcon">{{ suffixIcon }}</mat-icon>
 
-    <mat-hint *ngIf="description">{{ description }}</mat-hint>
+        <mat-hint *ngIf="description">{{ description }}</mat-hint>
 
-    <mat-error *ngFor="let error of errors" class="jsf-error">
-      {{ error }}
-    </mat-error>
-  </mat-form-field>
-</div>
+        <mat-error *ngFor="let error of errors" class="jsf-error">
+          {{ error }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+
+
+  <!-- Number -->
+  <ng-container *ngSwitchCase="'number'">
+    <div class="jsf-prop jsf-prop-number jsf-animatable"
+         [class.jsf-prop-variant-standard]="isVariantStandard()"
+         [class.jsf-prop-variant-small]="isVariantSmall()"
+         [ngClass]="htmlClass"
+         (click)="onClick.emit($event)">
+      <mat-form-field [color]="color"
+                      [appearance]="appearance"
+                      [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
+                      [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
+                      jsfOutlineGapAutocorrect>
+        <mat-label *ngIf="title"
+                   [attr.for]="id"
+                   [style.display]="notitle ? 'none' : ''">
+          {{ title }}
+        </mat-label>
+        <input matInput
+               [placeholder]="placeholder"
+               [required]="required"
+               [disabled]="disabled"
+               [id]="id"
+               [name]="id"
+               [readonly]="readonly"
+               type="number"
+               [step]="step"
+               [(ngModel)]="value"
+               #input="ngModel"
+               matInputNumberDecimal
+               [jsfNumberInputAutoCorrectMinDecimalDigits]="minDecimalDigits"
+               [jsfNumberInputAutoCorrectMaxDecimalDigits]="maxDecimalDigits"
+               [jsfPropValidator]="layoutBuilder"
+               [errorStateMatcher]="errorStateMatcher">
+
+        <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+        <span matPrefix *ngIf="prefixLabel">{{ prefixLabel }}</span>
+
+        <mat-icon matPrefix *ngIf="stepperButtons"
+                  id="{{ id }}--decrease"
+                  ngClass="stepper-button decrement no-text-selection cursor-pointer __color--{{ color }}"
+                  (click)="decrement()">
+          remove
+        </mat-icon>
+
+        <button mat-button *ngIf="clearable && value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="value = null">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <mat-icon matSuffix *ngIf="stepperButtons"
+                  id="{{ id }}--increment"
+                  ngClass="stepper-button increment no-text-selection cursor-pointer __color--{{ color }}"
+                  (click)="increment()">
+          add
+        </mat-icon>
+
+        <span matSuffix *ngIf="suffixLabel">{{ suffixLabel }}</span>
+        <mat-icon matSuffix *ngIf="suffixIcon">{{ suffixIcon }}</mat-icon>
+
+        <mat-hint *ngIf="description">{{ description }}</mat-hint>
+
+        <mat-error *ngFor="let error of errors" class="jsf-error">
+          {{ error }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+
+  <!-- Integer -->
+  <ng-container *ngSwitchCase="'integer'">
+    <div class="jsf-prop jsf-prop-integer jsf-animatable"
+         [class.jsf-prop-variant-standard]="isVariantStandard()"
+         [class.jsf-prop-variant-small]="isVariantSmall()"
+         [ngClass]="htmlClass"
+         (click)="onClick.emit($event)">
+      <mat-form-field [color]="color"
+                      [appearance]="appearance"
+                      [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
+                      [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
+                      jsfOutlineGapAutocorrect>
+        <mat-label *ngIf="title"
+                   [attr.for]="id"
+                   [style.display]="notitle ? 'none' : ''">
+          {{ title }}
+        </mat-label>
+        <input matInput
+               [placeholder]="placeholder"
+               [required]="required"
+               [disabled]="disabled"
+               [id]="id"
+               [name]="id"
+               [readonly]="readonly"
+               type="number"
+               [step]="step"
+               [(ngModel)]="value"
+               #input="ngModel"
+               [jsfPropValidator]="layoutBuilder"
+               [errorStateMatcher]="errorStateMatcher">
+
+        <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+        <span matPrefix *ngIf="prefixLabel">{{ prefixLabel }}</span>
+
+        <mat-icon matPrefix *ngIf="stepperButtons"
+                  id="{{ id }}--decrease"
+                  ngClass="stepper-button decrement no-text-selection cursor-pointer __color--{{ color }}"
+                  (click)="decrement()">
+          remove
+        </mat-icon>
+
+        <button mat-button *ngIf="clearable && value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="value = null">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <mat-icon matSuffix *ngIf="stepperButtons"
+                  id="{{ id }}--increment"
+                  ngClass="stepper-button increment no-text-selection cursor-pointer __color--{{ color }}"
+                  (click)="increment()">
+          add
+        </mat-icon>
+
+        <span matSuffix *ngIf="suffixLabel">{{ suffixLabel }}</span>
+        <mat-icon matSuffix *ngIf="suffixIcon">{{ suffixIcon }}</mat-icon>
+
+        <mat-hint *ngIf="description">{{ description }}</mat-hint>
+
+        <mat-error *ngFor="let error of errors" class="jsf-error">
+          {{ error }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+
+  <!-- Date -->
+  <ng-container *ngSwitchCase="'date'">
+    <div class="jsf-prop jsf-prop-date jsf-animatable"
+         [class.jsf-prop-variant-standard]="isVariantStandard()"
+         [class.jsf-prop-variant-small]="isVariantSmall()"
+         [ngClass]="htmlClass"
+         (click)="onClick.emit($event)">
+      <mat-form-field [color]="color"
+                      [appearance]="appearance"
+                      [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
+                      [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
+                      jsfOutlineGapAutocorrect>
+        <mat-label *ngIf="title"
+                   [attr.for]="id"
+                   [style.display]="notitle ? 'none' : ''">
+          {{ title }}
+        </mat-label>
+
+        <input matInput
+               [placeholder]="placeholder"
+               [required]="required"
+               [min]="minimum"
+               [max]="maximum"
+               [disabled]="disabled"
+               [id]="id"
+               [name]="id"
+               [readonly]="readonly"
+               [matDatepicker]="picker"
+               [(ngModel)]="value"
+               #input="ngModel"
+               #field
+               (focus)="picker.open()"
+               [jsfPropValidator]="layoutBuilder"
+               [errorStateMatcher]="errorStateMatcher">
+
+        <mat-icon matPrefix *ngIf="prefixIcon">{{ prefixIcon }}</mat-icon>
+        <span matPrefix *ngIf="prefixLabel">{{ prefixLabel }}</span>
+
+        <button mat-button *ngIf="clearable && value" matSuffix mat-icon-button aria-label="Clear"
+                (click)="value = null; $event.stopPropagation()">
+          <mat-icon>close</mat-icon>
+        </button>
+
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker [color]="color" (closed)="field.blur()"></mat-datepicker>
+
+        <span matSuffix *ngIf="suffixLabel">{{ suffixLabel }}</span>
+        <mat-icon matSuffix *ngIf="suffixIcon">{{ suffixIcon }}</mat-icon>
+
+        <mat-hint *ngIf="description">{{ description }}</mat-hint>
+
+        <mat-error *ngFor="let error of errors" class="jsf-error">
+          {{ error }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </ng-container>
+
+  <!-- Fallback -->
+  <span *ngSwitchDefault>Unknown input type "{{ type }}"</span>
+</ng-container>

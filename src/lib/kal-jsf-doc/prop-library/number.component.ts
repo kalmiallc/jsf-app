@@ -17,70 +17,36 @@ import { BuilderDeveloperToolsInterface } from '../builder-developer-tools.inter
 @Component({
   selector: 'jsf-prop-number',
   template: `
-      <div class="jsf-prop jsf-prop-number jsf-animatable"
-           [class.jsf-prop-variant-standard]="isVariantStandard()"
-           [class.jsf-prop-variant-small]="isVariantSmall()"
-           [ngClass]="htmlClass"
-           (click)="handleLayoutClick($event)">
-          <mat-form-field [color]="themePreferences.color"
-                          [appearance]="themePreferences.appearance"
-                          [class.jsf-mat-form-field-variant-standard]="isVariantStandard()"
-                          [class.jsf-mat-form-field-variant-small]="isVariantSmall()"
-                          jsfOutlineGapAutocorrect>
-              <mat-label *ngIf="prop?.title"
-                         [attr.for]="id"
-                         [style.display]="layout?.notitle ? 'none' : ''">
-                  {{ i18n(prop?.title) }}
-              </mat-label>
-              <input matInput
-                     [placeholder]="i18n(layout?.placeholder || '')"
-                     [required]="prop?.required"
-                     [disabled]="disabled"
-                     [id]="id"
-                     [name]="propBuilder.id"
-                     [readonly]="prop.readonly || prop.const ? 'readonly' : null"
-                     type="number"
-                     [step]="themePreferences.step"
-                     [(ngModel)]="value"
-                     #input="ngModel"
-                     matInputNumberDecimal
-                     [jsfNumberInputAutoCorrectMinDecimalDigits]="jsfNumberInputAutoCorrectOptions.minDecimalDigits"
-                     [jsfNumberInputAutoCorrectMaxDecimalDigits]="jsfNumberInputAutoCorrectOptions.maxDecimalDigits"
-                     [jsfPropValidator]="layoutBuilder"
-                     [errorStateMatcher]="errorStateMatcher">
-
-              <mat-icon matPrefix *ngIf="themePreferences.prefixIcon">{{ themePreferences.prefixIcon }}</mat-icon>
-              <span matPrefix *ngIf="themePreferences.prefixLabel">{{ themePreferences.prefixLabel }}</span>
-
-              <mat-icon matPrefix *ngIf="themePreferences.stepperButtons"
-                        id="{{ id }}--decrease"
-                        ngClass="stepper-button decrement no-text-selection cursor-pointer __color--{{ themePreferences.color }}"
-                        (click)="decrement()">
-                  remove
-              </mat-icon>
-
-              <button mat-button *ngIf="themePreferences.clearable && value" matSuffix mat-icon-button aria-label="Clear"
-                      (click)="value = null">
-                  <mat-icon>close</mat-icon>
-              </button>
-
-              <mat-icon matSuffix *ngIf="themePreferences.stepperButtons"
-                        id="{{ id }}--increment"
-                        ngClass="stepper-button increment no-text-selection cursor-pointer __color--{{ themePreferences.color }}"
-                        (click)="increment()">
-                  add
-              </mat-icon>
-
-              <span matSuffix *ngIf="themePreferences.suffixLabel">{{ themePreferences.suffixLabel }}</span>
-              <mat-icon matSuffix *ngIf="themePreferences.suffixIcon">{{ themePreferences.suffixIcon }}</mat-icon>
-
-              <mat-hint *ngIf="prop?.description">{{ i18n(prop?.description) }}</mat-hint>
-
-              <mat-error *ngFor="let error of errors" class="jsf-error">
-                  {{ error.interpolatedMessage }}
-              </mat-error>
-          </mat-form-field>
-      </div>
+    <jsf-input [type]="'number'"
+               [required]="prop?.required"
+               [disabled]="disabled"
+               [id]="id"
+               [name]="propBuilder.id"
+               [readonly]="prop.readonly || prop.const ? 'readonly' : null"
+               [title]="i18n(prop?.title || '')"
+               [description]="i18n(prop?.description || '')"
+               [variant]="themePreferences.variant"
+               [notitle]="layout?.notitle"
+               [placeholder]="i18n(layout?.placeholder || '')"
+               [htmlClass]="htmlClass"
+               [color]="themePreferences.color"
+               [appearance]="themePreferences.appearance"
+               (click)="handleLayoutClick($event)"
+               [(ngModel)]="value"
+               [prefixIcon]="themePreferences.prefixIcon"
+               [prefixLabel]="themePreferences.prefixLabel"
+               [suffixIcon]="themePreferences.suffixIcon"
+               [suffixLabel]="themePreferences.suffixLabel"
+               [clearable]="themePreferences.clearable"
+               [step]="themePreferences.step"
+               [minimum]="prop.minimum"
+               [maximum]="prop.maximum"
+               [minDecimalDigits]="jsfNumberInputAutoCorrectOptions.minDecimalDigits"
+               [maxDecimalDigits]="jsfNumberInputAutoCorrectOptions.maxDecimalDigits"
+               [stepperButtons]="themePreferences.stepperButtons"
+               [layoutBuilder]="layoutBuilder"
+               [errorStateMatcher]="errorStateMatcher">
+    </jsf-input>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: []
@@ -101,7 +67,7 @@ export class PropNumberComponent extends AbstractPropLayoutComponent<JsfPropBuil
       minDecimalDigits: this.propBuilder.prop.minDecimalDigits,
       maxDecimalDigits: this.propBuilder.prop.maxDecimalDigits,
       // minIntegerDigits:  this.propBuilder.prop.minIntegerDigits
-    }
+    };
   }
 
   constructor(protected cdRef: ChangeDetectorRef,

@@ -9,7 +9,7 @@ import {
   Input,
   OnDestroy,
   OnInit,
-  Output
+  Output, ViewChild
 }                                                             from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Overlay }                                            from '@angular/cdk/overlay';
@@ -18,6 +18,8 @@ import { JsfFormat, JsfPropBuilder, JsfPropLayoutBuilder }    from '@kalmia/jsf-
 import { ErrorStateMatcher }                                  from '@angular/material/core';
 import { isBoolean }                                          from 'lodash';
 import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
+import * as BigJs                                             from 'big.js';
+import { MatInput }                                           from '@angular/material/input';
 
 
 @Component({
@@ -37,20 +39,23 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  private _value: string;
+  private _value: string | number | Date;
 
   get value() {
     return this._value;
   }
 
-  set value(x: string) {
+  set value(x: string | number | Date) {
     this._value = x;
     this.propagateChange(this._value);
   }
 
   private _control: NgControl;
 
-  @Input() type: 'string' | 'number' = 'string';
+  @ViewChild(MatInput, { static: false })
+  matInputControl: MatInput;
+
+  @Input() type: 'string' | 'number' | 'integer' | 'date' = 'string';
   @Input() multiline?: boolean;
 
   @Input() title?: string;
@@ -64,6 +69,12 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   @Input() readonly?: boolean;
   @Input() secret?: boolean;
   @Input() format?: JsfFormat;
+  @Input() step?: number;
+  @Input() minimum?: number | Date;
+  @Input() maximum?: number | Date;
+  @Input() minDecimalDigits?: number;
+  @Input() maxDecimalDigits?: number;
+  @Input() stepperButtons?: boolean;
 
   @Input() htmlClass?: string;
   @Input() color?: 'primary' | 'accent' | 'none'                   = 'primary';
@@ -158,6 +169,39 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.unsubscribe();
+  }
+
+  increment() {
+    let x = + (new BigJs.Big(<number>this.value || 0)
+      .plus(this.step)
+      .toPrecision());
+
+    if (this.maximum !== undefined) {
+      x = Math.min(x, <number>this.maximum);
+    }
+    this.value = x;
+    this.markMaterialControlAsDirty();
+  }
+
+  decrement() {
+    let x = + (new BigJs.Big(<number>this.value || 0)
+      .minus(this.step)
+      .toPrecision());
+
+    if (this.minimum !== undefined) {
+      x = Math.max(x, <number>this.minimum);
+    }
+    this.value = x;
+    this.markMaterialControlAsDirty();
+  }
+
+  private markMaterialControlAsDirty() {
+    if (this.matInputControl) {
+      const ngControl = this.matInputControl.ngControl;
+      if (ngControl && ngControl.control) {
+        ngControl.control.markAsDirty();
+      }
+    }
   }
 
   public registerOnChange(fn: any): void {
