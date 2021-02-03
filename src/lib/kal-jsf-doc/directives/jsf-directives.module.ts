@@ -8,6 +8,7 @@ import { PropValidatorDirective }                       from './prop-validator.d
 import { ArrayItemRemoveDirective }                     from './array-item-remove.directive';
 import { LayoutProgressTrackerStepControllerDirective } from './layout-progress-tracker-step-controller.directive';
 import { MatInputNumberDecimalDirective }               from './mat-input-number-decimal.directive';
+import { ModelValidatorDirective }                      from './model-validator.directive';
 
 @NgModule({
   imports     : [
@@ -21,7 +22,8 @@ import { MatInputNumberDecimalDirective }               from './mat-input-number
     PropValidatorDirective,
     ArrayItemRemoveDirective,
     LayoutProgressTrackerStepControllerDirective,
-    MatInputNumberDecimalDirective
+    MatInputNumberDecimalDirective,
+    ModelValidatorDirective
   ],
   exports     : [
     ShowValidationMessagesDirective,
@@ -31,7 +33,8 @@ import { MatInputNumberDecimalDirective }               from './mat-input-number
     PropValidatorDirective,
     ArrayItemRemoveDirective,
     LayoutProgressTrackerStepControllerDirective,
-    MatInputNumberDecimalDirective
+    MatInputNumberDecimalDirective,
+    ModelValidatorDirective
   ]
 })
 export class JsfDirectivesModule {}
