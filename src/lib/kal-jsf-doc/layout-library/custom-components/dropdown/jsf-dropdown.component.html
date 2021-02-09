@@ -37,12 +37,21 @@
           </ngx-mat-select-search>
         </mat-option>
 
-        <overlay-scrollbars [options]="scrollOptions" [class.has-dropdown-panel-footer]="!!panelFooterTemplate">
-          <mat-option *ngIf="!required && !isArray && !multiple" [value]="null">{{ nullValueLabel }}</mat-option>
-          <mat-option *ngFor="let item of filteredItems; trackBy: trackByFn"
-                      [value]="item.value">
-            {{ item.label }}
-          </mat-option>
+        <overlay-scrollbars [options]="scrollOptions" [class.has-dropdown-panel-footer]="!!panelFooterTemplate" #osHost class="jsf-dropdown-os-host">
+          <virtual-scroller *ngIf="osHost?.osInstance()?.getElements()?.viewport"
+                            #scroll
+                            [items]="filteredItems"
+                            [parentScroll]="osHost.osInstance().getElements().viewport"
+                            [modifyOverflowStyleOfParentScroll]="false"
+                            [style.height.px]="dropdownContentHeight">
+            <mat-option *ngIf="hasNullValueOption" [value]="null">{{ nullValueLabel }}</mat-option>
+            <div #container>
+              <mat-option *ngFor="let item of scroll.viewPortItems; trackBy: trackByFn"
+                          [value]="item.value">
+                {{ item.label }}
+              </mat-option>
+            </div>
+          </virtual-scroller>
         </overlay-scrollbars>
 
         <ng-container *ngIf="panelFooterTemplate">

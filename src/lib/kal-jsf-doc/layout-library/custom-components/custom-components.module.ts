@@ -19,20 +19,21 @@ import { MonacoEditorModule }           from 'ngx-monaco-editor';
 import { OverlayModule }                from '@angular/cdk/overlay';
 import { FormsModule }                  from '@angular/forms';
 import { NgxMatSelectSearchModule }     from 'ngx-mat-select-search';
-import { SharedModule }                 from '../../shared/shared.module';
-import { JsfBadgeComponent }            from './badge/jsf-badge.component';
-import { JsfChipListComponent }         from './chip-list/jsf-chip-list.component';
-import { MatChipsModule }               from '@angular/material/chips';
-import { MatAutocompleteModule }        from '@angular/material/autocomplete';
-import { JsfFileUploadComponent }       from './file-upload/jsf-file-upload.component';
-import { FileUploadModule }             from 'ng2-file-upload';
-import { MatProgressSpinnerModule }     from '@angular/material/progress-spinner';
-import { MatProgressBarModule }         from '@angular/material/progress-bar';
-import { MatSnackBarModule }            from '@angular/material/snack-bar';
-import { JsfPipesModule }               from '../../pipes/jsf-pipes.module';
+import { SharedModule }             from '../../shared/shared.module';
+import { JsfBadgeComponent }        from './badge/jsf-badge.component';
+import { JsfChipListComponent }     from './chip-list/jsf-chip-list.component';
+import { MatChipsModule }           from '@angular/material/chips';
+import { MatAutocompleteModule }    from '@angular/material/autocomplete';
+import { JsfFileUploadComponent }   from './file-upload/jsf-file-upload.component';
+import { FileUploadModule }         from 'ng2-file-upload';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatProgressBarModule }     from '@angular/material/progress-bar';
+import { MatSnackBarModule }        from '@angular/material/snack-bar';
+import { JsfPipesModule }           from '../../pipes/jsf-pipes.module';
+import { VirtualScrollerModule }    from 'ngx-virtual-scroller';
 
 @NgModule({
-  imports     : [
+  imports: [
     CommonModule,
     SharedModule,
     NgxMatSelectSearchModule,
@@ -52,7 +53,8 @@ import { JsfPipesModule }               from '../../pipes/jsf-pipes.module';
     FormsModule,
     MonacoEditorModule,
     JsfDirectivesModule,
-    JsfPipesModule
+    JsfPipesModule,
+    VirtualScrollerModule
   ],
   declarations: [
     JsfErrorMessagesComponent,

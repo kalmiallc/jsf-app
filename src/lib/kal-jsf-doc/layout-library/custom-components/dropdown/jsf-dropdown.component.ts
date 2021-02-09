@@ -118,6 +118,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() suffixIcon?: string;
   @Input() suffixLabel?: string;
   @Input() clearable?: boolean;
+  @Input() optionItemHeightPx = 32; // Should match the height of each item in CSS. Needed for virtual scrolling.
 
   @Input() nullValueLabel?: string            = $localize`--`;
   @Input() searchPlaceholderLabel?: string    = $localize`Search`;
@@ -146,6 +147,14 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   get hasNoItems() {
     return (!this.items || this.items.length === 0);
+  }
+
+  get hasNullValueOption() {
+    return !this.required && !this.isArray && !this.multiple;
+  }
+
+  get dropdownContentHeight() {
+    return (this.filteredItems.length + (this.hasNullValueOption ? 1 : 0)) * this.optionItemHeightPx;
   }
 
   get errors() {
