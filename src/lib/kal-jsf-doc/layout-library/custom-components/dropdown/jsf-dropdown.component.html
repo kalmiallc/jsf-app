@@ -26,9 +26,11 @@
         [(ngModel)]="value"
         #input="ngModel"
         #dropdown
+        (openedChange)="openedChange($event)"
         [jsfPropValidator]="layoutBuilder"
         (selectionChange)="onClick.emit($event)"
-        [errorStateMatcher]="errorStateMatcher">
+        [errorStateMatcher]="errorStateMatcher"
+        [disableOptionCentering]="true">
         <mat-option *ngIf="searchable">
           <ngx-mat-select-search ngModel
                                  (ngModelChange)="search = $event"
@@ -47,7 +49,8 @@
             <mat-option *ngIf="hasNullValueOption" [value]="null">{{ nullValueLabel }}</mat-option>
             <div #container>
               <mat-option *ngFor="let item of scroll.viewPortItems; trackBy: trackByFn"
-                          [value]="item.value">
+                          [value]="item.value"
+                          [attr.title]="item.label">
                 {{ item.label }}
               </mat-option>
             </div>

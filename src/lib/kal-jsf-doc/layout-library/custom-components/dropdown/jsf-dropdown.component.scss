@@ -32,6 +32,8 @@
 
 ::ng-deep {
   .jsf-dropdown-os-host {
-
+    virtual-scroller {
+      height: 1000px;
+    }
   }
 }

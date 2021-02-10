@@ -11,7 +11,7 @@ import {
   OnInit,
   Output, TemplateRef,
   ViewChild
-} from '@angular/core';
+}                                                             from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Overlay }                                            from '@angular/cdk/overlay';
 import { Subject }                                            from 'rxjs';
@@ -22,6 +22,7 @@ import * as OverlayScrollbars                                 from 'overlayscrol
 import { jsfDefaultScrollOptions }                            from '../../../../utilities';
 import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
 import { takeUntil }                                          from 'rxjs/operators';
+import { MatOption }                                          from '@kalmia/material/core';
 
 
 export interface JsfDropdownItem {
@@ -46,13 +47,13 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  private _value: string;
+  private _value: string | string[];
 
   get value() {
     return this._value;
   }
 
-  set value(x: string) {
+  set value(x: string | string[]) {
     this._value = x;
     this.propagateChange(this._value);
   }
@@ -103,8 +104,8 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() readonly?: boolean;
   @Input() stepperButtons?: boolean;
 
-  @Input() iconNext?: string     = 'keyboard_arrow_right';
-  @Input() iconPrevious?: string = 'keyboard_arrow_left';
+  @Input() iconNext     = 'keyboard_arrow_right';
+  @Input() iconPrevious = 'keyboard_arrow_left';
 
   @Input() htmlClass?: string;
   @Input() color?: 'primary' | 'accent' | 'none'                   = 'primary';
@@ -236,6 +237,19 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     this._filteredItems = this.search
       ? this._items.filter(x => x.label.toLowerCase().indexOf(this.search.toLowerCase().trim()) >= 0)
       : this._items;
+
+    if (this.multiple) {
+      this._filteredItems.sort((a: JsfDropdownItem, b: JsfDropdownItem) => {
+        if (this.isItemSelected(a) && !this.isItemSelected(b)) {
+          return -1;
+        }
+        if (!this.isItemSelected(a) && this.isItemSelected(b)) {
+          return 1;
+        }
+        return this.items.indexOf(b) - this.items.indexOf(a);
+      });
+    }
+
     this.cdRef.markForCheck();
     this.cdRef.detectChanges();
   }
@@ -252,8 +266,34 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     }
   }
 
+  isItemSelected(item: JsfDropdownItem) {
+    if (!this.multiple) {
+      return this.selectedItem.value === item.value;
+    }
+
+    if ((this.value as any[] || []).find(x => x === item.value)) {
+      return true;
+    }
+  }
+
   trackByFn(index, item) {
     return item.value;
+  }
+
+  openedChange(state: boolean) {
+    if (state) {
+      this.fixPanelPosition();
+    } else {
+      this.updateFilteredItems();
+    }
+  }
+
+  private fixPanelPosition() {
+    setTimeout(() => {
+      (this.matSelect.overlayDir.overlayRef as any)._positionStrategy._positionLocked = false;
+      (this.matSelect.overlayDir.overlayRef as any)._positionStrategy.apply();
+      (this.matSelect.overlayDir.overlayRef as any)._positionStrategy._positionLocked = true;
+    }, 0);
   }
 
   public registerOnChange(fn: any): void {
