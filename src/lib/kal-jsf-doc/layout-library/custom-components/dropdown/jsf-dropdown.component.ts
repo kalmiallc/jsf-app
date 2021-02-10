@@ -154,7 +154,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   get dropdownContentHeight() {
-    return (this.filteredItems.length + (this.hasNullValueOption ? 1 : 0)) * this.optionItemHeightPx;
+    return ((this.filteredItems || []).length + (this.hasNullValueOption ? 1 : 0)) * this.optionItemHeightPx;
   }
 
   get errors() {
