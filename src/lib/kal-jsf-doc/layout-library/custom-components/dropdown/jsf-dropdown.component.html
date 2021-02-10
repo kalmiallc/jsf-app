@@ -23,7 +23,7 @@
         [multiple]="isArray"
         [id]="id"
         [name]="name"
-        [(ngModel)]="value"
+        [ngModel]="value"
         #input="ngModel"
         #dropdown
         (openedChange)="openedChange($event)"
@@ -31,6 +31,7 @@
         (selectionChange)="onClick.emit($event)"
         [errorStateMatcher]="errorStateMatcher"
         [disableOptionCentering]="true">
+
         <mat-option *ngIf="searchable">
           <ngx-mat-select-search ngModel
                                  (ngModelChange)="search = $event"
@@ -39,23 +40,34 @@
           </ngx-mat-select-search>
         </mat-option>
 
-        <overlay-scrollbars [options]="scrollOptions" [class.has-dropdown-panel-footer]="!!panelFooterTemplate" #osHost class="jsf-dropdown-os-host">
-          <virtual-scroller *ngIf="osHost?.osInstance()?.getElements()?.viewport"
-                            #scroll
-                            [items]="filteredItems"
-                            [parentScroll]="osHost.osInstance().getElements().viewport"
-                            [modifyOverflowStyleOfParentScroll]="false"
-                            [style.height.px]="dropdownContentHeight">
-            <mat-option *ngIf="hasNullValueOption" [value]="null">{{ nullValueLabel }}</mat-option>
-            <div #container>
-              <mat-option *ngFor="let item of scroll.viewPortItems; trackBy: trackByFn"
-                          [value]="item.value"
-                          [attr.title]="item.label">
-                {{ item.label }}
-              </mat-option>
-            </div>
-          </virtual-scroller>
-        </overlay-scrollbars>
+        <ng-container *ngIf="dropdown.panelOpen; else closedPanelTemplate">
+          <overlay-scrollbars [options]="scrollOptions" [class.has-dropdown-panel-footer]="!!panelFooterTemplate" #osHost class="jsf-dropdown-os-host">
+            <virtual-scroller *ngIf="osHost?.osInstance()?.getElements()?.viewport"
+                              #scroll
+                              [items]="filteredItems"
+                              [parentScroll]="osHost.osInstance().getElements().viewport"
+                              [modifyOverflowStyleOfParentScroll]="false"
+                              [style.height.px]="dropdownContentHeight">
+              <mat-option *ngIf="hasNullValueOption" [value]="null">{{ nullValueLabel }}</mat-option>
+              <div #container>
+                <mat-option *ngFor="let item of scroll.viewPortItems; trackBy: trackByFn"
+                            [value]="item.value"
+                            (onSelectionChange)="itemSelectionChange($event, item)"
+                            [attr.title]="item.label">
+                  {{ item.label }}
+                </mat-option>
+              </div>
+            </virtual-scroller>
+          </overlay-scrollbars>
+        </ng-container>
+
+        <ng-template #closedPanelTemplate>
+          <mat-option *ngFor="let item of items; trackBy: trackByFn"
+                      [value]="item.value"
+                      class="d-none">
+            {{ item.label }}
+          </mat-option>
+        </ng-template>
 
         <ng-container *ngIf="panelFooterTemplate">
           <div class="jsf-dropdown-panel-footer">

@@ -21,8 +21,8 @@ import { MatSelect, MatSelectChange }                         from '@angular/mat
 import * as OverlayScrollbars                                 from 'overlayscrollbars';
 import { jsfDefaultScrollOptions }                            from '../../../../utilities';
 import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
-import { takeUntil }                                          from 'rxjs/operators';
-import { MatOption }                                          from '@kalmia/material/core';
+import { takeUntil }                           from 'rxjs/operators';
+import { MatOption, MatOptionSelectionChange } from '@kalmia/material/core';
 
 
 export interface JsfDropdownItem {
@@ -47,13 +47,13 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  private _value: string | string[];
+  private _value: any | any[];
 
   get value() {
     return this._value;
   }
 
-  set value(x: string | string[]) {
+  set value(x: any | any[]) {
     this._value = x;
     this.propagateChange(this._value);
   }
@@ -236,7 +236,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   private updateFilteredItems() {
     this._filteredItems = this.search
       ? this._items.filter(x => x.label.toLowerCase().indexOf(this.search.toLowerCase().trim()) >= 0)
-      : this._items;
+      : [].concat(this._items);
 
     if (this.multiple) {
       this._filteredItems.sort((a: JsfDropdownItem, b: JsfDropdownItem) => {
@@ -246,7 +246,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
         if (!this.isItemSelected(a) && this.isItemSelected(b)) {
           return 1;
         }
-        return this.items.indexOf(b) - this.items.indexOf(a);
+        return this.items.indexOf(a) - this.items.indexOf(b);
       });
     }
 
@@ -266,9 +266,35 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     }
   }
 
+  selectItem(item: JsfDropdownItem) {
+    if (this.multiple) {
+      this.value = (this.value || []).concat([item.value]);
+    } else {
+      this.value = item.value;
+    }
+  }
+
+  deselectItem(item: JsfDropdownItem) {
+    if (this.multiple) {
+      this.value = this.value.filter(x => x !== item.value);
+    }
+  }
+
+  itemSelectionChange(selectionEvent: MatOptionSelectionChange, item: JsfDropdownItem) {
+    if (!selectionEvent.isUserInput) {
+      return;
+    }
+    console.log('itemSelectionChange', selectionEvent);
+    if (selectionEvent.source.selected) {
+      this.selectItem(item);
+    } else {
+      this.deselectItem(item);
+    }
+  }
+
   isItemSelected(item: JsfDropdownItem) {
     if (!this.multiple) {
-      return this.selectedItem.value === item.value;
+      return this.selectedItem?.value === item.value;
     }
 
     if ((this.value as any[] || []).find(x => x === item.value)) {
@@ -289,11 +315,9 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   private fixPanelPosition() {
-    setTimeout(() => {
-      (this.matSelect.overlayDir.overlayRef as any)._positionStrategy._positionLocked = false;
-      (this.matSelect.overlayDir.overlayRef as any)._positionStrategy.apply();
-      (this.matSelect.overlayDir.overlayRef as any)._positionStrategy._positionLocked = true;
-    }, 0);
+    (this.matSelect.overlayDir.overlayRef as any)._positionStrategy._positionLocked = false;
+    (this.matSelect.overlayDir.overlayRef as any)._positionStrategy.apply();
+    (this.matSelect.overlayDir.overlayRef as any)._positionStrategy._positionLocked = true;
   }
 
   public registerOnChange(fn: any): void {
