@@ -154,7 +154,9 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   get dropdownContentHeight() {
-    return ((this.filteredItems || []).length + (this.hasNullValueOption ? 1 : 0)) * this.optionItemHeightPx;
+    // In order to try and combat the dropdown appearing off-screen issue we set the initial items count to 100 if there are no filtered items available.
+    // This should hopefully force the thing on screen.
+    return ((this.filteredItems ? this.filteredItems.length : 100) + (this.hasNullValueOption ? 1 : 0)) * this.optionItemHeightPx;
   }
 
   get errors() {
