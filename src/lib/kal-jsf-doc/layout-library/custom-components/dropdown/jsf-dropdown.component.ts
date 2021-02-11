@@ -323,7 +323,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   trackByFn(index, item) {
-    return item.value;
+    return item?.value;
   }
 
   openedChange(state: boolean) {
