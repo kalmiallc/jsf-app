@@ -282,6 +282,12 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   selectItem(item: JsfDropdownItem) {
+    // Prevent infinite selection loop in case somebody subscribes to ngModelChange.
+    // Additionally, this is just a good idea to check first in general.
+    if (this.isItemSelected(item)) {
+      return;
+    }
+
     if (this.multiple) {
       this.value = (this.value || []).concat([item.value]);
     } else {
