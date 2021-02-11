@@ -168,7 +168,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   get useVirtualScroll() {
-    return this.items.length >= 50;
+    return this.items && this.items.length >= 50;
   }
 
   get errors() {
