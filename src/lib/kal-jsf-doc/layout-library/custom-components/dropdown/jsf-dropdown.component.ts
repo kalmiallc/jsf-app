@@ -21,8 +21,9 @@ import { MatSelect, MatSelectChange }                         from '@angular/mat
 import * as OverlayScrollbars                                 from 'overlayscrollbars';
 import { jsfDefaultScrollOptions }                            from '../../../../utilities';
 import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
-import { takeUntil }                           from 'rxjs/operators';
-import { MatOption, MatOptionSelectionChange } from '@kalmia/material/core';
+import { takeUntil }                                          from 'rxjs/operators';
+import { MatOption, MatOptionSelectionChange }                from '@kalmia/material/core';
+import { VirtualScrollerComponent }                           from 'ngx-virtual-scroller';
 
 
 export interface JsfDropdownItem {
@@ -87,8 +88,14 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     this.updateFilteredItems();
   }
 
+  dropdownPanelOpen = false;
+
   @ViewChild('dropdown', { read: MatSelect, static: false })
   matSelect: MatSelect;
+
+  @ViewChild('scroll', { read: VirtualScrollerComponent })
+  virtualScroll: VirtualScrollerComponent;
+
 
   @Input() multiple?: boolean;
   @Input() searchable?: boolean;
@@ -158,6 +165,10 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     // In order to try and combat the dropdown appearing off-screen issue we set the initial items count to 100 if there are no filtered items available.
     // This should hopefully force the thing on screen.
     return ((this.filteredItems ? this.filteredItems.length : 100) + (this.hasNullValueOption ? 1 : 0)) * this.optionItemHeightPx;
+  }
+
+  get useVirtualScroll() {
+    return this.items.length >= 50;
   }
 
   get errors() {
@@ -250,6 +261,10 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
       });
     }
 
+    if (this.virtualScroll) {
+      this.virtualScroll.refresh();
+    }
+
     this.cdRef.markForCheck();
     this.cdRef.detectChanges();
   }
@@ -284,7 +299,6 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     if (!selectionEvent.isUserInput) {
       return;
     }
-    console.log('itemSelectionChange', selectionEvent);
     if (selectionEvent.source.selected) {
       this.selectItem(item);
     } else {
@@ -308,9 +322,21 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   openedChange(state: boolean) {
     if (state) {
-      this.fixPanelPosition();
+      this.dropdownPanelOpen = true;
+      this.cdRef.detectChanges();
+
+      setTimeout(() => {
+        (this.matSelect.panel.nativeElement as HTMLElement).classList.add('jsf-dropdown-panel-visible');
+        this.fixPanelPosition();
+
+        if (this.virtualScroll) {
+          this.virtualScroll.refresh();
+        }
+      }, 0);
     } else {
+      this.dropdownPanelOpen = false;
       this.updateFilteredItems();
+      this.cdRef.detectChanges();
     }
   }
 

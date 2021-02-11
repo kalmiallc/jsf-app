@@ -1,3 +1,6 @@
+$swift-ease-out-duration:        200ms !default;
+$swift-ease-out-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1) !default;
+
 .dropdown {
   position: relative;
 
@@ -31,6 +34,15 @@
 }
 
 ::ng-deep {
+  .jsf-dropdown-panel {
+    transition: opacity $swift-ease-out-duration $swift-ease-out-timing-function;
+    opacity:    0 !important;
+
+    &.jsf-dropdown-panel-visible {
+      opacity: 1 !important;
+    }
+  }
+
   .jsf-dropdown-os-host {
     virtual-scroller {
       height: 1000px;
