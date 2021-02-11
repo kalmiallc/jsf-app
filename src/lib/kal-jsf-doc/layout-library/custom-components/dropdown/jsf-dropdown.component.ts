@@ -80,7 +80,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   private _items: JsfDropdownItem[] = [];
   @Input()
   public get items(): JsfDropdownItem[] {
-    return this._items;
+    return this._items || [];
   }
 
   public set items(value: JsfDropdownItem[]) {
