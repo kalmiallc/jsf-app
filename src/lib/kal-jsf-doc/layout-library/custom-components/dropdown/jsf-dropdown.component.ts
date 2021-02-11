@@ -84,7 +84,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   public set items(value: JsfDropdownItem[]) {
-    this._items = value;
+    this._items = value || [];
     this.updateFilteredItems();
   }
 
