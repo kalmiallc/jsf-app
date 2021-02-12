@@ -1,16 +1,16 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, ElementRef,
   EventEmitter,
   forwardRef,
   Inject,
   Injector,
-  Input,
+  Input, OnChanges,
   OnDestroy,
   OnInit,
-  Output, ViewChild
-}                                                             from '@angular/core';
+  Output, SimpleChanges, TemplateRef, ViewChild
+} from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { Overlay }                                            from '@angular/cdk/overlay';
 import { Subject }                                            from 'rxjs';
@@ -35,7 +35,7 @@ import { MatInput }                                           from '@angular/mat
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class JsfInputComponent implements OnInit, OnDestroy, OnChanges, ControlValueAccessor {
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
@@ -46,14 +46,23 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   }
 
   set value(x: string | number | Date) {
+    if (this.type === 'number' || this.type === 'integer') {
+      x = +x;
+    }
     this._value = x;
     this.propagateChange(this._value);
   }
 
   private _control: NgControl;
 
+  editMode = true;
+
+
   @ViewChild(MatInput, { static: false })
   matInputControl: MatInput;
+
+  @ViewChild('input', { read: ElementRef, static: false })
+  inputElementRef: ElementRef;
 
   @Input() type: 'string' | 'number' | 'integer' | 'date' = 'string';
   @Input() multiline?: boolean;
@@ -88,6 +97,10 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   @Input() clearable?: boolean;
 
   @Input() errorMap?: { [errorCode: string]: any };
+
+  @Input() toggleableEditing: boolean;
+  @Input() disabledEditingTemplate: TemplateRef<any>;
+
 
   // Used internally by JSF
   @Input() layoutBuilder?: JsfPropLayoutBuilder<JsfPropBuilder>;
@@ -162,6 +175,8 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   ngOnInit(): void {
     this._control = this.injector.get(NgControl);
 
+    this.setInitialEditMode();
+
     this.cdRef.markForCheck();
     this.cdRef.detectChanges();
   }
@@ -169,6 +184,34 @@ export class JsfInputComponent implements OnInit, OnDestroy, ControlValueAccesso
   ngOnDestroy(): void {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.unsubscribe();
+  }
+
+  public ngOnChanges(changes: SimpleChanges) {
+    if ('editModeToggle' in changes) {
+      this.setInitialEditMode();
+    }
+  }
+
+  private setInitialEditMode() {
+    this.editMode = !this.toggleableEditing;
+    this.cdRef.detectChanges();
+  }
+
+  enableEditMode() {
+    if (this.disabled) {
+      return;
+    }
+
+    this.editMode = true;
+    setTimeout(() => {
+      if (this.inputElementRef?.nativeElement) {
+        this.inputElementRef?.nativeElement.focus();
+      }
+    }, 0);
+  }
+
+  disableEditMode() {
+    this.editMode = false;
   }
 
   increment() {

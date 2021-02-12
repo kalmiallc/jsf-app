@@ -1,0 +1,10 @@
+.jsf-input-not-editable-container {
+  display: inline-block;
+  width: 100%;
+
+  cursor: pointer;
+
+  &.disabled {
+    cursor: not-allowed;
+  }
+}
