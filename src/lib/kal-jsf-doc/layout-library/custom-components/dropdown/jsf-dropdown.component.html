@@ -51,7 +51,11 @@
                                 [parentScroll]="osHost.osInstance().getElements().viewport"
                                 [modifyOverflowStyleOfParentScroll]="false"
                                 [style.height.px]="dropdownContentHeight">
-                <mat-option *ngIf="hasNullValueOption" [value]="null">{{ nullValueLabel }}</mat-option>
+                <mat-option *ngIf="hasNullValueOption"
+                            [value]="null"
+                            (onSelectionChange)="itemSelectionChange($event, { label: nullValueLabel, value: null })">
+                  {{ nullValueLabel }}
+                </mat-option>
                 <div #container>
                   <mat-option *ngFor="let item of scroll.viewPortItems; trackBy: trackByFn"
                               [value]="item.value"
@@ -76,7 +80,11 @@
         <!-- Pure scroll -->
         <ng-template #pureScroll>
           <overlay-scrollbars [options]="scrollOptions" [class.has-dropdown-panel-footer]="!!panelFooterTemplate" #osHost class="jsf-dropdown-os-host">
-              <mat-option *ngIf="hasNullValueOption" [value]="null">{{ nullValueLabel }}</mat-option>
+            <mat-option *ngIf="hasNullValueOption"
+                        [value]="null"
+                        (onSelectionChange)="itemSelectionChange($event, { label: nullValueLabel, value: null })">
+              {{ nullValueLabel }}
+            </mat-option>
               <div #container>
                 <mat-option *ngFor="let item of filteredItems; trackBy: trackByFn"
                             [value]="item.value"
