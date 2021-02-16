@@ -211,7 +211,17 @@ function addNoCacheParameter(resource, next) {
   // Add a query parameter based on current time to force invalidate the cache for the file.
   // const timestamp = new Date().getTime();
   // resource.url    = `${ resource.url }?X-Cache-Invalidate=${ timestamp }`;
-  resource.url = `${ resource.url }?X-Cache-Invalidate=Render2D`;
+
+  // Patch for loading from SS tmp storage: extension will contain part of the base url.
+  if (resource.extension.indexOf('com/') > -1) {
+    resource.loadType = 2;
+    resource._determineLoadType = () => 2;
+  }
+
+  // Only do this if the resource does not already contain a query string.
+  if (resource.url.split('?').length !== 2) {
+    resource.url = `${ resource.url }?X-Cache-Invalidate=Render2D`;
+  }
 
   next();
 }
