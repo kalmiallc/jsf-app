@@ -47,6 +47,7 @@
                  [type]="inputType"
                  [(ngModel)]="value"
                  (blur)="disableEditMode()"
+                 (keyup.enter)="disableEditMode()"
                  #input="ngModel"
                  [jsfPropValidator]="layoutBuilder"
                  [errorStateMatcher]="errorStateMatcher">
@@ -120,6 +121,7 @@
                  [(ngModel)]="value"
                  #input="ngModel"
                  (blur)="disableEditMode()"
+                 (keyup.enter)="disableEditMode()"
                  matInputNumberDecimal
                  [jsfNumberInputAutoCorrectMinDecimalDigits]="minDecimalDigits"
                  [jsfNumberInputAutoCorrectMaxDecimalDigits]="maxDecimalDigits"
@@ -189,6 +191,7 @@
                  [(ngModel)]="value"
                  #input="ngModel"
                  (blur)="disableEditMode()"
+                 (keyup.enter)="disableEditMode()"
                  [jsfPropValidator]="layoutBuilder"
                  [errorStateMatcher]="errorStateMatcher">
 
@@ -256,6 +259,7 @@
                  [matDatepicker]="picker"
                  [(ngModel)]="value"
                  (blur)="disableEditMode()"
+                 (keyup.enter)="disableEditMode()"
                  #input="ngModel"
                  #field
                  (focus)="picker.open()"
