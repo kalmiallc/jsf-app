@@ -48,6 +48,10 @@ export class JsfInputComponent implements OnInit, OnDestroy, OnChanges, ControlV
   set value(x: string | number | Date) {
     if (this.type === 'number' || this.type === 'integer') {
       x = +x;
+
+      if (isNaN(x)) {
+        x = null;
+      }
     }
     this._value = x;
     this.propagateChange(this._value);
