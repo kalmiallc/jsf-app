@@ -16,6 +16,7 @@
         <!-- Awaiting Upload -->
         <ng-container *ngSwitchCase="uploaderState.AwaitingUpload">
           <div class="text-center w-full d-flex flex-column align-items-center justify-content-center rounded-sm upload-area"
+               *ngIf="uploader"
                ng2FileDrop
                [uploader]="uploader"
                [class.__background-color--primary-20]="dropZoneOver"

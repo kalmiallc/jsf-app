@@ -214,8 +214,6 @@ export class JsfFileUploadComponent implements OnInit, AfterViewInit, OnDestroy,
   }
 
   private createUploader() {
-    this.state = UploaderState.AwaitingUpload;
-
     this.apiService.get('common/storage/presigned-upload')
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(({ preSignedUpload, preSignedDownload, s3Path, token }) => {
@@ -230,6 +228,8 @@ export class JsfFileUploadComponent implements OnInit, AfterViewInit, OnDestroy,
           method          : 'PUT',
           autoUpload      : true
         });
+
+        this.state = UploaderState.AwaitingUpload;
 
         this.uploader.onAfterAddingFile  = (item: FileItem) => {
           console.log('onAfterAddingFile', item);
