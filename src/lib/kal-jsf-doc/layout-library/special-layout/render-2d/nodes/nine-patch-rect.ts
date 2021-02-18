@@ -3,6 +3,7 @@ import { NodeProperty, NodePropertyGetter, NodePropertySetter } from './abstract
 import { deg2rad, rad2deg }                                     from '../helpers/math';
 import { TextureLoader }                                        from '../helpers/texture-loader';
 import Color                                                    from 'color';
+import { isNil }                                                from 'lodash';
 
 export class NinePatchRect extends Node<PIXI.NineSlicePlane> {
 
@@ -93,15 +94,17 @@ export class NinePatchRect extends Node<PIXI.NineSlicePlane> {
       const scaleX = this.scaleX;
       const scaleY = this.scaleY;
 
-      this.displayObject.texture = this._texture;
-      this.renderer.ticker.forceUpdate();
-      this.renderer.application.render();
+      if (!isNil(scaleX) && !isNil(scaleY)) {
+        this.displayObject.texture = this._texture;
+        this.renderer.ticker.forceUpdate();
+        this.renderer.application.render();
 
-      this.scaleX = scaleX;
-      this.scaleY = scaleY;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
 
-      this.setSpriteScaleX();
-      this.setSpriteScaleY();
+        this.setSpriteScaleX();
+        this.setSpriteScaleY();
+      }
     })();
   }
 

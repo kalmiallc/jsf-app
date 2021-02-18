@@ -2,6 +2,7 @@ import { Node } from './abstract/node';
 import { NodeProperty, NodePropertyGetter, NodePropertySetter } from './abstract/node-decorators';
 import { deg2rad, rad2deg } from '../helpers/math';
 import { TextureLoader } from '../helpers/texture-loader';
+import { isNil } from 'lodash';
 import Color from 'color';
 
 export class Sprite extends Node<PIXI.Sprite> {
@@ -97,15 +98,17 @@ export class Sprite extends Node<PIXI.Sprite> {
       const scaleX = this.scaleX;
       const scaleY = this.scaleY;
 
-      this.displayObject.texture = this._texture;
-      this.renderer.ticker.forceUpdate();
-      this.renderer.application.render();
+      if (!isNil(scaleX) && !isNil(scaleY)) {
+        this.displayObject.texture = this._texture;
+        this.renderer.ticker.forceUpdate();
+        this.renderer.application.render();
 
-      this.scaleX = scaleX;
-      this.scaleY = scaleY;
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
 
-      this.setSpriteScaleX();
-      this.setSpriteScaleY();
+        this.setSpriteScaleX();
+        this.setSpriteScaleY();
+      }
     })();
   }
 
