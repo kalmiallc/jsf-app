@@ -88,6 +88,20 @@ export class NinePatchRect extends Node<PIXI.NineSlicePlane> {
     return (async () => {
       this._texture              = await this._textureLoader.loadTexture(this.image);
       this.displayObject.texture = this._texture;
+
+      // Cache and restore values after setting the texture, because Pixi will automatically change those when replacing the image.
+      const scaleX = this.scaleX;
+      const scaleY = this.scaleY;
+
+      this.displayObject.texture = this._texture;
+      this.renderer.ticker.forceUpdate();
+      this.renderer.application.render();
+
+      this.scaleX = scaleX;
+      this.scaleY = scaleY;
+
+      this.setSpriteScaleX();
+      this.setSpriteScaleY();
     })();
   }
 

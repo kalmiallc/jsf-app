@@ -92,7 +92,20 @@ export class Sprite extends Node<PIXI.Sprite> {
     // and then wonder why you spent 3 hours trying to figure out why things are not working like they're supposed to
     return (async () => {
       this._texture = await this._textureLoader.loadTexture(this.image);
+
+      // Cache and restore values after setting the texture, because Pixi will automatically change those when replacing the image.
+      const scaleX = this.scaleX;
+      const scaleY = this.scaleY;
+
       this.displayObject.texture = this._texture;
+      this.renderer.ticker.forceUpdate();
+      this.renderer.application.render();
+
+      this.scaleX = scaleX;
+      this.scaleY = scaleY;
+
+      this.setSpriteScaleX();
+      this.setSpriteScaleY();
     })();
   }
 
