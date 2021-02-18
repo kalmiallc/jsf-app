@@ -175,7 +175,7 @@ export class JsfFileUploadComponent implements OnInit, AfterViewInit, OnDestroy,
    * Gets only the extension from extra parameters in the url.
    */
   get ext() {
-    return this.filenameWithExt.split('.').pop();
+    return this.filenameWithExt.split('.').pop()?.toLowerCase();
   }
 
   /**
@@ -236,8 +236,7 @@ export class JsfFileUploadComponent implements OnInit, AfterViewInit, OnDestroy,
 
           // Check for valid extension
           if (this.allowedExtensions && this.allowedExtensions.length) {
-            const ext = item.file.name.split('.').pop();
-            console.log(ext);
+            const ext = item.file.name.split('.').pop()?.toLowerCase();
             if (this.allowedExtensions.indexOf(ext) === -1) {
               this.snackBar.open(this.invalidFileTypeLabel, $localize`Close`, { duration: 5000 });
               return item.remove();
