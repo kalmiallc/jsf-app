@@ -167,6 +167,10 @@ export class LayoutButtonComponent extends AbstractSpecialLayoutComponent<JsfLay
   }
 
   async dispatchClickEvents(event: any) {
+    if (this.disabled) {
+      return;
+    }
+
     this.scrollToTop();
 
     if (this.isSubmit) {
