@@ -24,7 +24,7 @@ import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-contr
 import { takeUntil }                                          from 'rxjs/operators';
 import { MatOption, MatOptionSelectionChange }                from '@kalmia/material/core';
 import { VirtualScrollerComponent }                           from 'ngx-virtual-scroller';
-
+import { isEqual } from 'lodash';
 
 export interface JsfDropdownItem {
   value: any;
@@ -271,13 +271,13 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   get selectedItem(): JsfDropdownItem {
     if (this.value) {
-      return this._items.find(x => x.value === this.value);
+      return this._items.find(x => isEqual(x.value, this.value));
     }
   }
 
   get selectedItemIndex(): number {
     if (this.value) {
-      return this._items.findIndex(x => x.value === this.value);
+      return this._items.findIndex(x => isEqual(x.value, this.value));
     }
   }
 
@@ -297,7 +297,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   deselectItem(item: JsfDropdownItem) {
     if (this.multiple) {
-      this.value = this.value.filter(x => x !== item.value);
+      this.value = this.value.filter(x => !isEqual(x, item.value));
     }
   }
 
@@ -314,10 +314,10 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   isItemSelected(item: JsfDropdownItem) {
     if (!this.multiple) {
-      return this.selectedItem?.value === item.value;
+      return isEqual(this.selectedItem?.value, item.value);
     }
 
-    if ((this.value as any[] || []).find(x => x === item.value)) {
+    if ((this.value as any[] || []).find(x => isEqual(x, item.value))) {
       return true;
     }
   }
