@@ -364,6 +364,9 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
     this.cdRef.detectChanges();
   }
 
+  public compareFn(a: any, b: any) {
+    return isEqual(a, b);
+  }
 
   isVariantStandard = () => this.variant === 'standard';
   isVariantSmall    = () => this.variant === 'small';
