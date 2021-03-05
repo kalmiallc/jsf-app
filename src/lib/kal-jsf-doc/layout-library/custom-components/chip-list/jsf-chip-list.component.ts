@@ -39,7 +39,7 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
 
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  readonly separatorKeysCodes: number[] = [ENTER];
 
   private _value: any[] = [];
 
