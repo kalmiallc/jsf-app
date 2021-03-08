@@ -1,11 +1,21 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild
+}                                         from '@angular/core';
 import {
   Bind,
   JsfLayoutRender3D,
   JsfSpecialLayoutBuilder,
+  layoutClickHandlerService,
   PropStatus,
-  PropStatusChangeInterface,
-  layoutClickHandlerService
+  PropStatusChangeInterface
 }                                         from '@kalmia/jsf-common-es2015';
 import { AbstractSpecialLayoutComponent } from '../../../abstract/special-layout.component';
 import { ScriptInjectorService }          from '../../../services/script-injector.service';
@@ -15,6 +25,7 @@ import {
   SafeResourceUrl
 }                                         from '@angular/platform-browser';
 import { takeUntil }                      from 'rxjs/operators';
+import { RenderInstance }                 from '../../../service-library/3d-preload.service';
 
 
 let render3dCount = 0;
@@ -22,17 +33,23 @@ let render3dCount = 0;
 @Component({
   selector       : 'jsf-layout-render-3d',
   template       : `
-      <div class="jsf-layout-render-3d jsf-animatable" [ngClass]="htmlClass" id="jsf-render-3d-{{ render3dId }}">
-          <iframe class="rounded-sm" *ngIf="sourceUrl" [src]="sourceUrl" #iframeContainer allowfullscreen [style.width]="width" [style.height]="height"></iframe>
-      </div>`,
+    <div class="jsf-layout-render-3d jsf-animatable" [ngClass]="htmlClass" id="jsf-render-3d-{{ render3dId }}" #preloadPlaceholder>
+      <iframe class="rounded-sm" *ngIf="!usingPreload && sourceUrl"
+              [src]="sourceUrl"
+              #iframeContainer
+              allowfullscreen
+              [style.width]="width"
+              [style.height]="height">
+      </iframe>
+    </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles         : [
-      `iframe {
-          border: none;
-      }`
+    `:host ::ng-deep iframe {
+      border: none;
+    }`
   ]
 })
-export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfLayoutRender3D> implements OnInit, AfterViewInit {
+export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfLayoutRender3D> implements OnInit, OnDestroy, AfterViewInit {
 
   @Input()
   layoutBuilder: JsfSpecialLayoutBuilder;
@@ -43,9 +60,13 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
   @ViewChild('iframeContainer', { read: ElementRef, static: false })
   iframeContainer: ElementRef;
 
+  @ViewChild('preloadPlaceholder', { read: ElementRef, static: true })
+  preloadContainer: ElementRef;
+
+
   public render3dId = ++render3dCount;
 
-  private iframeLoaded = false;
+  private inlineIframeLoaded = false;
 
   private _sourceUrl: SafeResourceUrl;
   get sourceUrl() {
@@ -64,6 +85,14 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
     return this.isEvalObject(this.layout.sourceUrl) ? this.layout.sourceUrl.dependencies || [] : [];
   }
 
+  get preloadService() {
+    return this.layoutBuilder.rootBuilder.services['3d-preload'];
+  }
+
+  get usingPreload() {
+    return !!this.preloadService;
+  }
+
   constructor(private scriptInjector: ScriptInjectorService,
               private sanitizer: DomSanitizer,
               private cdRef: ChangeDetectorRef) {
@@ -71,29 +100,47 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
   }
 
   ngOnInit(): void {
-    if (this.isEvalObject(this.layout.sourceUrl)) {
-      if (this.dependencies.length) {
-        for (const dependency of this.dependencies) {
-          const dependencyAbsolutePath = this.layoutBuilder.abstractPathToAbsolute(dependency);
-          this.layoutBuilder.rootBuilder.listenForStatusChange(dependencyAbsolutePath)
-            .pipe(takeUntil(this.ngUnsubscribe))
-            .subscribe((status: PropStatusChangeInterface) => {
-              if (status.status !== PropStatus.Pending) {
-                this.initializeRenderer();
-              }
-            });
-        }
-      }
+  }
+
+  public async ngOnDestroy() {
+    super.ngOnDestroy();
+
+    if (this.usingPreload) {
+      const renderInstance: RenderInstance = await this.preloadService.onAction('get-render-instance', this.layoutBuilder.id);
+      renderInstance.unload();
     }
   }
 
   public ngAfterViewInit() {
-    this.initializeListeners();
-    this.initializeRenderer();
+    window.addEventListener('message', this.onIframeMessage);
+
+    if (!this.usingPreload) {
+      console.log('[Render3D] Initializing without preload.');
+
+      if (this.isEvalObject(this.layout.sourceUrl)) {
+        if (this.dependencies.length) {
+          for (const dependency of this.dependencies) {
+            const dependencyAbsolutePath = this.layoutBuilder.abstractPathToAbsolute(dependency);
+            this.layoutBuilder.rootBuilder.listenForStatusChange(dependencyAbsolutePath)
+              .pipe(takeUntil(this.ngUnsubscribe))
+              .subscribe((status: PropStatusChangeInterface) => {
+                if (status.status !== PropStatus.Pending) {
+                  this.initializeRendererWithoutPreload();
+                }
+              });
+          }
+        }
+      }
+      this.initializeRendererWithoutPreload();
+    } else {
+      console.log('[Render3D] Initializing with preload.');
+      this.initializeRendererWithPreload()
+        .catch(e => console.error(e));
+    }
   }
 
 
-  private initializeListeners() {
+  private initializeMessageBridge() {
     // Set up value change subscription.
     this.layoutBuilder.rootBuilder.statusChange
       .pipe(takeUntil(this.ngUnsubscribe))
@@ -102,12 +149,29 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
           this.executeIframeValueChangeProcedure();
         }
       });
-
-    window.addEventListener('message', this.onIframeMessage);
   }
 
-  private initializeRenderer() {
-    this.iframeLoaded = false;
+  private async initializeRendererWithPreload() {
+    const renderInstance: RenderInstance = await this.preloadService.onAction('get-render-instance', this.layoutBuilder.id);
+
+    renderInstance.loadInto(this.preloadContainer.nativeElement);
+    renderInstance.renderEl.classList.add('rounded-sm');
+    renderInstance.renderEl.allowFullscreen = true;
+    renderInstance.renderEl.style.width     = this.width;
+    renderInstance.renderEl.style.height    = this.height;
+
+    renderInstance.v3dReady
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe((ready: boolean) => {
+        if (ready) {
+          this.initializeMessageBridge();
+          this.executeIframeInitProcedure();
+        }
+      });
+  }
+
+  private initializeRendererWithoutPreload() {
+    this.inlineIframeLoaded = false;
 
     // Get source URL.
     if (this.isEvalObject(this.layout.sourceUrl)) {
@@ -121,6 +185,8 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
     }
 
     this._sourceUrl = this._sourceUrl && this.sanitizer.bypassSecurityTrustResourceUrl(this._sourceUrl as any);
+
+    this.initializeMessageBridge();
     this.cdRef.detectChanges();
   }
 
@@ -131,16 +197,18 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
 
     switch (event.eventName) {
       case 'jsf:verge3d:loaded': {
-        console.log('[Render3D] Verge3D loaded');
-        this.iframeLoaded = true;
-        this.executeIframeInitProcedure();
+        if (!this.usingPreload) {
+          console.log('[Render3D] Verge3D loaded');
+          this.inlineIframeLoaded = true;
+          this.executeIframeInitProcedure();
+        }
         break;
       }
       case 'jsf:event': {
         console.log('[Render3D] Event');
         layoutClickHandlerService.handleOnClick(this.layout.onEvent, {
-          rootBuilder  : this.layoutBuilder.rootBuilder,
-          layoutBuilder: this.layoutBuilder,
+          rootBuilder       : this.layoutBuilder.rootBuilder,
+          layoutBuilder     : this.layoutBuilder,
           extraContextParams: {
             $eventData: event
           }
@@ -173,23 +241,34 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
   private executeIframeInitProcedure() {
     this.dispatchEvent('jsf:init', {
       formValue: this.layoutBuilder.rootBuilder.getJsonValue()
-    });
+    }).catch(e => console.error(e));
   }
 
   private executeIframeValueChangeProcedure() {
     this.dispatchEvent('jsf:value-change', {
       formValue: this.layoutBuilder.rootBuilder.getJsonValue()
-    });
+    }).catch(e => console.error(e));
   }
 
-  private dispatchEvent(eventName: string, data: any) {
-    if (this.iframeContainer && this.iframeLoaded) {
+  private async dispatchEvent(eventName: string, data: any) {
+    if (this.usingPreload) {
+      const renderInstance: RenderInstance = await this.preloadService.onAction('get-render-instance', this.layoutBuilder.id);
+
       console.log('[Render3D] Dispatching message', eventName, data);
-      (this.iframeContainer.nativeElement as HTMLIFrameElement).contentWindow.postMessage({
+      (renderInstance.renderEl as HTMLIFrameElement).contentWindow.postMessage({
         ['jsf-render-3d']: true,
         eventName,
         data
       }, '*');
+    } else {
+      if (this.iframeContainer && this.inlineIframeLoaded) {
+        console.log('[Render3D] Dispatching message', eventName, data);
+        (this.iframeContainer.nativeElement as HTMLIFrameElement).contentWindow.postMessage({
+          ['jsf-render-3d']: true,
+          eventName,
+          data
+        }, '*');
+      }
     }
   }
 

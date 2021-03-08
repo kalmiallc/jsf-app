@@ -68,7 +68,8 @@ import { ModuleLoaderService }            from './services/module-loader.service
 import { OverlayScrollbarsService }       from './services/overlay-scrollbars.service';
 import { getUrlQuery }                    from '../utilities/query';
 import { ActivatedRoute, Router }         from '@angular/router';
-import { JsfScrollToErrorService }        from './services/scroll-to-error.service';
+import { JsfScrollToErrorService } from './services/scroll-to-error.service';
+import { Render3DPreloadService }  from './service-library/3d-preload.service';
 
 
 // tslint:disable:no-output-on-prefix
@@ -759,7 +760,8 @@ export class KalJsfDocComponent implements OnInit, AfterViewInit, OnDestroy {
   private async getAvailableServices(): Promise<{ [key: string]: JsfAbstractService }> {
     const services: { [key: string]: JsfAbstractService } = {
       // Stripe service
-      'stripe': new StripeService(this.scriptInjector)
+      'stripe': new StripeService(this.scriptInjector),
+      '3d-preload': new Render3DPreloadService(),
     };
 
     return services;
