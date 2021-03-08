@@ -23,6 +23,9 @@ export class RenderInstance {
 
   public v3dReady: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  // Load count counter. The loadInto method may be invoked multiple times before unload, that's why we need to keep a references to how many times we got loaded.
+  private loadCount = 0;
+
 
   constructor(private builder: JsfBuilder,
               private layoutBuilder: JsfSpecialLayoutBuilder,
@@ -64,11 +67,15 @@ export class RenderInstance {
   loadInto(element: HTMLElement) {
     console.log('[3D Preload] Load into', element);
     element.appendChild(this.renderEl);
+    this.loadCount++;
   }
 
   unload() {
     console.log('[3D Preload] Unload');
-    this.containerEl.appendChild(this.renderEl);
+    if (this.loadCount <= 1) {
+      this.containerEl.appendChild(this.renderEl);
+    }
+    this.loadCount--;
   }
 
   private createInternal() {
@@ -122,7 +129,7 @@ export class RenderInstance {
     */
 
     this.renderEl.src = iframeUrl;
-    
+
     this.containerEl.appendChild(this.renderEl);
 
     // Listen for iframe events
