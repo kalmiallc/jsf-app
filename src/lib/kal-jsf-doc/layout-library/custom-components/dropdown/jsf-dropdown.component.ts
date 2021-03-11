@@ -99,6 +99,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
 
   @Input() multiple?: boolean;
   @Input() searchable?: boolean;
+  @Input() sortSelectedToTop?: boolean;
 
   @Input() title?: string;
   @Input() description?: string;
@@ -249,7 +250,7 @@ export class JsfDropdownComponent implements OnInit, OnDestroy, ControlValueAcce
       ? this._items.filter(x => x.label.toLowerCase().indexOf(this.search.toLowerCase().trim()) >= 0)
       : [].concat(this._items);
 
-    if (this.multiple) {
+    if (this.multiple && this.sortSelectedToTop) {
       this._filteredItems.sort((a: JsfDropdownItem, b: JsfDropdownItem) => {
         if (this.isItemSelected(a) && !this.isItemSelected(b)) {
           return -1;
