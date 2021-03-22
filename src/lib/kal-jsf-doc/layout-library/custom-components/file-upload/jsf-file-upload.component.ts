@@ -229,7 +229,9 @@ export class JsfFileUploadComponent implements OnInit, AfterViewInit, OnDestroy,
           autoUpload      : true
         });
 
-        this.state = UploaderState.AwaitingUpload;
+        if (!this.value) {
+          this.state = UploaderState.AwaitingUpload;
+        }
 
         this.uploader.onAfterAddingFile  = (item: FileItem) => {
           console.log('onAfterAddingFile', item);
