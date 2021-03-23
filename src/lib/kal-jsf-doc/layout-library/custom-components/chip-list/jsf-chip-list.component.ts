@@ -20,8 +20,8 @@ import { JSF_FORM_CONTROL_ERRORS }                              from '../jsf-con
 import { MatChipInputEvent }                                    from '@angular/material/chips';
 import { COMMA, ENTER, SPACE }                                  from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import Color                                                    from 'color';
-import { colorUtils }                                           from '@kalmia/jsf-app/lib/utilities';
+import Color          from 'color';
+import { colorUtils } from '../../../../utilities';
 
 
 @Component({

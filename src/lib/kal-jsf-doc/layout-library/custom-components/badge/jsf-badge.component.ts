@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import Color                                                                                              from 'color';
-import { colorUtils }                                                           from '@kalmia/jsf-app/lib/utilities';
+import { colorUtils }                                                                                     from '../../../../utilities';
 
 @Component({
   selector       : 'jsf-badge',
@@ -82,7 +82,7 @@ export class JsfBadgeComponent implements OnInit, OnChanges {
     if (bgColor === 'primary' || bgColor === 'accent' || bgColor === 'warn') {
       this._bgColor = bgColor;
     } else {
-      this._bgColor   =  Color(bgColor).alpha(.2).rgb().string();
+      this._bgColor = Color(bgColor).alpha(.2).rgb().string();
     }
 
     this.cdRef.detectChanges();
