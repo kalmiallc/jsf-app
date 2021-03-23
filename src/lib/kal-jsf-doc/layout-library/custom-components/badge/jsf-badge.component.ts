@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
-import Color                                                                    from 'color';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import Color                                                                                              from 'color';
+import { colorUtils }                                                           from '@kalmia/jsf-app/lib/utilities';
 
 @Component({
   selector       : 'jsf-badge',
@@ -7,7 +8,7 @@ import Color                                                                    
   styleUrls      : ['./jsf-badge.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class JsfBadgeComponent implements OnInit {
+export class JsfBadgeComponent implements OnInit, OnChanges {
 
   private _isInitialized = false;
 
@@ -15,28 +16,40 @@ export class JsfBadgeComponent implements OnInit {
 
   @Input() htmlClass?: string;
 
-  private _color: string;
-  @Input()
-  public get color(): string {
-    return this._color;
-  }
-  public set color(value: string) {
-    this._color = value;
-    this.updateColor();
-  }
-
+  @Input() color: string;
   @Input() backgroundColor?: string;
+
+  @Input() autoColorDelimiter?: string;
 
 
   private _textColor: string;
   private _bgColor: string;
 
   get textColor(): string {
-    return this._textColor;
+    if (!this.autoColorDelimiter) {
+      return this._textColor;
+    }
+    const tokens = this.title.split(this.autoColorDelimiter);
+    if (!tokens || tokens.length < 2) {
+      return this._textColor;
+    }
+    const text = tokens[0];
+    return colorUtils.getColorFromString(text);
   }
 
   get bgColor(): string {
-    return this._bgColor;
+    if (!this.autoColorDelimiter) {
+      console.log('1', this._bgColor);
+      return this._bgColor;
+    }
+    const tokens = this.title.split(this.autoColorDelimiter);
+    if (!tokens || tokens.length < 2) {
+      console.log('2', this._bgColor);
+      return this._bgColor;
+    }
+    const text = tokens[0];
+    console.log('3', Color(colorUtils.getColorFromString(text)).alpha(.2).rgb().string());
+    return Color(colorUtils.getColorFromString(text)).alpha(.2).rgb().string();
   }
 
 
@@ -48,10 +61,16 @@ export class JsfBadgeComponent implements OnInit {
     this.updateColor();
   }
 
+  public ngOnChanges(changes: SimpleChanges): void {
+    this.updateColor();
+  }
+
   private updateColor() {
     if (!this._isInitialized) {
       return;
     }
+
+    this.color = this.color || 'primary';
 
     if (this.color === 'primary' || this.color === 'accent' || this.color === 'warn') {
       this._textColor = this.color;
@@ -68,4 +87,5 @@ export class JsfBadgeComponent implements OnInit {
 
     this.cdRef.detectChanges();
   }
+
 }

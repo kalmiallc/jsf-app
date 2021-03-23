@@ -10,16 +10,18 @@ import {
   OnDestroy,
   OnInit,
   Output, ViewChild
-} from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
-import { Overlay }                                            from '@angular/cdk/overlay';
-import { BehaviorSubject, Observable, Subject }               from 'rxjs';
-import { JsfPropBuilder, JsfPropLayoutBuilder }               from '@kalmia/jsf-common-es2015';
-import { MatSelectChange }                                    from '@angular/material/select';
-import { JSF_FORM_CONTROL_ERRORS }                            from '../jsf-control-errors';
-import { MatChipInputEvent }                                  from '@angular/material/chips';
+}                                                               from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl }   from '@angular/forms';
+import { Overlay }                                              from '@angular/cdk/overlay';
+import { BehaviorSubject, Observable, Subject }                 from 'rxjs';
+import { JsfPropBuilder, JsfPropLayoutBuilder }                 from '@kalmia/jsf-common-es2015';
+import { MatSelectChange }                                      from '@angular/material/select';
+import { JSF_FORM_CONTROL_ERRORS }                              from '../jsf-control-errors';
+import { MatChipInputEvent }                                    from '@angular/material/chips';
 import { COMMA, ENTER, SPACE }                                  from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import Color                                                    from 'color';
+import { colorUtils }                                           from '@kalmia/jsf-app/lib/utilities';
 
 
 @Component({
@@ -84,6 +86,9 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
   @Input() addOnBlur?: boolean = true;
 
   @Input() errorMap?: { [errorCode: string]: string };
+
+  @Input() autoColorDelimiter?: string;
+
 
   // Used internally by JSF
   @Input() layoutBuilder?: JsfPropLayoutBuilder<JsfPropBuilder>;
@@ -183,6 +188,29 @@ export class JsfChipListComponent implements OnInit, OnDestroy, ControlValueAcce
     this.cdRef.detectChanges();
   }
 
+  getChipColor(text: string) {
+    if (!this.autoColorDelimiter) {
+      return;
+    }
+    const tokens = text.split(this.autoColorDelimiter);
+    if (!tokens || tokens.length < 2) {
+      return;
+    }
+    text = tokens[0];
+    return colorUtils.getColorFromString(text);
+  }
+
+  getChipBackgroundColor(text: string) {
+    if (!this.autoColorDelimiter) {
+      return;
+    }
+    const tokens = text.split(this.autoColorDelimiter);
+    if (!tokens || tokens.length < 2) {
+      return;
+    }
+    text = tokens[0];
+    return Color(colorUtils.getColorFromString(text)).alpha(.2).rgb().string();
+  }
 
   trackByFn(index, item) {
     return item;

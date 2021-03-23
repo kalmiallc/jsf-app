@@ -26,11 +26,12 @@
       <mat-chip-list #chipList>
         <mat-chip *ngFor="let chip of value; trackBy: trackByFn"
                   [selectable]="selectable"
-                  color="primary"
+                  [style.color]="getChipColor(chip)"
+                  [style.background-color]="getChipBackgroundColor(chip)"
                   [removable]="removable"
                   (removed)="remove(chip)">
           {{ chip }}
-          <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+          <mat-icon matChipRemove *ngIf="removable" [style.color]="getChipColor(chip)">cancel</mat-icon>
         </mat-chip>
 
         <input [placeholder]="placeholder"
