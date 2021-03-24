@@ -39,16 +39,13 @@ export class JsfBadgeComponent implements OnInit, OnChanges {
 
   get bgColor(): string {
     if (!this.autoColorDelimiter) {
-      console.log('1', this._bgColor);
       return this._bgColor;
     }
     const tokens = this.title.split(this.autoColorDelimiter);
     if (!tokens || tokens.length < 2) {
-      console.log('2', this._bgColor);
       return this._bgColor;
     }
     const text = tokens[0];
-    console.log('3', Color(colorUtils.getColorFromString(text)).alpha(.2).rgb().string());
     return Color(colorUtils.getColorFromString(text)).alpha(.2).rgb().string();
   }
 
