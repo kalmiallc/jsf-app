@@ -224,6 +224,7 @@ export class KalJsfDocComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Developer tools options for visual jsf builder for jsf builder.
+   * @deprecated
    */
   @Input() developerTools?: BuilderDeveloperToolsInterface;
 
