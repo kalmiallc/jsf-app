@@ -1,5 +1,6 @@
-import { evalService, JsfSpecialLayoutBuilder } from '@kalmia/jsf-common-es2015';
-import { colorUtils }                           from '../../../../../utilities';
+import { evalService, JsfLayoutRender2D, JsfSpecialLayoutBuilder } from '@kalmia/jsf-common-es2015';
+import { colorUtils }                                              from '../../../../../utilities';
+import { get } from 'lodash';
 
 export interface EvalObject {
   $eval: string;
@@ -19,7 +20,12 @@ export class PropertyEvaluator {
       // Additional context parameters that are available only inside the renderer.
       extraContext = {
         $ralToHex: (x: string) => colorUtils.ralToHex(x),
-        ... (extraContext || {})
+        ... (extraContext || {}),
+        $var: new Proxy({}, {
+          get: (target, name: string) => {
+            return get((this.layoutBuilder.layout as JsfLayoutRender2D).vars, name);
+          }
+        }),
       };
 
       // Evaluate.
