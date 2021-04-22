@@ -308,12 +308,14 @@ export class LayoutWizardComponent extends AbstractItemsLayoutComponent<JsfLayou
       }
     }
 
+    const stepIndex = initialStep.analyticsStepIndex ?? this.getStepIndex(initialStep);
+
     if (this.primary) {
       this.layoutBuilder.rootBuilder.analyticsService.track({
         name   : 'step-complete',
         payload: {
           wizardId : this.id,
-          stepIndex: initialStep
+          stepIndex: stepIndex
         }
       });
     }
