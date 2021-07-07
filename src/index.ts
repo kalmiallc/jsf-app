@@ -28,6 +28,7 @@ export * from './lib/kal-jsf-filter/prop-filter-library/table.component';
 export * from './lib/kal-jsf-filter/handler-filter-library/common/button-toggle.component';
 export * from './lib/kal-jsf-filter/handler-filter-library/common/dropdown.component';
 export * from './lib/kal-jsf-filter/handler-filter-library/common/radio.component';
+export * from './lib/kal-jsf-filter/handler-filter-library/generic-select.component';
 
 export * from './lib/kal-jsf-doc/theme/jsf-theme.module';
 export * from './lib/kal-jsf-doc/theme/base-theme.component';

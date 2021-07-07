@@ -17,7 +17,7 @@ import { FilterPropTableComponent }                 from './kal-jsf-filter/prop-
 import { FilterHandlerCommonDropdownComponent }     from './kal-jsf-filter/handler-filter-library/common/dropdown.component';
 import { FilterHandlerCommonRadioComponent }        from './kal-jsf-filter/handler-filter-library/common/radio.component';
 import { FilterHandlerCommonButtonToggleComponent } from './kal-jsf-filter/handler-filter-library/common/button-toggle.component';
-import { FilterGenericSelectComponent }             from '@kalmia/jsf-app/lib/kal-jsf-filter/handler-filter-library/generic-select.component';
+import { FilterGenericSelectComponent }             from './kal-jsf-filter/handler-filter-library/generic-select.component';
 
 @NgModule({
   imports     : [
