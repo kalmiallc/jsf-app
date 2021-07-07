@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { JsfBuilder, JsfPropBuilderString }                                        from '@kalmia/jsf-common-es2015';
-import { AbstractFilterPropComponent }                                             from '@kalmia/jsf-app/lib/kal-jsf-filter/abstract/filter-prop.component';
-import { FilterItemInterface }                                                     from '@kalmia/jsf-app/lib/kal-jsf-filter/filter-item.interface';
+import { JsfBuilder, JsfPropBuilderString } from '@kalmia/jsf-common-es2015';
+import { AbstractFilterPropComponent } from '../abstract/filter-prop.component';
+import { FilterItemInterface }         from '../filter-item.interface';
 
 
 @Component({
