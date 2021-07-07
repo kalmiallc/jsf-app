@@ -8,10 +8,10 @@
         <!-- Filter menu -->
         <mat-menu #jsfFilterMenu="matMenu">
           <button *ngFor="let item of availableFilters; let i = index" (click)="selectFilter(item)"
-            mat-menu-item>{{ i18n(item.title) }}</button>
+                  mat-menu-item>{{ i18n(item.title) }}</button>
         </mat-menu>
         <button mat-icon-button [color]="selectedFilters && selectedFilters.length && 'primary'"
-          [matMenuTriggerFor]="jsfFilterMenu" [disabled]="!availableFilters.length">
+                [matMenuTriggerFor]="jsfFilterMenu" [disabled]="!availableFilters.length">
           <mat-icon [matTooltip]="i18n(messages.filter)">filter_list</mat-icon>
         </button>
 
@@ -27,11 +27,11 @@
           <ng-container *ngFor="let item of allFilters; let i = index">
             <button mat-menu-item (click)="selectSort(item); $event.stopPropagation()">
               <mat-icon color="primary"
-                *ngIf="(selectedSort && selectedSort.path === item.path && selectedSort.direction === 1)">
+                        *ngIf="(selectedSort && selectedSort.path === item.path && selectedSort.direction === 1)">
                 arrow_upward
               </mat-icon>
               <mat-icon color="primary"
-                *ngIf="(selectedSort && selectedSort.path === item.path && selectedSort.direction === -1)">
+                        *ngIf="(selectedSort && selectedSort.path === item.path && selectedSort.direction === -1)">
                 arrow_downward
               </mat-icon>
               <span>{{ i18n(item.title) }}</span>
@@ -61,7 +61,7 @@
         </mat-menu>
 
         <button mat-icon-button [color]="selectedSort && 'primary'" [matMenuTriggerFor]="jsfSortMenu"
-          [disabled]="!availableFilters.length">
+                [disabled]="!availableFilters.length">
           <mat-icon [matTooltip]="i18n(messages.sort)">sort_by_alpha</mat-icon>
         </button>
       </div>
@@ -75,16 +75,24 @@
         <!-- USE PROP FILTER HANDLER -->
         <ng-container *ngIf="item.jsfProp.prop.handler; else defaultProp" [ngSwitch]="item.jsfProp.prop.handler.type">
           <jsf-filter-handler-common-dropdown *ngSwitchCase="'common/dropdown'"
-            (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
+                                              (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
           </jsf-filter-handler-common-dropdown>
 
           <jsf-filter-handler-common-button-toggle *ngSwitchCase="'common/button-toggle'"
-            (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
+                                                   (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
           </jsf-filter-handler-common-button-toggle>
 
           <jsf-filter-handler-common-radio *ngSwitchCase="'common/radio'"
-            (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
+                                           (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
           </jsf-filter-handler-common-radio>
+
+          <jsf-filter-generic-select *ngSwitchCase="'salesqueze/card-select'"
+                                     (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
+          </jsf-filter-generic-select>
+
+          <jsf-filter-generic-select *ngSwitchCase="'salesqueze/item-picker'"
+                                     (queryChange)="onFilterItemQueryChange(item, $event)" [filterItem]="item" [jsfBuilder]="jsfBuilder">
+          </jsf-filter-generic-select>
 
           <ng-container *ngSwitchDefault>
             <pre>No filter found for handler: {{ item.jsfProp.prop.handler.type }}</pre>
@@ -95,23 +103,23 @@
         <ng-template #defaultProp>
           <ng-container [ngSwitch]="item.jsfProp.prop.type">
             <jsf-filter-prop-string *ngSwitchCase="'string'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-string>
+                                    [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-string>
             <jsf-filter-prop-number *ngSwitchCase="'number'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-number>
+                                    [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-number>
             <jsf-filter-prop-binary *ngSwitchCase="'binary'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-binary>
+                                    [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-binary>
             <jsf-filter-prop-boolean *ngSwitchCase="'boolean'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-boolean>
+                                     [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-boolean>
             <jsf-filter-prop-date *ngSwitchCase="'date'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-date>
+                                  [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-date>
             <jsf-filter-prop-integer *ngSwitchCase="'integer'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-integer>
+                                     [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-integer>
             <jsf-filter-prop-object *ngSwitchCase="'object'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-object>
+                                    [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-object>
             <jsf-filter-prop-ref *ngSwitchCase="'ref'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-ref>
+                                 [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-ref>
             <jsf-filter-prop-id *ngSwitchCase="'id'" (queryChange)="onFilterItemQueryChange(item, $event)"
-              [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-id>
+                                [filterItem]="item" [jsfBuilder]="jsfBuilder"></jsf-filter-prop-id>
             <ng-container *ngSwitchCase="'null'"></ng-container>
 
             <pre *ngSwitchDefault>No filter found for type: {{ item.jsfProp.prop.type }}</pre>
