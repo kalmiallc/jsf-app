@@ -111,6 +111,8 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
       const renderInstance: RenderInstance = await this.preloadService.onAction('get-render-instance', this.layoutBuilder.id);
       renderInstance.unload();
     }
+
+    window.removeEventListener('message', this.onIframeMessage);
   }
 
   public ngAfterViewInit() {
