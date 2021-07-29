@@ -5,6 +5,7 @@ import {
   Component,
   ElementRef,
   Input,
+  NgZone,
   OnDestroy,
   OnInit,
   ViewChild
@@ -95,6 +96,7 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
 
   constructor(private scriptInjector: ScriptInjectorService,
               private sanitizer: DomSanitizer,
+              private zone: NgZone,
               private cdRef: ChangeDetectorRef) {
     super();
   }
@@ -193,49 +195,53 @@ export class LayoutRender3DComponent extends AbstractSpecialLayoutComponent<JsfL
 
   @Bind()
   private onIframeMessage(message: any) {
-    const event = message.data;
+    this.zone.run(() => {
+      const event = message.data;
 
-    switch (event.eventName) {
-      case 'jsf:verge3d:loaded': {
-        if (!this.usingPreload) {
-          console.log('[Render3D] Verge3D loaded');
-          this.inlineIframeLoaded = true;
-          this.executeIframeInitProcedure();
-        }
-        break;
-      }
-      case 'jsf:event': {
-        console.log('[Render3D] Event');
-        layoutClickHandlerService.handleOnClick(this.layout.onEvent, {
-          rootBuilder       : this.layoutBuilder.rootBuilder,
-          layoutBuilder     : this.layoutBuilder,
-          extraContextParams: {
-            $eventData: event
+      switch (event.eventName) {
+        case 'jsf:verge3d:loaded': {
+          if (!this.usingPreload) {
+            console.log('[Render3D] Verge3D loaded');
+            this.inlineIframeLoaded = true;
+            this.executeIframeInitProcedure();
           }
-        }).catch(console.error);
-        break;
-      }
-      case 'jsf:prop:set-value': {
-        try {
-          console.log('[Render3D] Set value on prop ' + event.data.path + ' with value:', event.data.value);
-          const prop = this.layoutBuilder.rootBuilder
-            .getProp(event.data.path);
+          break;
+        }
+        case 'jsf:event': {
+          console.log('[Render3D] Event');
 
-          if (prop) {
-            prop.setValue(event.data.value)
-              .catch(e => console.error('[Render3D] Failed to set value on prop', e));
-          } else {
-            console.error('[Render3D] Prop ' + event.data.path + ' not found.');
-          }
-        } catch (e) {
-          console.error('[Render3D] Failed to set value on prop', e);
+          layoutClickHandlerService.handleOnClick(this.layout.onEvent, {
+            rootBuilder       : this.layoutBuilder.rootBuilder,
+            layoutBuilder     : this.layoutBuilder,
+            extraContextParams: {
+              $eventData: event
+            }
+          }).catch(console.error);
+
+          break;
         }
-        break;
+        case 'jsf:prop:set-value': {
+          try {
+            console.log('[Render3D] Set value on prop ' + event.data.path + ' with value:', event.data.value);
+            const prop = this.layoutBuilder.rootBuilder
+              .getProp(event.data.path);
+
+            if (prop) {
+              prop.setValue(event.data.value)
+                .catch(e => console.error('[Render3D] Failed to set value on prop', e));
+            } else {
+              console.error('[Render3D] Prop ' + event.data.path + ' not found.');
+            }
+          } catch (e) {
+            console.error('[Render3D] Failed to set value on prop', e);
+          }
+          break;
+        }
+        default: {
+          console.error(`Unknown event "${ event.eventName }"`);
+        }
       }
-      default: {
-        console.error(`Unknown event "${ event.eventName }"`);
-      }
-    }
+    });
   }
 
   private executeIframeInitProcedure() {
