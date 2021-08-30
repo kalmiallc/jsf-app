@@ -18,6 +18,7 @@ import { takeUntil }                                                            
 import { debounce, flattenDeep, get, isArray, map, merge, pick, set, uniq }                  from 'lodash';
 import * as Bowser                                                                           from 'bowser';
 import { DomSanitizer, SafeUrl }                                                             from '@angular/platform-browser';
+import { Subscription }                                                                      from 'rxjs';
 
 export const render2dConfig = {
 
@@ -132,6 +133,8 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
   private _realtimeRendererFinishedLoading = false;
 
 
+  private _ssrRequestSubscription: Subscription;
+
   @Input()
   layoutBuilder: JsfSpecialLayoutBuilder;
 
@@ -192,10 +195,21 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
     return this.layout.ssr && this.layout.ssr.preloadWithSSR;
   }
 
+  get parallelRequests() {
+    return this.layout.ssr && (this.layout.ssr as any).parallelRequests;
+  }
+
   public updateSSRImage = debounce(() => {
-    this.ssrUpdateNext = true;
-    if (!this.ssrRequestPending) {
-      this.ssrCheckNext();
+    if (!this.parallelRequests) {
+      this.ssrUpdateNext = true;
+      if (!this.ssrRequestPending) {
+        this.ssrCheckNext();
+      }
+    } else {
+      this.ssrUpdateInternal()
+        .catch(e => {
+          throw e;
+        });
     }
   }, 200);
 
@@ -397,7 +411,12 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
       this.cdRef.markForCheck();
       this.cdRef.detectChanges();
 
-      this.layoutBuilder.rootBuilder.apiService.post(`headless/render/dff/${ this.ssrDffKey }`,
+      if (this._ssrRequestSubscription) {
+        this._ssrRequestSubscription.unsubscribe();
+        this._ssrRequestSubscription = undefined;
+      }
+
+      this._ssrRequestSubscription = this.layoutBuilder.rootBuilder.apiService.post(`headless/render/dff/${ this.ssrDffKey }`,
         {
           value: dependantValue
         })
@@ -410,6 +429,8 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
 
           this.cdRef.markForCheck();
           this.cdRef.detectChanges();
+
+          this._ssrRequestSubscription = undefined;
 
           this.ssrRequestPending = false;
           this.ssrCheckNext();
