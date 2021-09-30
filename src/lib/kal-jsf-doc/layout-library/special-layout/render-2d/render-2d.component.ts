@@ -220,6 +220,8 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
   }
 
   ngOnInit(): void {
+    this.registerLayoutComponent();
+
     this.layoutBuilder.visibleObservable
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((visible) => {
@@ -287,6 +289,8 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
 
   async ngOnDestroy(): Promise<void> {
     super.ngOnDestroy();
+
+    this.unregisterLayoutComponent();
 
     if (this.useRealtimeRendering) {
       await this.renderer.destroy();
