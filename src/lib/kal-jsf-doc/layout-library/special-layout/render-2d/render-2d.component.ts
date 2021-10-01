@@ -407,8 +407,20 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
 
     const documentValue = this.layoutBuilder.rootBuilder.getJsonValue();
 
-    // Pick only keys which the renderer depends on.
-    const dependantValue = this.pickExtended(documentValue, this.getRendererDependencies());
+    let requestValue;
+    if (this.layout.ssr?.valueMapper) {
+      const ctx   = this.layoutBuilder.rootBuilder.getEvalContext({
+        layoutBuilder: this.layoutBuilder,
+        extraContextParams: {
+          $document: documentValue
+        }
+      });
+      requestValue = this.layoutBuilder.rootBuilder.runEvalWithContext(
+        (this.layout.ssr?.valueMapper as any).$evalTranspiled || this.layout.ssr?.valueMapper.$eval, ctx);
+    } else {
+      // Pick only keys which the renderer depends on.
+      requestValue = this.pickExtended(documentValue, this.getRendererDependencies());
+    }
 
     try {
       this.ssrLoading = true;
@@ -422,7 +434,7 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
 
       this._ssrRequestSubscription = this.layoutBuilder.rootBuilder.apiService.post(`headless/render/dff/${ this.ssrDffKey }`,
         {
-          value: dependantValue
+          value: requestValue
         })
         .pipe(takeUntil(this.ngUnsubscribe))
         .subscribe((response: { hash: string; imageUrl: string; }) => {
