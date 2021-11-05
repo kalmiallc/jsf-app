@@ -14,11 +14,11 @@ import { AbstractSpecialLayoutComponent }                                       
 import { ScriptInjectorService }                                                             from '../../../services/script-injector.service';
 import { Renderer }                                                                          from './renderer';
 import { BuilderDeveloperToolsInterface }                                                    from '../../../builder-developer-tools.interface';
-import { takeUntil }                                                                         from 'rxjs/operators';
-import { debounce, flattenDeep, get, isArray, map, merge, pick, set, uniq }                  from 'lodash';
+import { debounceTime, switchMap, takeUntil, tap }                                           from 'rxjs/operators';
+import { flattenDeep, get, isArray, map, merge, pick, set, uniq }                            from 'lodash';
 import * as Bowser                                                                           from 'bowser';
 import { DomSanitizer, SafeUrl }                                                             from '@angular/platform-browser';
-import { Subscription }                                                                      from 'rxjs';
+import { Subject }                                                                           from 'rxjs/internal/Subject';
 
 export const render2dConfig = {
 
@@ -37,63 +37,63 @@ enum DisplayMode {
 @Component({
   selector       : 'jsf-layout-render-2d',
   template       : `
-      <div class="jsf-layout-render-2d jsf-animatable"
-           [ngClass]="htmlClass"
-           [class.loading]="loadingIndicatorVisible">
+    <div class="jsf-layout-render-2d jsf-animatable"
+         [ngClass]="htmlClass"
+         [class.loading]="loadingIndicatorVisible">
 
-          <div class="render-2d-loading-indicator" *ngIf="loadingIndicatorVisible">
-              <mat-spinner color="accent" diameter="45"></mat-spinner>
-          </div>
+      <div class="render-2d-loading-indicator" *ngIf="loadingIndicatorVisible">
+        <mat-spinner color="accent" diameter="45"></mat-spinner>
+      </div>
 
-          <div id="jsf-render-2d-{{ render2dId }}"
-               class="render-2d-container rounded-sm"
-               [class.d-none]="!isRealtimeDisplayMode"
-               #renderContainer>
-          </div>
+      <div id="jsf-render-2d-{{ render2dId }}"
+           class="render-2d-container rounded-sm"
+           [class.d-none]="!isRealtimeDisplayMode"
+           #renderContainer>
+      </div>
 
-          <img [attr.src]="ssrImageUrl"
-               alt="Render"
-               class="render-2d-ssr"
-               [class.d-none]="!isSSRDisplayMode">
-      </div>`,
+      <img [attr.src]="ssrImageUrl"
+           alt="Render"
+           class="render-2d-ssr"
+           [class.d-none]="!isSSRDisplayMode">
+    </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles         : [`
-      .render-2d-container {
-          overflow: hidden;
-      }
+    .render-2d-container {
+      overflow: hidden;
+    }
 
-      .jsf-layout-render-2d {
-          position: relative;
-          height:   100%;
-      }
+    .jsf-layout-render-2d {
+      position: relative;
+      height:   100%;
+    }
 
-      .jsf-layout-render-2d.loading {
-          /* Set a min height value when loading to ensure the loading indicator is properly visible */
-          min-height: 100px;
-      }
+    .jsf-layout-render-2d.loading {
+      /* Set a min height value when loading to ensure the loading indicator is properly visible */
+      min-height: 100px;
+    }
 
-      .jsf-layout-render-2d .render-2d-loading-indicator {
-          position:  absolute;
-          top:       50%;
-          left:      50%;
-          transform: translate(-50%, -50%);
-      }
+    .jsf-layout-render-2d .render-2d-loading-indicator {
+      position:  absolute;
+      top:       50%;
+      left:      50%;
+      transform: translate(-50%, -50%);
+    }
 
-      .render-2d-ssr {
-          width:   100%;
-          display: block;
-      }
+    .render-2d-ssr {
+      width:   100%;
+      display: block;
+    }
 
-      .loading .render-2d-ssr {
-          opacity: .35;
-      }
+    .loading .render-2d-ssr {
+      opacity: .35;
+    }
 
-      :host ::ng-deep .renderer {
-          /* Scale canvas element to parent */
-          width:   100%;
-          /* Prevent an extra 5px margin on the bottom of the canvas */
-          display: block;
-      }
+    :host ::ng-deep .renderer {
+      /* Scale canvas element to parent */
+      width:   100%;
+      /* Prevent an extra 5px margin on the bottom of the canvas */
+      display: block;
+    }
   `]
 })
 export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfLayoutRender2D> implements OnInit, OnDestroy, AfterViewInit {
@@ -133,8 +133,6 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
   private _realtimeRendererFinishedLoading = false;
 
 
-  private _ssrRequestSubscription: Subscription;
-
   @Input()
   layoutBuilder: JsfSpecialLayoutBuilder;
 
@@ -145,6 +143,8 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
   private renderContainer: ElementRef;
 
   private libraryLoaded = false;
+
+  private _ssrUpdate$ = new Subject<void>();
 
   get hookId() {
     return `render-2d-${ this.render2dId }-screenshot`;
@@ -199,24 +199,22 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
     return this.layout.ssr && (this.layout.ssr as any).parallelRequests;
   }
 
-  public updateSSRImage = debounce(() => {
-    if (!this.parallelRequests) {
-      this.ssrUpdateNext = true;
-      if (!this.ssrRequestPending) {
-        this.ssrCheckNext();
-      }
-    } else {
-      this.ssrUpdateInternal()
-        .catch(e => {
-          throw e;
-        });
-    }
-  }, 200);
+  public updateSSRImage() {
+    this._ssrUpdate$.next();
+  }
 
   constructor(private scriptInjector: ScriptInjectorService,
               private cdRef: ChangeDetectorRef,
               private sanitizer: DomSanitizer) {
     super();
+
+    this._ssrUpdate$
+      .pipe(
+        debounceTime(50),
+        switchMap(() => this.ssrUpdateInternal()),
+        takeUntil(this.ngUnsubscribe)
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -236,6 +234,10 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
       || Bowser.c // This browser has degraded capabilities. Serve simpler version.
       || Bowser.x // This browser has minimal capabilities and is probably not well detected.
     );
+
+    if ((this.layout.ssr as any).forceRealtimeSupport) {
+      this._deviceSupportsRealtimeRendering = true;
+    }
 
     console.log('[Render2D] _deviceSupportsRealtimeRendering', this._deviceSupportsRealtimeRendering);
 
@@ -392,25 +394,16 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
     }, {});
   }
 
-  private ssrCheckNext() {
-    if (this.ssrUpdateNext) {
-      this.ssrUpdateInternal()
-        .catch(e => {
-          throw e;
-        });
-      this.ssrUpdateNext = false;
-    }
-  }
 
-  private async ssrUpdateInternal() {
+  private ssrUpdateInternal() {
     this.ssrRequestPending = true;
 
     const documentValue = this.layoutBuilder.rootBuilder.getJsonValue();
 
     let requestValue;
     if (this.layout.ssr?.valueMapper) {
-      const ctx   = this.layoutBuilder.rootBuilder.getEvalContext({
-        layoutBuilder: this.layoutBuilder,
+      const ctx    = this.layoutBuilder.rootBuilder.getEvalContext({
+        layoutBuilder     : this.layoutBuilder,
         extraContextParams: {
           $document: documentValue
         }
@@ -427,17 +420,11 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
       this.cdRef.markForCheck();
       this.cdRef.detectChanges();
 
-      if (this._ssrRequestSubscription) {
-        this._ssrRequestSubscription.unsubscribe();
-        this._ssrRequestSubscription = undefined;
-      }
-
-      this._ssrRequestSubscription = this.layoutBuilder.rootBuilder.apiService.post(`headless/render/dff/${ this.ssrDffKey }`,
+      return this.layoutBuilder.rootBuilder.apiService.post(`headless/render/dff/${ this.ssrDffKey }`,
         {
           value: requestValue
         })
-        .pipe(takeUntil(this.ngUnsubscribe))
-        .subscribe((response: { hash: string; imageUrl: string; }) => {
+        .pipe(tap((response: { hash: string; imageUrl: string; }) => {
           this.ssrImageUrlRaw = response.imageUrl;
           this.ssrImageUrl    = this.sanitizer.bypassSecurityTrustUrl(response.imageUrl);
 
@@ -446,15 +433,8 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
           this.cdRef.markForCheck();
           this.cdRef.detectChanges();
 
-          this._ssrRequestSubscription = undefined;
-
           this.ssrRequestPending = false;
-          this.ssrCheckNext();
-        }, (e) => {
-          this.ssrRequestPending = false;
-
-          console.error(e);
-        });
+        }));
     } catch (e) {
       console.error(e);
 
@@ -464,7 +444,6 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
       this.cdRef.detectChanges();
 
       this.ssrRequestPending = false;
-      this.ssrCheckNext();
     }
   }
 
