@@ -235,7 +235,7 @@ export class LayoutRender2DComponent extends AbstractSpecialLayoutComponent<JsfL
       || Bowser.x // This browser has minimal capabilities and is probably not well detected.
     );
 
-    if ((this.layout.ssr as any).forceRealtimeSupport) {
+    if ((this.layout?.ssr as any).forceRealtimeSupport) {
       this._deviceSupportsRealtimeRendering = true;
     }
 
