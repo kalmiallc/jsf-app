@@ -20,9 +20,9 @@ import {
 import { JsfPropLayoutBuilder, JsfUnknownLayoutBuilder, PropStatus }                                      from '@kalmia/jsf-common-es2015';
 import { RouterComponent }                                                                                from './router.component';
 import { Subject }                                                                                        from 'rxjs';
-import { BuilderDeveloperToolsInterface }                                                                 from '../builder-developer-tools.interface';
-import { takeUntil }                                                                                      from 'rxjs/operators';
-import { PropRouterComponent }                                                                            from './prop-router.component';
+import { BuilderDeveloperToolsInterface }  from '../builder-developer-tools.interface';
+import { distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { PropRouterComponent }             from './prop-router.component';
 import { LayoutDivComponent }                                                                             from '../layout-library/items-layout/div/div.component';
 import { LayoutRowComponent }                                                                             from '../layout-library/items-layout/row/row.component';
 import { LayoutColComponent }                                                                             from '../layout-library/items-layout/col/col.component';
@@ -227,29 +227,35 @@ export class LayoutRouterComponent extends RouterComponent implements OnInit, Af
     this.idAttr   = this.layoutBuilder.id;
     this.isHidden = !this.layoutBuilder.visible;
 
-    if (!isNil(this.layoutBuilder.rootBuilder.doc.$engine?.layoutRenderingMode)) {
-      if (this.layoutBuilder.rootBuilder.doc.$engine?.layoutRenderingMode === 'sync') {
-        this.tryCreateComponent();
-      } else {
-        setTimeout(() => {
+    if (this.layoutBuilder.rootBuilder.doc?.$engine?.visibilityHandler !== 'angular') {
+      if (!isNil(this.layoutBuilder.rootBuilder.doc.$engine?.layoutRenderingMode)) {
+        if (this.layoutBuilder.rootBuilder.doc.$engine?.layoutRenderingMode === 'sync') {
           this.tryCreateComponent();
-        }, 0);
-      }
-    } else {
-      if (this.jsfAppConfig.syncLayoutRendering) {
-        this.tryCreateComponent();
+        } else {
+          setTimeout(() => {
+            this.tryCreateComponent();
+          }, 0);
+        }
       } else {
-        setTimeout(() => {
+        if (this.jsfAppConfig.syncLayoutRendering) {
           this.tryCreateComponent();
-        }, 0);
+        } else {
+          setTimeout(() => {
+            this.tryCreateComponent();
+          }, 0);
+        }
       }
     }
 
     this.layoutBuilder.visibleObservable
-      .pipe(takeUntil(this.ngUnsubscribe))
+      .pipe(
+        distinctUntilChanged(),
+        takeUntil(this.ngUnsubscribe)
+      )
       .subscribe(next => {
         this.isHidden = !next;
         this.detectChanges();
+        this.updateRenderedComponent();
       });
 
     this.detectChanges();
@@ -299,6 +305,8 @@ export class LayoutRouterComponent extends RouterComponent implements OnInit, Af
     if (this.matTooltipDirective) {
       this.matTooltipDirective.ngOnDestroy();
     }
+
+    this.destroyComponent();
   }
 
 
@@ -313,6 +321,18 @@ export class LayoutRouterComponent extends RouterComponent implements OnInit, Af
     if (this.parentCdRef) {
       this.parentCdRef.markForCheck();
       this.parentCdRef.detectChanges();
+    }
+  }
+
+  private updateRenderedComponent() {
+    if (this.layoutBuilder.rootBuilder.doc?.$engine?.visibilityHandler !== 'angular') {
+      return;
+    }
+
+    if (this.isHidden) {
+      this.destroyComponent();
+    } else {
+      this.tryCreateComponent();
     }
   }
 
@@ -370,6 +390,11 @@ export class LayoutRouterComponent extends RouterComponent implements OnInit, Af
 
     // Run change detection
     this.componentRef.changeDetectorRef.detectChanges();
+  }
+
+  private destroyComponent() {
+    this.routerOutlet.clear();
+    this.componentRef = null;
   }
 
   private updateTooltip() {
